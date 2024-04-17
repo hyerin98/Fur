@@ -14,6 +14,14 @@ public class PlayerSelector : MonoBehaviour
 
     private Dictionary<string, Player> players = new Dictionary<string, Player>();
 
+    public Transform[] furSeets;
+
+    Tweener floatTweener;
+    Sequence showSequence, hideSequence;
+    
+    public Ease ease;
+
+
     private void Awake()
     {
         ProtocolManager.instance.onWebControllerEvent += OnWebControllerEvent;
@@ -109,17 +117,21 @@ public class PlayerSelector : MonoBehaviour
             players.Remove(playerData.color_id);
 
             targetPlayer.isActive = false;
-            targetPlayer.playerID ="0";
+            targetPlayer.playerID = "0";
             targetPlayer.Test();
 
             Debug.Log("이미 존재하고 있는 컬러 : " + playerData.color_id + " : " + targetPlayer.GetInstanceID());
             Debug.Log("이미 존재하는 플레이어 아이디 : " + targetPlayer.playerID);
         }
-        targetPlayer = Instantiate(playerPrefab, RandomPosition(), Quaternion.identity).GetComponent<Player>();
-        targetPlayer.transform.DOScale(1.2f, 1.2f); // 생성 효과 추가 (수정필)
-        targetPlayer.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 1.0f)
-        .SetEase(Ease.InOutSine)
-        .SetLoops(-1, LoopType.Yoyo);
+        targetPlayer = Instantiate(playerPrefab, GetNextPosition(), Quaternion.identity).GetComponent<Player>();
+
+        targetPlayer.transform.DOScale(0,1).SetEase(ease);
+        targetPlayer.transform.DOShakeScale(1,1).SetEase(ease);
+
+        // targetPlayer.transform.DOScale(1.2f, 1.2f); // 생성 효과 추가 (수정필)
+        // targetPlayer.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 1.0f)
+        // .SetEase(Ease.InOutSine)
+        // .SetLoops(-1, LoopType.Yoyo);
 
         Debug.Log("유저번호: " + playerData.player_index + " 이 가지고 있는 컬러: " + playerData.color_id);
         Debug.Log("추가된 유저의 컬러값 : " + playerData.color_id + " : " + targetPlayer.GetInstanceID());
@@ -130,11 +142,11 @@ public class PlayerSelector : MonoBehaviour
         targetPlayer.SetUserIndex(playerData.player_index);
 
         Renderer renderer = targetPlayer.GetComponent<Renderer>();
-        if(renderer != null)
+        if (renderer != null)
         {
             Material material = renderer.material;
             Color color;
-            if(ColorUtility.TryParseHtmlString("#" + playerData.color_id, out color))
+            if (ColorUtility.TryParseHtmlString("#" + playerData.color_id, out color))
             {
                 renderer.material.color = color;
             }
@@ -159,7 +171,7 @@ public class PlayerSelector : MonoBehaviour
 
     private void OnPlayerEnd(Player targetPlayer)
     {
-        if(players.ContainsValue(targetPlayer))
+        if (players.ContainsValue(targetPlayer))
         {
             targetPlayer.onPlayerEnd -= OnPlayerEnd;
             players.Remove(targetPlayer.playerID);
@@ -200,18 +212,38 @@ public class PlayerSelector : MonoBehaviour
             }
             else
             {
+
                 Debug.Log("삭제할 플레이어가 없습니다.");
             }
         }
     }
 
-    Vector2 RandomPosition() // 플레이어 랜덤하게 생성
+
+
+    // 4.17 ~ 랜덤한 자리에 생성하지 말고, 특정 공간안에서 랜덤하게 생성하게 수정필
+    Vector3 RandomPosition() // 플레이어 랜덤하게 생성
     {
-        Vector2 randomPosition;
+
+        Vector3 randomPosition;
         do
         {
-            randomPosition = new Vector2(UnityEngine.Random.Range(-8f, 8f), UnityEngine.Random.Range(-5f, 5f)); // 4.15 갑자기 random오류나서 수정함
+            randomPosition = new Vector3(UnityEngine.Random.Range(-8f, 8f), UnityEngine.Random.Range(-5f, 5f)); // 4.15 random오류나서 UnityEngine써서 수정함
         } while (Physics.CheckSphere(randomPosition, 1f)); // 반지름의 구를 기준으로 겹치는지 확인
         return randomPosition;
     }
+    Vector3 GetNextPosition()
+    {
+        if (furSeets.Length == 0)
+        {
+            Debug.LogError("정해진 자리가 없슴");
+            return Vector3.zero;
+        }
+
+
+        Vector3 nextPosition = furSeets[0].position;
+        furSeets = furSeets.Skip(1).ToArray();
+
+        return nextPosition;
+    }
+
 }

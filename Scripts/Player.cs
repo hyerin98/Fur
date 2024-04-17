@@ -10,7 +10,7 @@ using System;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Animator animator = null;
+    [SerializeField] private Animator Anim = null;
     [SerializeField] private float moveSpeed = .01f;
     private ColorManager colorManager;
 
@@ -30,6 +30,7 @@ public class Player : MonoBehaviour
     {
         colorManager = FindObjectOfType<ColorManager>();
         //playerID = System.Guid.NewGuid().ToString();
+        Anim = GetComponent<Animator>();
     }
 
     void Start()
@@ -43,33 +44,84 @@ public class Player : MonoBehaviour
         {
             //transform.DOMoveY(transform.position.y + moveSpeed, 1.0f).SetRelative();
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            downKeyCode = KeyCode.UpArrow;
-            PlayerEnd();
-            //transform.DOLocalMove());
 
-        }
         else if (downKeyCode == KeyCode.DownArrow)
         {
             transform.DOLocalMoveZ(-moveSpeed, .3f).SetRelative();
         }
         else if (downKeyCode == KeyCode.LeftArrow)
         {
-            transform.DOLocalMoveX(-moveSpeed, .3f).SetRelative();
+            //transform.DOLocalMoveX(-moveSpeed, .3f).SetRelative();
+
         }
         else if (downKeyCode == KeyCode.RightArrow)
         {
-            transform.DOLocalMoveX(moveSpeed, .3f).SetRelative();
+            //transform.DOLocalMoveX(moveSpeed, .3f).SetRelative();
         }
+
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            Debug.Log("오른쪽 애니메이션 테스트");
+            downKeyCode = KeyCode.UpArrow;
+            Anim.SetBool("Right", true);
+            Anim.SetBool("Left", false);
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            Debug.Log("왼쪽 애니메 테스트");
+            downKeyCode = KeyCode.UpArrow;
+            Anim.SetBool("Left", true);
+            Anim.SetBool("Right", false);
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("액션버튼 테스트");
+            transform.DOMoveY(transform.position.y  + (-moveSpeed), 1.0f);
+            transform.DOShakeScale(1,0.5f).SetEase(Ease.InOutFlash);
+        }
+
     }
 
-    void OnCollisionEnter2D(Collision2D other)
+    public void OnCollisionEnter(Collision other) 
     {
         if (other.gameObject.CompareTag("Ground"))
         {
             //Debug.Log("땅에 닿았음");
             isFalled = true;
+        }    
+
+        if(other.gameObject.CompareTag("Bone"))
+        {
+            Debug.Log("본끼리닿는다");
+        }
+    }
+    
+    public void OnTriggerEnter(Collider other) 
+    {   
+        if(other.CompareTag("Bone"))
+        {
+            Debug.Log("본에 닿음");
+            Anim.SetBool("Right",true);
+        }
+    }
+
+    public void OnTriggerStay(Collider other) 
+    {
+        if(other.CompareTag("Bone"))
+        {
+            Debug.Log("본에 닿고 있는 중");
+            Anim.SetBool("Right",true);
+        }
+    }
+
+    public void OnTriggerExit(Collider other) 
+    {
+        if(other.CompareTag("Bone"))
+        {
+            Debug.Log("본에 닿고있지않음");
+            Anim.SetBool("Right",false);
         }
     }
 
@@ -138,13 +190,13 @@ public class Player : MonoBehaviour
 
     public void RemovePlayer()
     {
-        if(!isFalled) return;
+        if (!isFalled) return;
         else
         {
             Debug.Log("삭제!");
             DOVirtual.DelayedCall(6, PlayerEnd);
         }
-            
+
     }
 
     private void PlayerEnd()
