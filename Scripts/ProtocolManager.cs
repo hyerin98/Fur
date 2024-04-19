@@ -59,7 +59,6 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
                     //JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_connect", JoyStreamCommunicator.instance.ThemeType + "," + JoyStreamCommunicator.instance.GetPlayerIndex(conn_id).ToString());
                     break;
                 }
-                
         }
     }
 

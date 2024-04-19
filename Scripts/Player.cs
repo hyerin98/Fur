@@ -7,6 +7,7 @@ using IMFINE.Utils.ConfigManager;
 using IMFINE.Utils.JoyStream.Communicator;
 using Unity.VisualScripting;
 using System;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -21,6 +22,12 @@ public class Player : MonoBehaviour
     public string playerID;
     public int userIndex;
     public bool isActive = false;
+
+    // 플레이어가 액션버튼을 눌러 떨어질 때
+    public Transform destination;
+
+    public float fallDistance = 1f;
+    public float fallTime = 1f;
 
     // 4.15 추가
     public delegate void OnPlayerEnd(Player target);
@@ -62,66 +69,61 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            Debug.Log("오른쪽 애니메이션 테스트");
             downKeyCode = KeyCode.UpArrow;
             Anim.SetBool("Right", true);
             Anim.SetBool("Left", false);
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            Debug.Log("왼쪽 애니메 테스트");
             downKeyCode = KeyCode.UpArrow;
             Anim.SetBool("Left", true);
             Anim.SetBool("Right", false);
         }
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("액션버튼 테스트");
-            transform.DOMoveY(transform.position.y  + (-moveSpeed), 1.0f);
-            transform.DOShakeScale(1,0.5f).SetEase(Ease.InOutFlash);
+            transform.DOMoveY(transform.position.y + (-moveSpeed), 1.0f);
+            transform.DOShakeScale(1, 0.5f).SetEase(Ease.InOutFlash);
+            //LeanTween.move(gameObject, destination.position, 3f).setEase(LeanTweenType.easeOutBounce);
+
+            Vector3 targetPosition = transform.position + new Vector3(0f, -fallDistance, 0f);
+            LeanTween.move(gameObject, targetPosition, fallTime)
+                .setEase(LeanTweenType.easeOutBounce);
+
         }
 
     }
 
-    public void OnCollisionEnter(Collision other) 
+    public void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Ground"))
         {
             //Debug.Log("땅에 닿았음");
             isFalled = true;
-        }    
-
-        if(other.gameObject.CompareTag("Bone"))
-        {
-            Debug.Log("본끼리닿는다");
-        }
-    }
-    
-    public void OnTriggerEnter(Collider other) 
-    {   
-        if(other.CompareTag("Bone"))
-        {
-            Debug.Log("본에 닿음");
-            Anim.SetBool("Right",true);
         }
     }
 
-    public void OnTriggerStay(Collider other) 
+    public void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Bone"))
+        if (other.CompareTag("Bone"))
         {
-            Debug.Log("본에 닿고 있는 중");
-            Anim.SetBool("Right",true);
+            Anim.SetBool("Right", true);
         }
     }
 
-    public void OnTriggerExit(Collider other) 
+    public void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("Bone"))
+        if (other.CompareTag("Bone"))
         {
-            Debug.Log("본에 닿고있지않음");
-            Anim.SetBool("Right",false);
+            Anim.SetBool("Right", true);
+        }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Bone"))
+        {
+            Anim.SetBool("Right", false);
         }
     }
 

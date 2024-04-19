@@ -15,6 +15,14 @@ public class ColorManager : MonoSingleton<ColorManager>
     public int maxUsers;
     private int userIndex; 
 
+    private bool isColor;
+    
+    private bool IsBrightColor(Color color)
+    {
+        isColor = true;
+        float averageBrightness = (color.r + color.g + color.b) / 3f;
+        return averageBrightness > 0.5f;
+    }
     void Start()
     {
         maxUsers = 50;
@@ -33,9 +41,13 @@ public class ColorManager : MonoSingleton<ColorManager>
         List<string> randomColors = new List<string>();
         for (int i = 0; i < count; i++)
         {
+            if (isColor)
+            {
+                string color = GenerateRandomColor();
+                randomColors.Add(color);
+            }
             // 임의의 컬러 생성 및 추가
-            string color = GenerateRandomColor();
-            randomColors.Add(color);
+
         }
         return randomColors;
     }
@@ -45,9 +57,11 @@ public class ColorManager : MonoSingleton<ColorManager>
         // 임의의 색상을 생성하여 반환
         Color color = Random.ColorHSV();
         return ColorUtility.ToHtmlStringRGB(color);
+
     }
 
- public string AssignUserColor() 
+    
+    public string AssignUserColor() 
 {
     // 현재 할당된 플레이어 수가 최대 플레이어 수보다 작은 경우에만 새로운 컬러를 할당
     if (userIndex <= maxUsers)
@@ -83,6 +97,7 @@ public class ColorManager : MonoSingleton<ColorManager>
         return null;
     }
 }
+
 
 public void RemoveUserAtIndex(int index)
 {
