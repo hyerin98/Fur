@@ -15,14 +15,13 @@ public class ColorManager : MonoSingleton<ColorManager>
     public int maxUsers;
     private int userIndex; 
 
-    private bool isColor;
+    // 색 할당
+    private float minSaturation = 0.2f;
+    private float maxSaturation = 0.8f;
+    private float minBrightness = 0.6f;
+    private float maxBrightness = 1.0f;
+
     
-    private bool IsBrightColor(Color color)
-    {
-        isColor = true;
-        float averageBrightness = (color.r + color.g + color.b) / 3f;
-        return averageBrightness > 0.5f;
-    }
     void Start()
     {
         maxUsers = 50;
@@ -41,13 +40,8 @@ public class ColorManager : MonoSingleton<ColorManager>
         List<string> randomColors = new List<string>();
         for (int i = 0; i < count; i++)
         {
-            if (isColor)
-            {
                 string color = GenerateRandomColor();
                 randomColors.Add(color);
-            }
-            // 임의의 컬러 생성 및 추가
-
         }
         return randomColors;
     }
@@ -55,9 +49,25 @@ public class ColorManager : MonoSingleton<ColorManager>
     string GenerateRandomColor()
     {
         // 임의의 색상을 생성하여 반환
-        Color color = Random.ColorHSV();
-        return ColorUtility.ToHtmlStringRGB(color);
+        //Color color = Random.ColorHSV();
+        //return ColorUtility.ToHtmlStringRGB(color);
+        Color color;
+        do
+        {
+            // 랜덤한 HSV 범위에서 색상을 생성합니다.
+            color = Random.ColorHSV(0f, 1f, minSaturation, maxSaturation, minBrightness, maxBrightness);
+        } while (IsColorTooDark(color)); // 생성된 색상이 너무 어두운지 확인합니다.
 
+        return ColorUtility.ToHtmlStringRGB(color);
+    
+    }
+
+     bool IsColorTooDark(Color color)
+    {
+        // 색상의 밝기를 계산합니다.
+        float brightness = color.r * 0.299f + color.g * 0.587f + color.b * 0.114f;
+        // 만약 밝기가 너무 낮다면 어두운 색상으로 판단합니다.
+        return brightness < 0.5f;
     }
 
     

@@ -29,6 +29,9 @@ public class Player : MonoBehaviour
     public float fallDistance = 1f;
     public float fallTime = 1f;
 
+    bool isRight;
+    bool isLeft;
+
     // 4.15 추가
     public delegate void OnPlayerEnd(Player target);
     public event OnPlayerEnd onPlayerEnd;
@@ -69,15 +72,12 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            downKeyCode = KeyCode.UpArrow;
-            Anim.SetBool("Right", true);
-            Anim.SetBool("Left", false);
+            Anim.SetTrigger("doRight");
+
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            downKeyCode = KeyCode.UpArrow;
-            Anim.SetBool("Left", true);
-            Anim.SetBool("Right", false);
+            Anim.SetTrigger("doLeft");
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -107,7 +107,8 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag("Bone"))
         {
-            Anim.SetBool("Right", true);
+            Anim.SetTrigger("doRight");
+            Debug.Log("본에 닿았따");
         }
     }
 
@@ -115,7 +116,8 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag("Bone"))
         {
-            Anim.SetBool("Right", true);
+            Anim.SetTrigger("doRight");
+            Debug.Log("본에 닿는중");
         }
     }
 
@@ -161,34 +163,6 @@ public class Player : MonoBehaviour
                 break;
         }
     }
-
-
-    // public void AssignUserColor()
-    // {
-    //     string userColor = ColorManager.instance.AssignUserColor();
-
-    //     if (userColor != null)
-    //     {
-    //         SetPlayerColor(userColor);
-    //         userIndex = ColorManager.instance.GetUserIndex(); // ColorManager에서 사용자의 인덱스 가져오기
-    //         Debug.Log(userIndex + " 번째 유저에게 할당된 컬러 : " + userColor);
-
-    //         //playerassignedColors.Add(userColor); // 할당된 컬러를 playerassignedColors 리스트에 추가
-    //     }
-    //     else
-    //     {
-    //         Debug.Log(userIndex + " 번째 유저에게 할당할 컬러가 없습니다.");
-    //     }
-    // }
-
-    // public void RemoveUserAtIndex(int index)
-    // {
-    //     string userColor = colorManager.GetAssignedColorAtIndex(index);
-    //     colorManager.RemoveUserAtIndex(index);
-    //     Debug.Log("유저 " + index + "가 삭제되었습니다. 할당된 컬러: " + userColor);
-    //     // 삭제된 유저의 컬러를 playerassignedColors 리스트에서 제거
-    //     playerassignedColors.RemoveAt(index);
-    // }
 
     public void RemovePlayer()
     {
