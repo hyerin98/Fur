@@ -33,6 +33,9 @@ public class Player : MonoBehaviour
     public float moveStep = 0.3f;
     private Rigidbody rigid;
 
+    public GameObject childWithHinge; 
+    private HingeJoint hinge;
+
     // 4.15 추가
     public delegate void OnPlayerEnd(Player target);
     public event OnPlayerEnd onPlayerEnd;
@@ -48,6 +51,11 @@ public class Player : MonoBehaviour
     void Start()
     {
         PlayerStart();
+
+         if (childWithHinge != null)
+        {
+            hinge = childWithHinge.GetComponent<HingeJoint>();
+        }
     }
 
     private void Update()
@@ -115,6 +123,18 @@ public class Player : MonoBehaviour
             Debug.Log("땅에 닿았음");
             this.rigid.isKinematic = true;
             isFalled = false;
+        }
+
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            // 이 오브젝트 및 모든 자식 오브젝트에서 HingeJoint 컴포넌트를 찾아 제거
+            foreach (var hinge in GetComponentsInChildren<HingeJoint>())
+            {
+                Destroy(hinge);
+                Destroy(this);
+            }
+
+            // 충돌 시 시각적 효과가 필요하면 여기에 코드 추가
         }
     }
 

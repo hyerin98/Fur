@@ -3,43 +3,12 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    public float moveStep = 1.0f; // 한 번 키를 누를 때마다 이동할 거리
-
-    private Rigidbody rb;
-
-    void Start()
-    {
-        rb = GetComponent<Rigidbody>();
-    }
+     public Material material; // 사용할 머티리얼
+    public float speed = 0.5f; // 오프셋 변화 속도
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            // 현재 위치에서 오른쪽 방향(양의 x축)으로 moveStep 만큼 이동
-            Vector3 newPosition = rb.position + new Vector3(moveStep, 0, 0);
-            rb.MovePosition(newPosition);
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            // 현재 위치에서 오른쪽 방향(양의 x축)으로 moveStep 만큼 이동
-            Vector3 newPosition = rb.position + new Vector3(-moveStep, 0, 0);
-            rb.MovePosition(newPosition);
-        }
-
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            // 현재 위치에서 오른쪽 방향(양의 x축)으로 moveStep 만큼 이동
-            Vector3 newPosition = rb.position + new Vector3(0, moveStep, 0);
-            rb.MovePosition(newPosition);
-        }
-
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            // 현재 위치에서 오른쪽 방향(양의 x축)으로 moveStep 만큼 이동
-            Vector3 newPosition = rb.position + new Vector3(0, -moveStep, 0);
-            rb.MovePosition(newPosition);
-        }
+        float offset = Time.time * speed; // 시간에 따라 오프셋 계산
+        material.SetTextureOffset("_MainTex", new Vector2(offset, 0)); // X축 오프셋 적용
     }
 }
