@@ -1,40 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using DG.Tweening;
 
 public class Test : MonoBehaviour
 {
-    [SerializeField] float moveY = 0.1f;
-    Material material;
-    Renderer renderer;
+    public float moveStep = 1.0f; // 한 번 키를 누를 때마다 이동할 거리
 
-    private void Start()
+    private Rigidbody rb;
+
+    void Start()
     {
-        float initPosY = transform.localPosition.y;
-        transform.DOLocalMoveY(initPosY, 1).From(initPosY + moveY).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
-        renderer = GetComponent<Renderer>();
-
-        Show();
-        Hide();
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        //Show();
-        //Hide();
-    }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            // 현재 위치에서 오른쪽 방향(양의 x축)으로 moveStep 만큼 이동
+            Vector3 newPosition = rb.position + new Vector3(moveStep, 0, 0);
+            rb.MovePosition(newPosition);
+        }
 
-    void Show()
-    {
-        material = renderer.material;
-        material.DOOffset(Vector3.zero, 3).SetEase(Ease.Linear);
-    }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            // 현재 위치에서 오른쪽 방향(양의 x축)으로 moveStep 만큼 이동
+            Vector3 newPosition = rb.position + new Vector3(-moveStep, 0, 0);
+            rb.MovePosition(newPosition);
+        }
 
-    void Hide()
-    {
-        material = renderer.material;
-        material.DOOffset(Vector3.down, 3).SetEase(Ease.Linear);
-    }
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            // 현재 위치에서 오른쪽 방향(양의 x축)으로 moveStep 만큼 이동
+            Vector3 newPosition = rb.position + new Vector3(0, moveStep, 0);
+            rb.MovePosition(newPosition);
+        }
 
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            // 현재 위치에서 오른쪽 방향(양의 x축)으로 moveStep 만큼 이동
+            Vector3 newPosition = rb.position + new Vector3(0, -moveStep, 0);
+            rb.MovePosition(newPosition);
+        }
+    }
 }

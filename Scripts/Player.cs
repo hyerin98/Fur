@@ -23,14 +23,15 @@ public class Player : MonoBehaviour
     public int userIndex;
     public bool isActive = false;
 
-    // 플레이어가 액션버튼을 눌러 떨어질 때
+    
     public Transform destination;
 
+    // 플레이어가 액션버튼을 눌러 떨어질 때
     public float fallDistance = 1f;
     public float fallTime = 1f;
 
-    bool isRight;
-    bool isLeft;
+    public float moveStep = 0.3f;
+    private Rigidbody rigid;
 
     // 4.15 추가
     public delegate void OnPlayerEnd(Player target);
@@ -41,6 +42,7 @@ public class Player : MonoBehaviour
         colorManager = FindObjectOfType<ColorManager>();
         //playerID = System.Guid.NewGuid().ToString();
         Anim = GetComponent<Animator>();
+        rigid = GetComponent<Rigidbody>();
     }
 
     void Start()
@@ -53,53 +55,66 @@ public class Player : MonoBehaviour
         if (downKeyCode == KeyCode.UpArrow)
         {
             //transform.DOMoveY(transform.position.y + moveSpeed, 1.0f).SetRelative();
+            Anim.SetTrigger("doUp");
         }
 
         else if (downKeyCode == KeyCode.DownArrow)
         {
-            transform.DOLocalMoveZ(-moveSpeed, .3f).SetRelative();
+            Anim.SetTrigger("doDown");
         }
         else if (downKeyCode == KeyCode.LeftArrow)
         {
-            //transform.DOLocalMoveX(-moveSpeed, .3f).SetRelative();
+            Anim.SetTrigger("doLeft");
 
         }
         else if (downKeyCode == KeyCode.RightArrow)
         {
-            //transform.DOLocalMoveX(moveSpeed, .3f).SetRelative();
+            Anim.SetTrigger("doRight");
         }
 
 
+        // 에디터에서 테스트
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            Vector3 newPosition = rigid.position + new Vector3(0, moveStep, 0);
+            rigid.MovePosition(newPosition);
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            Vector3 newPosition = rigid.position + new Vector3(0, -moveStep, 0);
+            rigid.MovePosition(newPosition);
+        }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            Anim.SetTrigger("doRight");
-
+            Vector3 newPosition = rigid.position + new Vector3(moveStep, 0, 0);
+            rigid.MovePosition(newPosition);
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            Anim.SetTrigger("doLeft");
+            Vector3 newPosition = rigid.position + new Vector3(-moveStep, 0, 0);
+            rigid.MovePosition(newPosition);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            transform.DOMoveY(transform.position.y + (-moveSpeed), 1.0f);
-            transform.DOShakeScale(1, 0.5f).SetEase(Ease.InOutFlash);
-            //LeanTween.move(gameObject, destination.position, 3f).setEase(LeanTweenType.easeOutBounce);
+            // transform.DOMoveY(transform.position.y + (-moveSpeed), 1.0f);
 
-            Vector3 targetPosition = transform.position + new Vector3(0f, -fallDistance, 0f);
-            LeanTween.move(gameObject, targetPosition, fallTime)
-                .setEase(LeanTweenType.easeOutBounce);
+            // Vector3 targetPosition = transform.position + new Vector3(0f, -fallDistance, 0f);
+            // LeanTween.move(gameObject, targetPosition, fallTime)
+            //     .setEase(LeanTweenType.easeOutQuint);
 
+            this.rigid.isKinematic = false;
+            isFalled = true;
         }
-
     }
 
     public void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Ground"))
+        if (other.gameObject.CompareTag("Ground") && isFalled) // 씬 오브젝트에 부모객체 콜라이더 추가하기
         {
-            //Debug.Log("땅에 닿았음");
-            isFalled = true;
+            Debug.Log("땅에 닿았음");
+            this.rigid.isKinematic = true;
+            isFalled = false;
         }
     }
 
@@ -107,27 +122,27 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag("Bone"))
         {
-            Anim.SetTrigger("doRight");
             Debug.Log("본에 닿았따");
+            //Anim.SetTrigger("doPlaying");
         }
     }
-
     public void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Bone"))
         {
-            Anim.SetTrigger("doRight");
-            Debug.Log("본에 닿는중");
+            //Anim.SetTrigger("doPlaying");
         }
     }
+
 
     public void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Bone"))
         {
-            Anim.SetBool("Right", false);
+            //Anim.SetBool("doPlaying", false);
         }
     }
+
 
     public void OnPlayerMoveProtocol(ProtocolType protocolType)
     {

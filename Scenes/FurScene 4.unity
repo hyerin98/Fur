@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (3)
@@ -215,6 +219,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (10)
@@ -296,6 +304,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (5)
@@ -517,7 +529,7 @@ Transform:
   - {fileID: 1802484532}
   - {fileID: 1130364126}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &190771256
 PrefabInstance:
@@ -526,6 +538,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (4)
@@ -606,6 +622,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (3)
@@ -686,6 +706,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (11)
@@ -785,7 +809,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &222303978
 MonoBehaviour:
@@ -807,6 +831,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (21)
@@ -887,6 +915,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (20)
@@ -967,6 +999,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (9)
@@ -1043,6 +1079,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (8)
@@ -1114,6 +1154,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (13)
@@ -1190,6 +1234,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (15)
@@ -1316,7 +1364,7 @@ Transform:
   - {fileID: 1039540169}
   - {fileID: 1814462983}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &584744370 stripped
 GameObject:
@@ -1367,7 +1415,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &595351324 stripped
 GameObject:
@@ -1381,6 +1429,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1053078022623772189, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -1465,6 +1517,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (9)
@@ -1536,6 +1592,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (1)
@@ -1701,7 +1761,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1001 &716887877
 PrefabInstance:
@@ -1710,6 +1770,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (17)
@@ -1790,6 +1854,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (7)
@@ -1870,6 +1938,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1
@@ -2035,7 +2107,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &885824040
 PrefabInstance:
@@ -2044,6 +2116,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (13)
@@ -2115,6 +2191,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (17)
@@ -2280,7 +2360,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &938658356
 GameObject:
@@ -2334,6 +2414,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (7)
@@ -2418,6 +2502,7 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
+  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2489,8 +2574,20 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &963194229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345cd0df3fff46c479153b11ca71290f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &967059778
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2500,7 +2597,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2846388330960879653, guid: f0a4947e95283da42b545f40bc401f0f, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2846388330960879653, guid: f0a4947e95283da42b545f40bc401f0f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2556,6 +2653,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (21)
@@ -2636,6 +2737,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (15)
@@ -2716,6 +2821,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (22)
@@ -2817,6 +2926,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (2)
@@ -2890,6 +3003,50 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
   m_PrefabInstance: {fileID: 1095957688}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1098465193
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1098465194}
+  - component: {fileID: 1098465195}
+  m_Layer: 0
+  m_Name: ScreenManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1098465194
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1098465193}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 21
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1098465195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1098465193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345cd0df3fff46c479153b11ca71290f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1098759686
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2897,6 +3054,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (4)
@@ -2977,6 +3138,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (19)
@@ -3057,6 +3222,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (23)
@@ -3147,6 +3316,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (12)
@@ -3233,7 +3406,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1847295062685022201, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1847295062685022201, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3284,6 +3457,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (6)
@@ -3364,6 +3541,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (8)
@@ -3440,6 +3621,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (18)
@@ -3526,23 +3711,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalScale.x
-      value: 70
+      value: 27.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalScale.z
-      value: 70
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.3
+      value: 1.52
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.5
+      value: 1.35
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 76.9
+      value: 8.2
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3580,6 +3769,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2282756078534926301, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926303, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -3599,23 +3792,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalScale.x
-      value: 70
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalScale.z
-      value: 70
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 30.9
+      value: 10.49
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.2
+      value: 1.65
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 43.5
+      value: 0.31
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3652,6 +3845,10 @@ PrefabInstance:
     - target: {fileID: 2282756078534926301, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2282756078534926301, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926303, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -3777,6 +3974,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (19)
@@ -3857,6 +4058,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (11)
@@ -3928,6 +4133,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (16)
@@ -4008,6 +4217,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (6)
@@ -4088,6 +4301,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (18)
@@ -4168,6 +4385,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (2)
@@ -4320,12 +4541,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1600706915}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.05, y: -17.01, z: -0.48}
+  m_LocalPosition: {x: 2.8, y: -6.97, z: -0.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1600706920
 MonoBehaviour:
@@ -4381,6 +4602,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (14)
@@ -4461,6 +4686,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (22)
@@ -4541,6 +4770,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (23)
@@ -4621,6 +4854,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (1)
@@ -4706,20 +4943,24 @@ PrefabInstance:
       value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 19.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalScale.z
-      value: 137.44373
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.79
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -24.9
+      value: -6.5
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 43.4
+      value: 2.27
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4757,6 +4998,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2282756078534926301, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926303, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -4770,6 +5015,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (14)
@@ -4850,6 +5099,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (16)
@@ -4930,6 +5183,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (12)
@@ -5001,6 +5258,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (10)
@@ -5160,7 +5421,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2033803841 stripped
 GameObject:
@@ -5218,7 +5479,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8865671968706495291, guid: db2d04d86556c62469e3afde50ab5520, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8865671968706495291, guid: db2d04d86556c62469e3afde50ab5520, type: 3}
       propertyPath: m_AnchorMax.x
@@ -5317,6 +5578,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 173459129}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (20)
@@ -5397,6 +5662,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 562098294}
     m_Modifications:
+    - target: {fileID: -6447265469641953897, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847295062685021696, guid: ad3ee366580e25846b8d9eb4a61caecb, type: 3}
       propertyPath: m_Name
       value: furrigging4 1 (5)
@@ -5483,23 +5752,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalScale.x
-      value: 70
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalScale.z
-      value: 70
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -33.9
+      value: -9.4
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.2
+      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 43.5
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5537,6 +5806,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2282756078534926301, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 2282756078534926303, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -5552,7 +5825,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 916561085948508090, guid: 8d2a533afda602b4ab26be2e00b62939, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 916561085948508090, guid: 8d2a533afda602b4ab26be2e00b62939, type: 3}
       propertyPath: m_LocalPosition.x

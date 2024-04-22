@@ -108,145 +108,166 @@ public class PlayerSelector : MonoBehaviour
 
     private void OnAddUser(PlayerData playerData)
     {
-         ColorManager colorManager = ColorManager.instance;
-    playerData.color_id = colorManager.AssignUserColor();
-    int userIndex = colorManager.GetUserIndex();
-    playerData.player_index = userIndex;
+        ColorManager colorManager = ColorManager.instance;
+        playerData.color_id = colorManager.AssignUserColor();
+        int userIndex = colorManager.GetUserIndex();
+        playerData.player_index = userIndex;
 
-    Player targetPlayer;
-     //Player playerComponent = availableObject.GetComponent<Player>(); // 4.21 추가
+        Player targetPlayer;
+        //Player playerComponent = availableObject.GetComponent<Player>(); // 4.21 추가
 
-    GameObject assignedObject = GetAvailableGameObject();
-    if (assignedObject == null)
-    {
-        Debug.Log("씬에 할당 가능한 오브젝트가 없습니다.");
-        return;
-    }
+        GameObject assignedObject = GetAvailableGameObject();
+        if (assignedObject == null)
+        {
+            Debug.Log("씬에 할당 가능한 오브젝트가 없습니다.");
+            return;
+        }
 
-    // 이미 색상이 변경되지 않은 오브젝트를 찾아 할당
-    GameObject availableObject = GetAvailableGameObjectExcludingChangedColors();
-    if (availableObject == null)
-    {
-        Debug.Log("변경되지 않은 색상의 오브젝트를 찾을 수 없습니다.");
-        return;
-    }
+        // 이미 색상이 변경되지 않은 오브젝트를 찾아 할당
+        GameObject availableObject = GetAvailableGameObjectExcludingChangedColors();
+        if (availableObject == null)
+        {
+            Debug.Log("변경되지 않은 색상의 오브젝트를 찾을 수 없습니다.");
+            return;
+        }
 
-    // 이미 존재하는 오브젝트 중 하나를 할당
-    Renderer renderer = availableObject.GetComponent<Renderer>();
-    if (renderer != null)
-    {
-        Material material = renderer.material;
+        // 이미 존재하는 오브젝트 중 하나를 할당
+        // Renderer renderer = availableObject.GetComponent<Renderer>();
+        // if (renderer != null)
+        // {
+        //     Material material = renderer.material;
+        //     Color color;
+        //     if (UnityEngine.ColorUtility.TryParseHtmlString("#" + playerData.color_id, out color))
+        //     {
+        //         material.color = color;
+        //         StartCoroutine(ChangeColorGradually(renderer, color, 10f));
+        //         // 변경된 색상을 추적하기 위해 HashSet에 추가
+        //         changedColors.Add(color);
+        //     }
+        //     else
+        //     {
+        //         Debug.LogError("컬러 생성 안댐: " + playerData.color_id);
+        //     }
+        // }
+        //-------------------------------------------------------------------
+        Renderer[] renderers = availableObject.GetComponentsInChildren<Renderer>(true);
         Color color;
         if (UnityEngine.ColorUtility.TryParseHtmlString("#" + playerData.color_id, out color))
         {
-            material.color = color;
-            StartCoroutine(ChangeColorGradually(renderer, color, 3f));
+            foreach (Renderer renderer in renderers)
+            {
+                Material material = renderer.material;
+                material.color = color;
+                StartCoroutine(ChangeColorGradually(renderer, color, 10f));
+            }
             // 변경된 색상을 추적하기 위해 HashSet에 추가
             changedColors.Add(color);
         }
         else
         {
-            Debug.LogError("컬러 생성 안댐: " + playerData.color_id);
+            Debug.LogError("컬러 생성 안됨: " + playerData.color_id);
         }
+
+        //-------------------------------------------------------------------
+
+        // 플레이어 정보 설정
+        targetPlayer = availableObject.GetComponent<Player>();
+        targetPlayer.playerID = playerData.color_id;
+        targetPlayer.SetPlayerColor(playerData.color_id);
+        targetPlayer.SetUserIndex(playerData.player_index);
+
+
+        // 유저 접속 시 효과 수정필
+        targetPlayer.transform.DOScale(0.8f, 0.7f).SetEase(ease); // 0.8크기로 2초안에 변한다
+        //targetPlayer.transform.DOShakeScale(1, 1).SetEase(ease);
+
+        players.Add(playerData.color_id, targetPlayer);
+
+        Debug.Log("추가된 유저의 컬러값 : " + playerData.color_id + " : " + targetPlayer.GetInstanceID());
+        Debug.Log("추가된 유저 인덱스 :" + playerData.player_index);
+
+        // 플레이어 정보 설정 4.21 추가
+        // if (playerComponent != null)
+        //     {
+        //         playerComponent.isActive = true;
+        //         playerComponent.playerID = playerData.color_id;
+        //         playerComponent.SetPlayerColor(playerData.color_id);
+        //         playerComponent.SetUserIndex(playerData.player_index);
+        //         players.Add(playerData.color_id, playerComponent);
+        //     }
     }
 
-    // 플레이어 정보 설정
-    targetPlayer = availableObject.GetComponent<Player>();
-    targetPlayer.playerID = playerData.color_id;
-    targetPlayer.SetPlayerColor(playerData.color_id);
-    targetPlayer.SetUserIndex(playerData.player_index);
-
-    targetPlayer.transform.DOScale(1, 1).SetEase(ease);
-    targetPlayer.transform.DOShakeScale(1, 1).SetEase(ease);
-
-    players.Add(playerData.color_id, targetPlayer);
-
-    Debug.Log("추가된 유저의 컬러값 : " + playerData.color_id + " : " + targetPlayer.GetInstanceID());
-    Debug.Log("추가된 유저 인덱스 :" + playerData.player_index);
-
-    // 플레이어 정보 설정 4.21 추가
-    // if (playerComponent != null)
-    //     {
-    //         playerComponent.isActive = true;
-    //         playerComponent.playerID = playerData.color_id;
-    //         playerComponent.SetPlayerColor(playerData.color_id);
-    //         playerComponent.SetUserIndex(playerData.player_index);
-    //         players.Add(playerData.color_id, playerComponent);
-    //     }
-}
-
-// 이미 변경된 색상이 아닌 오브젝트를 반환하는 메서드
-private GameObject GetAvailableGameObjectExcludingChangedColors()
-{
-    List<GameObject> availableObjects = new List<GameObject>();
-
-    foreach (GameObject obj in gameObjects)
+    // 이미 변경된 색상이 아닌 오브젝트를 반환하는 메서드
+    private GameObject GetAvailableGameObjectExcludingChangedColors()
     {
-        Renderer renderer = obj.GetComponent<Renderer>();
-        if (renderer != null)
+        List<GameObject> availableObjects = new List<GameObject>();
+
+        foreach (GameObject obj in gameObjects)
         {
-            Material material = renderer.material;
-            Color objectColor = material.color;
-            if (!changedColors.Contains(objectColor)) // 변경된 색상이 아닌 경우에만 추가
+            Renderer renderer = obj.GetComponent<Renderer>();
+            if (renderer != null)
             {
-                Player playerComponent = obj.GetComponent<Player>();
-                if (playerComponent != null && playerComponent.isActive)
+                Material material = renderer.material;
+                Color objectColor = material.color;
+                if (!changedColors.Contains(objectColor)) // 변경된 색상이 아닌 경우에만 추가
                 {
-                    availableObjects.Add(obj);
+                    Player playerComponent = obj.GetComponent<Player>();
+                    if (playerComponent != null && playerComponent.isActive)
+                    {
+                        availableObjects.Add(obj);
+                    }
                 }
             }
         }
-    }
 
-    if (availableObjects.Count > 0)
-    {
-        int randomIndex = UnityEngine.Random.Range(0, availableObjects.Count);
-        Player playerComponent = availableObjects[randomIndex].GetComponent<Player>();
-        if (playerComponent != null)
+        if (availableObjects.Count > 0)
         {
-            playerComponent.isActive = true;
-            return availableObjects[randomIndex];
+            int randomIndex = UnityEngine.Random.Range(0, availableObjects.Count);
+            Player playerComponent = availableObjects[randomIndex].GetComponent<Player>();
+            if (playerComponent != null)
+            {
+                playerComponent.isActive = true;
+                return availableObjects[randomIndex];
+            }
         }
-    }
-    return null;
+        return null;
     }
 
 
     public GameObject GetAvailableGameObject()
-{
-    List<GameObject> availableObjects = new List<GameObject>();
-
-    foreach (GameObject obj in gameObjects)
     {
-        Renderer renderer = obj.GetComponent<Renderer>();
-        if (renderer != null)
+        List<GameObject> availableObjects = new List<GameObject>();
+
+        foreach (GameObject obj in gameObjects)
         {
-            Material material = renderer.material;
-            Color objectColor = material.color;
-            if (!changedColors.Contains(objectColor)) // 변경된 색상이 아닌 경우에만 추가
+            Renderer renderer = obj.GetComponent<Renderer>();
+            if (renderer != null)
             {
-                Player playerComponent = obj.GetComponent<Player>();
-                if (playerComponent != null && playerComponent.isActive) 
+                Material material = renderer.material;
+                Color objectColor = material.color;
+                if (!changedColors.Contains(objectColor)) // 변경된 색상이 아닌 경우에만 추가
                 {
-                    availableObjects.Add(obj);
+                    Player playerComponent = obj.GetComponent<Player>();
+                    if (playerComponent != null && playerComponent.isActive)
+                    {
+                        availableObjects.Add(obj);
+                    }
                 }
             }
         }
-    }
 
-    if (availableObjects.Count > 0)
-    {
-        int randomIndex = UnityEngine.Random.Range(0, availableObjects.Count);
-        Player playerComponent = availableObjects[randomIndex].GetComponent<Player>();
-        if (playerComponent != null)
+        if (availableObjects.Count > 0)
         {
-            playerComponent.isActive = true;
-            return availableObjects[randomIndex];
+            int randomIndex = UnityEngine.Random.Range(0, availableObjects.Count);
+            Player playerComponent = availableObjects[randomIndex].GetComponent<Player>();
+            if (playerComponent != null)
+            {
+                playerComponent.isActive = true;
+                return availableObjects[randomIndex];
+            }
         }
+        return null;
     }
-    return null;
-}
-
 
     private IEnumerator ChangeColorGradually(Renderer renderer, Color targetColor, float duration)
     {
