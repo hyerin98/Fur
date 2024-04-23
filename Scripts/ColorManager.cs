@@ -13,7 +13,7 @@ public class ColorManager : MonoSingleton<ColorManager>
     private List<string> assignedColors;
     public Dictionary<string, Player> players = new Dictionary<string, Player>();
     public int maxUsers;
-    private int userIndex; 
+    public int userIndex; 
 
     // 색 할당
     private float minSaturation = 0.2f;
@@ -24,7 +24,7 @@ public class ColorManager : MonoSingleton<ColorManager>
     
     void Start()
     {
-        maxUsers = 50;
+        maxUsers = 10;
         availableColors = GenerateRandomColors(maxUsers);
         assignedColors = new List<string>(); 
     }
@@ -56,7 +56,7 @@ public class ColorManager : MonoSingleton<ColorManager>
         {
             // 랜덤한 HSV 범위에서 색상을 생성합니다.
             color = Random.ColorHSV(0f, 1f, minSaturation, maxSaturation, minBrightness, maxBrightness);
-        } while (IsColorTooDark(color)); // 생성된 색상이 너무 어두운지 확인합니다.
+        } while (IsColorTooDark(color)); // 생성된 색상이 너무 어두운지 확인
 
         return ColorUtility.ToHtmlStringRGB(color);
     
@@ -64,9 +64,9 @@ public class ColorManager : MonoSingleton<ColorManager>
 
      bool IsColorTooDark(Color color)
     {
-        // 색상의 밝기를 계산합니다.
+        // 색상의 밝기를 계산
         float brightness = color.r * 0.299f + color.g * 0.587f + color.b * 0.114f;
-        // 만약 밝기가 너무 낮다면 어두운 색상으로 판단합니다.
+        // 만약 밝기가 너무 낮다면 어두운 색상으로 판단
         return brightness < 0.5f;
     }
 

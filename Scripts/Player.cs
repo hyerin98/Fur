@@ -12,7 +12,6 @@ using UnityEngine.UIElements;
 public class Player : MonoBehaviour
 {
     [SerializeField] private Animator Anim = null;
-    [SerializeField] private float moveSpeed = .01f;
     private ColorManager colorManager;
 
     private KeyCode downKeyCode = 0;
@@ -33,29 +32,33 @@ public class Player : MonoBehaviour
     public float moveStep = 0.3f;
     private Rigidbody rigid;
 
-    public GameObject childWithHinge; 
     private HingeJoint hinge;
 
     // 4.15 추가
     public delegate void OnPlayerEnd(Player target);
     public event OnPlayerEnd onPlayerEnd;
 
-    public void Awake()
+    Vector3 originalPos;
+    Vector3 rotateAngle;
+    Vector3 originalRotation;
+    public float rotateSpeed = 5f;
+
+    public Ease ease;
+
+    private void Awake()
     {
         colorManager = FindObjectOfType<ColorManager>();
         //playerID = System.Guid.NewGuid().ToString();
         Anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
+        //rigid.sleepThreshold=0;
     }
 
     void Start()
     {
         PlayerStart();
-
-         if (childWithHinge != null)
-        {
-            hinge = childWithHinge.GetComponent<HingeJoint>();
-        }
+        originalPos = transform.position;
+        originalRotation = transform.localEulerAngles;
     }
 
     private void Update()
@@ -84,33 +87,45 @@ public class Player : MonoBehaviour
         // 에디터에서 테스트
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            Vector3 newPosition = rigid.position + new Vector3(0, moveStep, 0);
-            rigid.MovePosition(newPosition);
+            transform.DOMoveY(originalPos.y + 0.5f, 0.5f).SetEase(ease)
+            .OnComplete(() => 
+            {
+                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
+            });
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Vector3 newPosition = rigid.position + new Vector3(0, -moveStep, 0);
-            rigid.MovePosition(newPosition);
+            transform.DOMoveY(originalPos.y - 0.5f, 0.5f).SetEase(ease)
+            .OnComplete(() =>
+            {
+                transform.DOMoveY(originalPos.y , 1).SetEase(ease);
+            });
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            Vector3 newPosition = rigid.position + new Vector3(moveStep, 0, 0);
-            rigid.MovePosition(newPosition);
+            rigid.rotation = Quaternion.Euler(0, 0,45f);
+
+            //  transform.DORotate(-rotateAngle, 0.5f).SetEase(ease)
+            // .OnComplete(() =>
+            // {
+            //     // 원래 각도로 돌아오기
+            //     transform.DORotate(originalRotation, 1).SetEase(ease);
+            // });
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            Vector3 newPosition = rigid.position + new Vector3(-moveStep, 0, 0);
-            rigid.MovePosition(newPosition);
+            rigid.rotation = Quaternion.Euler(0, 0,-45f);
+
+            // transform.DORotate(-rotateAngle, 0.5f).SetEase(ease)
+            // .OnComplete(() =>
+            // {
+            //     // 원래 각도로 돌아오기
+            //     transform.DORotate(originalRotation, 1).SetEase(ease);
+            // });
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            // transform.DOMoveY(transform.position.y + (-moveSpeed), 1.0f);
-
-            // Vector3 targetPosition = transform.position + new Vector3(0f, -fallDistance, 0f);
-            // LeanTween.move(gameObject, targetPosition, fallTime)
-            //     .setEase(LeanTweenType.easeOutQuint);
-
             this.rigid.isKinematic = false;
             isFalled = true;
         }
@@ -123,6 +138,7 @@ public class Player : MonoBehaviour
             Debug.Log("땅에 닿았음");
             this.rigid.isKinematic = true;
             isFalled = false;
+            RemovePlayer();
         }
 
         if (other.gameObject.CompareTag("Ground"))
@@ -131,38 +147,12 @@ public class Player : MonoBehaviour
             foreach (var hinge in GetComponentsInChildren<HingeJoint>())
             {
                 Destroy(hinge);
-                Destroy(this);
+                PlayerEnd(); // 플레이어 삭제
             }
 
             // 충돌 시 시각적 효과가 필요하면 여기에 코드 추가
         }
     }
-
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Bone"))
-        {
-            Debug.Log("본에 닿았따");
-            //Anim.SetTrigger("doPlaying");
-        }
-    }
-    public void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("Bone"))
-        {
-            //Anim.SetTrigger("doPlaying");
-        }
-    }
-
-
-    public void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Bone"))
-        {
-            //Anim.SetBool("doPlaying", false);
-        }
-    }
-
 
     public void OnPlayerMoveProtocol(ProtocolType protocolType)
     {
