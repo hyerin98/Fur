@@ -1343,19 +1343,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2be73028fb688e043a6e64f0509fdc34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjects:
-  - {fileID: 2125493624}
-  - {fileID: 1153691943}
-  - {fileID: 972588399}
-  - {fileID: 1646345176}
-  - {fileID: 2050640}
-  - {fileID: 603942973}
-  - {fileID: 203717394}
-  - {fileID: 1959074106}
-  - {fileID: 139909472}
-  - {fileID: 1600266586}
   ease: 23
-  minDistanceBetweenPositions: 1
+  furs: []
+  furPositions: []
+  furPrefab: {fileID: 0}
 --- !u!4 &148409301
 Transform:
   m_ObjectHideFlags: 0
@@ -10760,7 +10751,9 @@ MonoBehaviour:
   fallDistance: 1
   fallTime: 1
   moveStep: 0.3
+  rotateSpeed: 5
   ease: 0
+  destroyEffect: {fileID: 0}
 --- !u!1001 &1695082104
 PrefabInstance:
   m_ObjectHideFlags: 0

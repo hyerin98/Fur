@@ -39,11 +39,11 @@ public class Player : MonoBehaviour
     public event OnPlayerEnd onPlayerEnd;
 
     Vector3 originalPos;
-    Vector3 rotateAngle;
-    Vector3 originalRotation;
     public float rotateSpeed = 5f;
 
     public Ease ease;
+
+    public GameObject destroyEffect;
 
     private void Awake()
     {
@@ -58,11 +58,12 @@ public class Player : MonoBehaviour
     {
         PlayerStart();
         originalPos = transform.position;
-        originalRotation = transform.localEulerAngles;
+        destroyEffect.SetActive(false);
     }
 
     private void Update()
     {
+        
         if (downKeyCode == KeyCode.UpArrow)
         {
             //transform.DOMoveY(transform.position.y + moveSpeed, 1.0f).SetRelative();
@@ -139,6 +140,7 @@ public class Player : MonoBehaviour
             this.rigid.isKinematic = true;
             isFalled = false;
             RemovePlayer();
+            destroyEffect.SetActive(true);
         }
 
         if (other.gameObject.CompareTag("Ground"))
@@ -148,6 +150,7 @@ public class Player : MonoBehaviour
             {
                 Destroy(hinge);
                 PlayerEnd(); // 플레이어 삭제
+                
             }
 
             // 충돌 시 시각적 효과가 필요하면 여기에 코드 추가
