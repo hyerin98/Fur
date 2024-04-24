@@ -1,74 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using IMFINE.Utils;
+using IMFINE.Utils.ConfigManager;
+using IMFINE.Utils.JoyStream.Communicator;
+using UnityEngine.UIElements;
 
-public class FurManager : MonoBehaviour
+public class FurManager : MonoSingleton<FurManager>
 {
-    public static FurManager instance;
-
-
-    public GameObject playerPrefab;
-
-
-    private List<Color> usedColors = new List<Color>();
-
-    void Start()
+    public List<GameObject> furs = new List<GameObject>();
+    public List<Vector3> furPositions = new List<Vector3>(); // 오브젝트 위치를 저장하는 리스트
+    PlayerSelector playerSelector;
+    void Update()
     {
-        // 싱글톤 인스턴스 초기화
-        if (instance == null)
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    // 새로운 플레이어를 생성하는 메서드
-    public void CreatePlayer()
-    {
-        // 플레이어에 무작위 색상 생성
-        Color randomColor = GetRandomColor();
-
-        // 플레이어 프리팹을 인스턴스화
-        GameObject newPlayer = Instantiate(playerPrefab, RandomPosition(), Quaternion.identity);
-
-        // 플레이어 재료 색상 설정
-        Renderer renderer = newPlayer.GetComponentInChildren<Renderer>();
-        if (renderer != null)
-        {
-            renderer.material.color = randomColor;
+            DestroyOneFur();
         }
 
-
-        // Player playerScript = newPlayer.GetComponent<Player>();
-        // if (playerScript != null)
-        // {
-        //     // 플레이어 데이터 생성 및 설정
-        //     PlayerData playerData = new PlayerData(System.Guid.NewGuid().ToString(), usedColors.Count + 1);
-        //     playerScript.playerData = playerData;
-        // }
-
-        // 사용된 색상을 목록에 추가
-        usedColors.Add(randomColor);
+        playerSelector = GetComponent<PlayerSelector>();
     }
 
-    // 아직 사용되지 않은 무작위 색상을 가져오는 메서드
-    private Color GetRandomColor()
+    void DestroyOneFur()
     {
-        // 무작위 색상 생성
-        Color randomColor;
-        do
+        if (furs.Count > 0)
         {
-            randomColor = new Color(Random.value, Random.value, Random.value);
-        } while (usedColors.Contains(randomColor));
-        return randomColor;
+            // 리스트에서 첫 번째 오브젝트를 찾아서 삭제
+            GameObject furToDestroy = furs[0];
+            furs.RemoveAt(0);
+            Vector3 positionOfDestroyed = furToDestroy.transform.position; // 삭제될 오브젝트의 위치를 저장
+            Destroy(furToDestroy);
+
+            // 일정 시간 후에 오브젝트를 다시 생성
+            StartCoroutine(RespawnFur(positionOfDestroyed));
+        }
     }
 
-    // 플레이어 스폰을 위한 무작위 위치를 가져오는 메서드
-    private Vector3 RandomPosition()
-    {
-        return new Vector3(Random.Range(-10f, 10f), Random.Range(-5f, 5f), Random.Range(-10f, 10f));
+    void FurCAssignedColor()
+    {   
+        
     }
+
+    IEnumerator RespawnFur(Vector3 position)
+    {
+        // 여기서 3초 기다립니다. 필요에 따라 시간을 조절하세요.
+        yield return new WaitForSeconds(3.0f);
+
+        // 다시 오브젝트를 생성합니다. `furPrefab`은 인스펙터에서 할당받은 프리팹을 가정합니다.
+        GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
+        furs.Add(newFur); // 생성된 오브젝트를 리스트에 추가
+    }
+
+    // 프리팹을 위한 참조입니다.
+    public GameObject furPrefab;
+    
 }
