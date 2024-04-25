@@ -1,0 +1,15 @@
+private void OnAddUser(PlayerData playerData)
+{
+    List<int> availableFur = Enumerable.Range(0, furs.Count).Where(i => !usedFur.Contains(i)).ToList();
+    if (availableFur.Count == 0)
+    {
+        Debug.LogError("사용가능한 fur이 없다");
+        return; // 여기서 함수 종료
+    }
+
+    int randomIndex = UnityEngine.Random.Range(0, availableFur.Count);
+    int furIndex = availableFur[randomIndex];
+    GameObject assignedObject = furs[furIndex];
+
+    // 이하 코드는 변경 없음
+}
