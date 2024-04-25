@@ -63,32 +63,32 @@ public float currentRotation = 0f; // 현재 회전 각도
     private void Update()
     {
 
-        if (downKeyCode == KeyCode.UpArrow)
-        {
-            transform.DOMoveY(originalPos.y + 0.5f, 0.5f).SetEase(ease)
-            .OnComplete(() =>
-            {
-                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-            });
-        }
+        // if (downKeyCode == KeyCode.UpArrow)
+        // {
+        //     transform.DOMoveY(originalPos.y + 0.5f, 0.5f).SetEase(ease)
+        //     .OnComplete(() =>
+        //     {
+        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
+        //     });
+        // }
 
-        else if (downKeyCode == KeyCode.DownArrow)
-        {
-            transform.DOMoveY(originalPos.y - 0.5f, 0.5f).SetEase(ease)
-            .OnComplete(() =>
-            {
-                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-            });
-        }
-        else if (downKeyCode == KeyCode.LeftArrow)
-        {
-            rigid.rotation = Quaternion.Euler(0, 0, 50f);
+        // else if (downKeyCode == KeyCode.DownArrow)
+        // {
+        //     transform.DOMoveY(originalPos.y - 0.5f, 0.5f).SetEase(ease)
+        //     .OnComplete(() =>
+        //     {
+        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
+        //     });
+        // }
+        // else if (downKeyCode == KeyCode.LeftArrow)
+        // {
+        //     rigid.rotation = Quaternion.Euler(0, 0, 50f);
 
-        }
-        else if (downKeyCode == KeyCode.RightArrow)
-        {
-            rigid.rotation = Quaternion.Euler(0, 0, -50f);
-        }
+        // }
+        // else if (downKeyCode == KeyCode.RightArrow)
+        // {
+        //     rigid.rotation = Quaternion.Euler(0, 0, -50f);
+        // }
 
 
         // 에디터에서 테스트
