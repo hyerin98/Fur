@@ -8,42 +8,41 @@ using IMFINE.Utils.JoyStream.Communicator;
 using Unity.VisualScripting;
 using System;
 using UnityEngine.UIElements;
+using Unity.Mathematics;
 
 public class Player : MonoBehaviour
 {
+    [Header("Settings")]
     [SerializeField] private Animator Anim = null;
     private ColorManager colorManager;
-
     private KeyCode downKeyCode = 0;
+    private Rigidbody rigid;
+    public delegate void OnPlayerEnd(Player target);
+    public event OnPlayerEnd onPlayerEnd;
+    public Transform destination;
 
+    [Header("Bool")]
     public bool isFalled = false;
+    public bool isActive = false;
+
+    [Header("String & Int")]
     public string playerColor;
     public string playerID;
     public int userIndex;
-    public bool isActive = false;
 
-    
-    public Transform destination;
-
-    // 플레이어가 액션버튼을 눌러 떨어질 때
+    [Header("PlayerMovement")]
+    Vector3 originalPos;
     public float fallDistance = 1f;
     public float fallTime = 1f;
-
     public float moveStep = 0.3f;
-    private Rigidbody rigid;
-
-    private HingeJoint hinge;
-
-    // 4.15 추가
-    public delegate void OnPlayerEnd(Player target);
-    public event OnPlayerEnd onPlayerEnd;
-
-    Vector3 originalPos;
     public float rotateSpeed = 5f;
 
-    public Ease ease;
+    public float rotationAmount = 50f; // 한 번에 회전할 각도
+public float currentRotation = 0f; // 현재 회전 각도
 
-    public GameObject destroyEffect;
+
+    [Header("DOTween")]
+    public Ease ease;
 
     private void Awake()
     {
@@ -52,36 +51,43 @@ public class Player : MonoBehaviour
         Anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
         //rigid.sleepThreshold=0;
+        
     }
 
     void Start()
     {
         PlayerStart();
         originalPos = transform.position;
-        destroyEffect.SetActive(false);
     }
 
     private void Update()
     {
-        
+
         if (downKeyCode == KeyCode.UpArrow)
         {
-            //transform.DOMoveY(transform.position.y + moveSpeed, 1.0f).SetRelative();
-            Anim.SetTrigger("doUp");
+            transform.DOMoveY(originalPos.y + 0.5f, 0.5f).SetEase(ease)
+            .OnComplete(() =>
+            {
+                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
+            });
         }
 
         else if (downKeyCode == KeyCode.DownArrow)
         {
-            Anim.SetTrigger("doDown");
+            transform.DOMoveY(originalPos.y - 0.5f, 0.5f).SetEase(ease)
+            .OnComplete(() =>
+            {
+                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
+            });
         }
         else if (downKeyCode == KeyCode.LeftArrow)
         {
-            Anim.SetTrigger("doLeft");
+            rigid.rotation = Quaternion.Euler(0, 0, 50f);
 
         }
         else if (downKeyCode == KeyCode.RightArrow)
         {
-            Anim.SetTrigger("doRight");
+            rigid.rotation = Quaternion.Euler(0, 0, -50f);
         }
 
 
@@ -89,7 +95,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             transform.DOMoveY(originalPos.y + 0.5f, 0.5f).SetEase(ease)
-            .OnComplete(() => 
+            .OnComplete(() =>
             {
                 transform.DOMoveY(originalPos.y, 1).SetEase(ease);
             });
@@ -99,30 +105,16 @@ public class Player : MonoBehaviour
             transform.DOMoveY(originalPos.y - 0.5f, 0.5f).SetEase(ease)
             .OnComplete(() =>
             {
-                transform.DOMoveY(originalPos.y , 1).SetEase(ease);
+                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
             });
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            rigid.rotation = Quaternion.Euler(0, 0,45f);
-
-            //  transform.DORotate(-rotateAngle, 0.5f).SetEase(ease)
-            // .OnComplete(() =>
-            // {
-            //     // 원래 각도로 돌아오기
-            //     transform.DORotate(originalRotation, 1).SetEase(ease);
-            // });
+            rigid.rotation = Quaternion.Euler(0, 0, -50f);
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            rigid.rotation = Quaternion.Euler(0, 0,-45f);
-
-            // transform.DORotate(-rotateAngle, 0.5f).SetEase(ease)
-            // .OnComplete(() =>
-            // {
-            //     // 원래 각도로 돌아오기
-            //     transform.DORotate(originalRotation, 1).SetEase(ease);
-            // });
+            rigid.rotation = Quaternion.Euler(0, 0, 50f);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -132,28 +124,19 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Ground") && isFalled) // 씬 오브젝트에 부모객체 콜라이더 추가하기
+        if(other.gameObject.CompareTag("Ground") && isFalled)
         {
-            Debug.Log("땅에 닿았음");
-            this.rigid.isKinematic = true;
+            Debug.Log("바닥과 충~돌");
+            rigid.isKinematic = true;
             isFalled = false;
-            RemovePlayer();
-            destroyEffect.SetActive(true);
-        }
 
-        if (other.gameObject.CompareTag("Ground"))
-        {
-            // 이 오브젝트 및 모든 자식 오브젝트에서 HingeJoint 컴포넌트를 찾아 제거
-            foreach (var hinge in GetComponentsInChildren<HingeJoint>())
+            foreach(var hinge in GetComponentsInChildren<HingeJoint>())
             {
                 Destroy(hinge);
-                PlayerEnd(); // 플레이어 삭제
-                
             }
-
-            // 충돌 시 시각적 효과가 필요하면 여기에 코드 추가
+            RemovePlayer();
         }
     }
 

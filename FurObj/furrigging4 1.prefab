@@ -54,13 +54,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1847295061104734778}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -0, y: 0, z: 0.8}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.8000001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1847295060959183055}
-  m_Father: {fileID: 1847295062144267706}
+  m_Father: {fileID: 1847295062685022201}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1847295061368523832
@@ -302,39 +302,6 @@ CapsuleCollider:
   m_Height: 1.4397007
   m_Direction: 1
   m_Center: {x: -0.001083985, y: -0.2198499, z: 0.000000059904366}
---- !u!1 &1847295062144267707
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1847295062144267706}
-  m_Layer: 0
-  m_Name: Fur
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1847295062144267706
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1847295062144267707}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1847295061104734773}
-  - {fileID: 1847295062314080746}
-  m_Father: {fileID: 1847295062685022201}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1847295062205184728
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,12 +327,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1847295062205184728}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1847295062685022201}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!137 &1847295062205184730
 SkinnedMeshRenderer:
@@ -451,13 +418,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1847295062314080747}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -0, y: 0, z: 0.8}
+  m_LocalRotation: {x: -1, y: -0, z: -0, w: -0.00000014901163}
+  m_LocalPosition: {x: 0, y: 0.8000001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1847295061368523835}
-  m_Father: {fileID: 1847295062144267706}
+  m_Father: {fileID: 1847295062685022201}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1847295062473572979
@@ -504,7 +471,6 @@ GameObject:
   - component: {fileID: 1847295062685022207}
   - component: {fileID: 1847295062685021698}
   - component: {fileID: 1053078022623772189}
-  - component: {fileID: 187817836291254159}
   - component: {fileID: -6447265469641953897}
   m_Layer: 0
   m_Name: furrigging4 1
@@ -525,7 +491,8 @@ Transform:
   m_LocalScale: {x: 1.2, y: 1.5, z: 1.2}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1847295062144267706}
+  - {fileID: 1847295061104734773}
+  - {fileID: 1847295062314080746}
   - {fileID: 1847295062205184731}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -539,8 +506,8 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1847295062685021696}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 78c2523da3510514d83b3f57878a0c5f, type: 3}
-  m_Controller: {fileID: 9100000, guid: 2231a38fd0d4b5f4cbe8d2b7c89652ab, type: 2}
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 157f4187ce517b44d8944006f9389329, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -624,15 +591,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Anim: {fileID: 0}
-  moveSpeed: 5
+  destination: {fileID: 0}
   isFalled: 0
+  isActive: 0
   playerColor: 
   playerID: 
   userIndex: 0
-  isActive: 0
-  destination: {fileID: 2282756078534926297, guid: 7d7d64cf1153866478c7e5781780d774, type: 3}
   fallDistance: 1
   fallTime: 0.5
+  moveStep: 0.3
+  rotateSpeed: 5
+  ease: 0
 --- !u!136 &1053078022623772189
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -647,36 +616,6 @@ CapsuleCollider:
   m_Height: 2.3939621
   m_Direction: 1
   m_Center: {x: 0, y: -0.0072166324, z: 0.00000007324624}
---- !u!114 &187817836291254159
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1847295062685021696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2d8418b0b9634b1892b0268dd9c2743, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boneShape: 1
-  drawBones: 1
-  drawTripods: 0
-  boneSize: 5
-  tripodSize: 1
-  boneColor: {r: 0, g: 0, b: 1, a: 0.5}
-  m_Transforms:
-  - {fileID: 1847295061104734773}
-  - {fileID: 1847295060959183055}
-  - {fileID: 1847295062314080746}
-  - {fileID: 1847295061368523835}
-  - {fileID: 1847295061638336998}
-  - {fileID: 1847295061734372440}
-  - {fileID: 1847295061400300215}
-  - {fileID: 1847295061986382406}
-  - {fileID: 1847295061858703910}
-  - {fileID: 1847295061645470175}
-  - {fileID: 1847295062473572978}
 --- !u!54 &-6447265469641953897
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -13,22 +13,25 @@ using Unity.VisualScripting;
 
 public class PlayerSelector : MonoBehaviour
 {
+    [Header("Settings")]
     private Dictionary<string, Player> players = new Dictionary<string, Player>();
-
-    public Ease ease;
-
     public HashSet<Color> changedColors = new HashSet<Color>(); // 변경된 색상을 추적하기 위한 HashSet
-
-    public List<GameObject> furs = new List<GameObject>();
-    public List<Vector3> furPositions = new List<Vector3>();
+    public List<GameObject> furs = new List<GameObject>(); // 색을 할당받을 털 리스트
+    public List<Vector3> furPositions = new List<Vector3>(); // 삭제 후 다시 생기기위한 털위치 리스트
     private HashSet<int> usedFur = new HashSet<int>();
-    public GameObject furPrefab;
 
+
+    [Header("DOtween & GameObject & Bool")]
+    public Ease ease;
+    public GameObject furPrefab;
+    public bool isSpawn;
+    [SerializeField] AnimationCurve curve;
 
     private void Awake()
     {
         ProtocolManager.instance.onWebControllerEvent += OnWebControllerEvent;
         ProtocolManager.instance.onUserConnectEvent += OnUserConnectEvent;
+        isSpawn = false;
     }
 
 
@@ -108,8 +111,7 @@ public class PlayerSelector : MonoBehaviour
 
     private void OnAddUser(PlayerData playerData)
     {
-        // 사용 가능한 플레이어 슬롯이 남아있는지 확인
-        if (players.Count >= furs.Count)
+        if (players.Count >= furs.Count) // 사용 가능한 플레이어 슬롯이 남아있는지 확인
         {
             Debug.Log("모든 플레이어가 들어가있다. 더 이상 유저를 추가안댐");
             return;
@@ -117,11 +119,7 @@ public class PlayerSelector : MonoBehaviour
 
         ColorManager colorManager = ColorManager.instance;
         playerData.color_id = colorManager.AssignUserColor();
-        if (playerData.color_id == null)
-        {
-            Debug.Log("할당 가능한 컬러가 없음. 유저를 접속 안댐");
-            return;
-        }
+        
 
         // int userIndex = players.Count; // 이미 접속한 유저 수를 바탕으로 인덱스 할당
         // playerData.player_index = userIndex;
@@ -143,6 +141,12 @@ public class PlayerSelector : MonoBehaviour
         GameObject assignedObject = furs[furIndex];
         playerData.player_index = userIndex;
 
+        if (playerData.color_id == null)
+        {
+            Debug.Log("할당 가능한 컬러가 없기 때문에 유저 접속 안댐! 현재 유저 인덱스는 ? " + playerData.player_index);
+            return;
+        }
+
         // 색상 할당 및 플레이어 설정 로직...
         Player targetPlayer = assignedObject.GetComponent<Player>();
         if (targetPlayer != null)
@@ -163,16 +167,20 @@ public class PlayerSelector : MonoBehaviour
             targetPlayer.SetPlayerColor(playerData.color_id);
             targetPlayer.SetUserIndex(playerData.player_index);
 
-            targetPlayer.transform.DOScale(0.9f, 1f).SetEase(Ease.InElastic); // 유저 접속 시 두트윈으로 효과주기
+            targetPlayer.transform.DOScale(3f, 1f).SetEase(Ease.InElastic); // 유저 접속 시 두트윈으로 효과주기
             //targetPlayer.transform.DOShakeScale(0.9f, 1f).SetEase(Ease.InElastic);
+            //ps.gameObject.SetActive(true);
 
             players.Add(playerData.color_id, targetPlayer);
-            Debug.Log("유저인덱스: " + playerData.player_index + " , 할당받은 컬러색: " + playerData.color_id);
+            Debug.Log("방금 들어온 유저인덱스는~: " + playerData.player_index + " , 방금 유저가 할당받은 컬러색은~: " + playerData.color_id);
         }
+        
         else
         {
             Debug.LogError("할당된 GameObject에 Player 컴포넌트가 없습니다.");
         }
+
+        
     }
 
     private IEnumerator ChangeColorGradually(Renderer renderer, Color targetColor, float duration)
@@ -314,6 +322,7 @@ public class PlayerSelector : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
+            isSpawn = true;
             PlayerData playerData = new PlayerData(" ", 0);
             OnAddUser(playerData);
             //Debug.Log(playerData.conn_id + "");

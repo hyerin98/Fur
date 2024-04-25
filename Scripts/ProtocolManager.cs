@@ -39,9 +39,9 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         JoyStreamCommunicator.instance.MaxPlayerCount = ConfigManager.instance.data.maxPlayerCount;
 
 #if !UNITY_EDITOR
-        JoyStreamCommunicator.instance.Connect(ConfigManager.instance.data.serverURL, "grab");
+        JoyStreamCommunicator.instance.Connect(ConfigManager.instance.data.serverURL, "fur");
 #else
-        JoyStreamCommunicator.instance.Connect(ConfigManager.instance.data.serverURL, "grabtest");
+        JoyStreamCommunicator.instance.Connect(ConfigManager.instance.data.serverURL, "furtest");
 #endif
         // DOTween라이브러리의 DelayedCall메서드. 지정된 시간이 지난 후에 지정된 작업을 실행
         DOVirtual.DelayedCall(5, () => SendIdleModeEvent(true)).SetId("IdleTimer" + GetInstanceID());
@@ -55,7 +55,7 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
             case "game_replay":
                 {
                     onUserReplayEvent?.Invoke(conn_id);
-                    JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_connect", color_id + "," + JoyStreamCommunicator.instance.GetPlayerIndex(conn_id).ToString()); // 4.15 sd에게 보낼것
+                    JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_color", color_id + "," + JoyStreamCommunicator.instance.GetPlayerIndex(conn_id).ToString()); // sd에게 보낼것
                     //JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_connect", JoyStreamCommunicator.instance.ThemeType + "," + JoyStreamCommunicator.instance.GetPlayerIndex(conn_id).ToString());
                     break;
                 }
@@ -70,7 +70,7 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
     private void OnUserEnter(PlayerData playerData) 
     {
         if (_enableDetaledLog) TraceBox.Log("User Enter / connID: " + playerData.conn_id + " / index: " + playerData.player_index);
-        //OnReceivedUserConnect(playerData);
+        OnReceivedUserConnect(playerData);
         if (JoyStreamCommunicator.instance.GetPlayerCount() == 1)
         {
             SendIdleModeEvent(false);
@@ -84,7 +84,7 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
     private void OnUserExit(PlayerData playerData)
     {
         if (_enableDetaledLog) TraceBox.Log("User Exit / connID: " + playerData.conn_id + " / index: " + playerData.player_index);
-        //OnReceivedUserDisconnect(playerData);
+        OnReceivedUserDisconnect(playerData);
         if (JoyStreamCommunicator.instance.GetPlayerCount() == 0)
         {
             DOVirtual.DelayedCall(5, () => SendIdleModeEvent(true)).SetId("IdleTimer" + GetInstanceID());

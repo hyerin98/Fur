@@ -28,6 +28,7 @@ public class ColorManager : MonoSingleton<ColorManager>
         maxUsers = 50;
         availableColors = GenerateRandomColors(maxUsers);
         //assignedColors = new List<string>(); 
+        userIndex = players.Count;
     }
 
      public void AddPlayer(Player player)
