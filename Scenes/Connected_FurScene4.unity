@@ -998,101 +998,6 @@ MonoBehaviour:
   - {fileID: 633688386}
   - {fileID: 1875924815}
   - {fileID: 69357189}
-  furPositions:
-  - {x: -16.7, y: 0.3, z: -24.9}
-  - {x: -16, y: 0.3, z: -24.9}
-  - {x: -15.3, y: 0.3, z: -24.9}
-  - {x: -14.5, y: 0.3, z: -24.9}
-  - {x: -13.8, y: 0.3, z: -24.9}
-  - {x: -13.1, y: 0.3, z: -24.9}
-  - {x: -12.4, y: 0.3, z: -24.9}
-  - {x: -11.6, y: 0.3, z: -24.9}
-  - {x: -10.9, y: 0.3, z: -24.9}
-  - {x: -10.2, y: 0.3, z: -24.9}
-  - {x: -8.8, y: 0.3, z: -24.9}
-  - {x: -8.1, y: 0.3, z: -24.9}
-  - {x: -9.500001, y: 0.3, z: -24.9}
-  - {x: -5.8, y: 0.3, z: -24.9}
-  - {x: -6.600001, y: 0.3, z: -24.9}
-  - {x: -5.1, y: 0.3, z: -24.9}
-  - {x: -4.4, y: 0.3, z: -24.9}
-  - {x: -3.6, y: 0.3, z: -24.9}
-  - {x: -2.8, y: 0.3, z: -24.9}
-  - {x: -2, y: 0.3, z: -24.9}
-  - {x: -1.2, y: 0.3, z: -24.9}
-  - {x: -0.5, y: 0.3, z: -24.9}
-  - {x: 0.1999999, y: 0.3, z: -24.9}
-  - {x: 0.9, y: 0.3, z: -24.9}
-  - {x: 1.59, y: 0.3, z: -24.9}
-  - {x: 2.29, y: 0.3, z: -24.9}
-  - {x: 2.99, y: 0.3, z: -24.9}
-  - {x: 3.73, y: 0.3, z: -24.9}
-  - {x: 4.43, y: 0.3, z: -24.9}
-  - {x: 5.13, y: 0.3, z: -24.9}
-  - {x: 5.88, y: 0.3, z: -24.9}
-  - {x: 6.58, y: 0.3, z: -24.9}
-  - {x: 7.28, y: 0.3, z: -24.9}
-  - {x: 8.05, y: 0.3, z: -24.9}
-  - {x: 8.75, y: 0.3, z: -24.9}
-  - {x: 9.450001, y: 0.3, z: -24.9}
-  - {x: 10.2, y: 0.3, z: -24.9}
-  - {x: 10.9, y: 0.3, z: -24.9}
-  - {x: 11.6, y: 0.3, z: -24.9}
-  - {x: 12.4, y: 0.3, z: -24.9}
-  - {x: 13.1, y: 0.3, z: -24.9}
-  - {x: 13.8, y: 0.3, z: -24.9}
-  - {x: 14.5, y: 0.3, z: -24.9}
-  - {x: 15.2, y: 0.3, z: -24.9}
-  - {x: 15.9, y: 0.3, z: -24.9}
-  - {x: 16.7, y: 0.3, z: -24.9}
-  - {x: -16.7, y: 0.3, z: -24.9}
-  - {x: -16, y: 0.3, z: -24.9}
-  - {x: -15.3, y: 0.3, z: -24.9}
-  - {x: -14.5, y: 0.3, z: -24.9}
-  - {x: -13.8, y: 0.3, z: -24.9}
-  - {x: -13.1, y: 0.3, z: -24.9}
-  - {x: -12.4, y: 0.3, z: -24.9}
-  - {x: -11.6, y: 0.3, z: -24.9}
-  - {x: -10.9, y: 0.3, z: -24.9}
-  - {x: -10.2, y: 0.3, z: -24.9}
-  - {x: -8.8, y: 0.3, z: -24.9}
-  - {x: -8.1, y: 0.3, z: -24.9}
-  - {x: -9.500001, y: 0.3, z: -24.9}
-  - {x: -5.8, y: 0.3, z: -24.9}
-  - {x: -6.600001, y: 0.3, z: -24.9}
-  - {x: -5.1, y: 0.3, z: -24.9}
-  - {x: -4.4, y: 0.3, z: -24.9}
-  - {x: -3.6, y: 0.3, z: -24.9}
-  - {x: -2.8, y: 0.3, z: -24.9}
-  - {x: -2, y: 0.3, z: -24.9}
-  - {x: -1.2, y: 0.3, z: -24.9}
-  - {x: -0.5, y: 0.3, z: -24.9}
-  - {x: 0.1999999, y: 0.3, z: -24.9}
-  - {x: 0.9, y: 0.3, z: -24.9}
-  - {x: 1.59, y: 0.3, z: -24.9}
-  - {x: 2.29, y: 0.3, z: -24.9}
-  - {x: 2.99, y: 0.3, z: -24.9}
-  - {x: 3.73, y: 0.3, z: -24.9}
-  - {x: 4.43, y: 0.3, z: -24.9}
-  - {x: 5.13, y: 0.3, z: -24.9}
-  - {x: 5.88, y: 0.3, z: -24.9}
-  - {x: 6.58, y: 0.3, z: -24.9}
-  - {x: 7.28, y: 0.3, z: -24.9}
-  - {x: 8.05, y: 0.3, z: -24.9}
-  - {x: 8.75, y: 0.3, z: -24.9}
-  - {x: 9.450001, y: 0.3, z: -24.9}
-  - {x: 10.2, y: 0.3, z: -24.9}
-  - {x: 10.9, y: 0.3, z: -24.9}
-  - {x: 11.6, y: 0.3, z: -24.9}
-  - {x: 12.4, y: 0.3, z: -24.9}
-  - {x: 13.1, y: 0.3, z: -24.9}
-  - {x: 13.8, y: 0.3, z: -24.9}
-  - {x: 14.5, y: 0.3, z: -24.9}
-  - {x: 15.2, y: 0.3, z: -24.9}
-  - {x: 15.9, y: 0.3, z: -24.9}
-  - {x: 16.7, y: 0.3, z: -24.9}
-  - {x: 17.43, y: 0.3, z: -24.9}
-  - {x: -17.4, y: 0.3, z: -24.9}
   ease: 23
   furPrefab: {fileID: 6900393763057827012, guid: 223b4e766cfc7964ba5e26e9dbd4202b, type: 3}
   isSpawn: 0
@@ -4925,7 +4830,12 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 194706, guid: e7aa3eba36ce5d04c84a01925e585932, type: 3}
   m_PrefabInstance: {fileID: 1364719187}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &743532410
+--- !u!4 &743532413 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 419030, guid: e7aa3eba36ce5d04c84a01925e585932, type: 3}
+  m_PrefabInstance: {fileID: 1364719187}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &743532416
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4934,23 +4844,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 743532402}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7e5f136c8327a944989bbf36f69af73, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b4e7433a44c0b945a167ab0fc12dac2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  surprise_moveDistance: 18
-  surprise_moveDuration: 5
+  surprise_moveDistance: 20
+  surprise_moveDuration: 10
   surprise_delayDuration: 10
-  light_moveDistance: 33
-  light_moveDuration: 3
+  light_moveDistance: 20
+  light_moveDuration: 5
   light_delayDuration: 10
   isLight: 1
   isSurprise: 0
-  ease: 0
---- !u!4 &743532413 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 419030, guid: e7aa3eba36ce5d04c84a01925e585932, type: 3}
-  m_PrefabInstance: {fileID: 1364719187}
-  m_PrefabAsset: {fileID: 0}
+  ease: 23
 --- !u!1001 &767266502
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11013,6 +10918,27 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.7140441
   m_Center: {x: 0.038939573, y: 0, z: 0.00000019073487}
+--- !u!114 &2007524062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007524050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b4e7433a44c0b945a167ab0fc12dac2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  surprise_moveDistance: 20
+  surprise_moveDuration: 10
+  surprise_delayDuration: 10
+  light_moveDistance: 20
+  light_moveDuration: 5
+  light_delayDuration: 10
+  isLight: 0
+  isSurprise: 1
+  ease: 23
 --- !u!1001 &2024427586
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12112,7 +12038,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2981639798367752188, guid: e5999cc5f9bd8d54ebb7afc4626a7f63, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 14.97
+      value: 16.62
       objectReference: {fileID: 0}
     - target: {fileID: 2981639798367752188, guid: e5999cc5f9bd8d54ebb7afc4626a7f63, type: 3}
       propertyPath: m_LocalRotation.w
@@ -12152,4 +12078,5 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 8c7414658169a924fa5f7aaaf7241c63, type: 2}
     m_RemovedComponents:
     - {fileID: 2981639798367752177, guid: e5999cc5f9bd8d54ebb7afc4626a7f63, type: 3}
+    - {fileID: 2981639798367752176, guid: e5999cc5f9bd8d54ebb7afc4626a7f63, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e5999cc5f9bd8d54ebb7afc4626a7f63, type: 3}

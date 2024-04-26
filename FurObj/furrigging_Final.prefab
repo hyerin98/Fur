@@ -1030,7 +1030,7 @@ MonoBehaviour:
   rotateSpeed: 5
   rotationAmount: 50
   currentRotation: 0
-  ease: 0
+  ease: 24
 --- !u!54 &6982620896659040083
 Rigidbody:
   m_ObjectHideFlags: 0

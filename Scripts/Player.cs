@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     public delegate void OnPlayerEnd(Player target);
     public event OnPlayerEnd onPlayerEnd;
     public Transform destination;
+     public PlayerData playerData; 
 
     [Header("Bool")]
     public bool isFalled = false;
@@ -36,9 +37,8 @@ public class Player : MonoBehaviour
     public float fallTime = 1f;
     public float moveStep = 0.3f;
     public float rotateSpeed = 5f;
-
     public float rotationAmount = 50f; // 한 번에 회전할 각도
-public float currentRotation = 0f; // 현재 회전 각도
+    public float currentRotation = 0f; // 현재 회전 각도
 
 
     [Header("DOTween")]
@@ -63,32 +63,32 @@ public float currentRotation = 0f; // 현재 회전 각도
     private void Update()
     {
 
-        // if (downKeyCode == KeyCode.UpArrow)
-        // {
-        //     transform.DOMoveY(originalPos.y + 0.5f, 0.5f).SetEase(ease)
-        //     .OnComplete(() =>
-        //     {
-        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-        //     });
-        // }
+        if (downKeyCode == KeyCode.UpArrow)
+        {
+            transform.DOMoveY(originalPos.y + 0.5f, 0.5f).SetEase(ease)
+            .OnComplete(() =>
+            {
+                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
+            });
+        }
 
-        // else if (downKeyCode == KeyCode.DownArrow)
-        // {
-        //     transform.DOMoveY(originalPos.y - 0.5f, 0.5f).SetEase(ease)
-        //     .OnComplete(() =>
-        //     {
-        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-        //     });
-        // }
-        // else if (downKeyCode == KeyCode.LeftArrow)
-        // {
-        //     rigid.rotation = Quaternion.Euler(0, 0, 50f);
+        else if (downKeyCode == KeyCode.DownArrow)
+        {
+            transform.DOMoveY(originalPos.y - 0.5f, 0.5f).SetEase(ease)
+            .OnComplete(() =>
+            {
+                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
+            });
+        }
+        else if (downKeyCode == KeyCode.LeftArrow)
+        {
+            rigid.rotation = Quaternion.Euler(0, 0, 50f);
 
-        // }
-        // else if (downKeyCode == KeyCode.RightArrow)
-        // {
-        //     rigid.rotation = Quaternion.Euler(0, 0, -50f);
-        // }
+        }
+        else if (downKeyCode == KeyCode.RightArrow)
+        {
+            rigid.rotation = Quaternion.Euler(0, 0, -50f);
+        }
 
 
         // 에디터에서 테스트
@@ -177,12 +177,15 @@ public float currentRotation = 0f; // 현재 회전 각도
 
     public void RemovePlayer()
     {
-        if (!isFalled) return;
-        else
-        {
-            Debug.Log("삭제!");
-            DOVirtual.DelayedCall(6, PlayerEnd);
-        }
+        // if (!isFalled) return;
+        // else
+        // {
+        //     Debug.Log("삭제!");
+        //     DOVirtual.DelayedCall(6, PlayerEnd);
+        // }
+
+        Debug.Log("삭제!");
+        DOVirtual.DelayedCall(6, PlayerEnd);
 
     }
 

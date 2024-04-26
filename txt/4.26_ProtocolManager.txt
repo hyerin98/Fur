@@ -9,7 +9,7 @@ using UnityEngine;
 public class ProtocolManager : MonoSingleton<ProtocolManager>
 {
     [SerializeField] bool _enableDetaledLog = false;
-    public delegate void WebControllerEvent(ProtocolType protocolType, string colorId);
+    public delegate void WebControllerEvent(ProtocolType protocolType, string connID);
     public event WebControllerEvent onWebControllerEvent;
 
     public delegate void UserConnectEvent(ProtocolType protocolType, PlayerData playerData);
@@ -17,7 +17,7 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
     public delegate void ModeDelegate(bool isActive);
     public event ModeDelegate idleModeChanged;
     public event ModeDelegate enterModeChanged;
-    public delegate void UserActionDelegate(string colorId);
+    public delegate void UserActionDelegate(string conn_id);
     public event UserActionDelegate onUserReplayEvent;
 
 
@@ -47,15 +47,15 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         DOVirtual.DelayedCall(5, () => SendIdleModeEvent(true)).SetId("IdleTimer" + GetInstanceID());
     }
 
-    private void ReceiveMessage(string conn_id, string key_code, string color_id, string value)
+    private void ReceiveMessage(string conn_id, string key_code, string color_id)
     {
-        TraceBox.Log("Message Received / connId: " + conn_id + " / key_code: " + key_code +" / colorID: " + color_id + " / value: " + value);
+        TraceBox.Log("Message Received / connId: " + conn_id + " / key_code: " + key_code + " / value: " + color_id);
         switch (key_code)
         {
             case "game_replay":
                 {
                     onUserReplayEvent?.Invoke(conn_id);
-                    JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_color", color_id);// + "," + JoyStreamCommunicator.instance.GetPlayerIndex(conn_id).ToString()); // sd에게 보낼것
+                    JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_color", color_id + "," + JoyStreamCommunicator.instance.GetPlayerIndex(conn_id).ToString()); // sd에게 보낼것
                     //JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_connect", JoyStreamCommunicator.instance.ThemeType + "," + JoyStreamCommunicator.instance.GetPlayerIndex(conn_id).ToString());
                     break;
                 }
@@ -69,11 +69,11 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
 
     private void OnUserEnter(PlayerData playerData) 
     {
-        if (_enableDetaledLog) TraceBox.Log("User Enter / connID: " + playerData.conn_id + " / color: " + playerData.color_id + " / index: " + playerData.player_index);
+        if (_enableDetaledLog) TraceBox.Log("User Enter / connID: " + playerData.conn_id + " / index: " + playerData.player_index);
         OnReceivedUserConnect(playerData);
         if (JoyStreamCommunicator.instance.GetPlayerCount() == 1)
         {
-            SendIdleModeEvent(true);
+            SendIdleModeEvent(false);
         }
         else if (JoyStreamCommunicator.instance.GetPlayerCount() == 51)
         {
@@ -83,13 +83,13 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
 
     private void OnUserExit(PlayerData playerData)
     {
-        if (_enableDetaledLog) TraceBox.Log("User Exit / connID: " + playerData.conn_id + " / color " + playerData.color_id + " / index: " + playerData.player_index);
+        if (_enableDetaledLog) TraceBox.Log("User Exit / connID: " + playerData.conn_id + " / index: " + playerData.player_index + " / color " + playerData.color_id);
         OnReceivedUserDisconnect(playerData);
         if (JoyStreamCommunicator.instance.GetPlayerCount() == 0)
         {
             DOVirtual.DelayedCall(5, () => SendIdleModeEvent(true)).SetId("IdleTimer" + GetInstanceID());
         }
-        else if (JoyStreamCommunicator.instance.GetPlayerCount() == 49)
+        else if (JoyStreamCommunicator.instance.GetPlayerCount() == 50)
         {
             enterModeChanged?.Invoke(true);
         }

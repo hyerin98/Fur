@@ -11,24 +11,27 @@ using Unity.Mathematics;
 public class SceneEvent : MonoBehaviour
 {
     [Header("SurpriseObj")]
-    public float surprise_moveDistance = 20f; // Z축으로 이동할 거리
-    public float surprise_moveDuration = 10f; // 이동하는데 걸리는 시간
-    public float surprise_delayDuration = 10f; // 원래 위치로 돌아간 후 대기하는 시간
+    public float surprise_moveDistance;
+    public float surprise_moveDuration;
+    public float surprise_delayDuration;
     private Vector3 surprise_originalPosition;
+    public float surprise_waitTime;
 
     [Header("LightObj")]
-    public float light_moveDistance =20f;
-    public float light_moveDuration = 5f;
-    public float light_delayDuration = 10f;
+    public float light_moveDistance;
+    public float light_moveDuration;
+    public float light_delayDuration;
     private Vector3 light_originalPosition;
-    
+    public float light_waitTime;
+
 
     [Header("Bool")]
     public bool isLight;
     public bool isSurprise;
 
     [Header("DOTween")]
-    public Ease ease;
+    public Ease surprise_ease;
+    public Ease light_ease;
 
     void Start()
     {
@@ -41,28 +44,40 @@ public class SceneEvent : MonoBehaviour
     {
         if (isSurprise)
         {
-            transform.DOMoveZ(surprise_originalPosition.z + -surprise_moveDistance, surprise_moveDuration).SetEase(Ease.InElastic)
+            transform.DOMoveZ(surprise_originalPosition.z + -surprise_moveDistance, surprise_moveDuration)
+                .SetEase(surprise_ease)
                 .OnComplete(() =>
                 {
-                    transform.DOMoveZ(surprise_originalPosition.z, surprise_moveDuration).SetEase(Ease.InElastic)
+                    // 목표 위치에서 원래 위치로 복귀
+                    transform.DOMoveZ(surprise_originalPosition.z, surprise_moveDuration)
+                        .SetEase(surprise_ease)
                         .OnComplete(() =>
                         {
-                            DOVirtual.DelayedCall(surprise_delayDuration, MoveObjects);
+                            // 원래 위치에서 대기
+                            DOVirtual.DelayedCall(surprise_waitTime, () =>
+                            {
+                                // 대기 후 원하는 추가 동작 실행
+                                MoveObjects();
+                            });
                         });
                 });
         }
-
         else if (isLight)
         {
-            transform.DOMoveX(light_originalPosition.x + light_moveDistance, light_delayDuration).SetEase(Ease.InQuad)
-            .OnComplete(() =>
-            {
-                transform.DOMoveX(light_originalPosition.x, light_delayDuration).SetEase(Ease.InQuad)
-                .OnComplete(()=>
+            transform.DOMoveX(light_originalPosition.x + light_moveDistance, light_delayDuration)
+                .SetEase(light_ease)
+                .OnComplete(() =>
                 {
-                    DOVirtual.DelayedCall(light_delayDuration, MoveObjects);
+                    DOVirtual.DelayedCall(light_waitTime, () => // 도착 후 waitTime만큼 대기!
+                    {
+                        transform.DOMoveX(light_originalPosition.x, light_delayDuration) // 대기가 끝난 후 원래 위치로
+                            .SetEase(light_ease)
+                            .OnComplete(() =>
+                            {
+                                MoveObjects(); // 원래 위치로 돌아온 후 다시 반복
+                            });
+                    });
                 });
-            });
         }
     }
 }
