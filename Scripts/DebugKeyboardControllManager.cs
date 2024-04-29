@@ -14,22 +14,17 @@ public class DebugKeyboardControllManager : MonoBehaviour
             if (selectedID == "1")
             {
                 PlayerData playerData = new PlayerData(); // 모든 값이 기본값
-                playerData.conn_id = "0";
-                playerData.color_id = "0";
+                playerData.conn_id = "1";
                 ProtocolManager.instance.OnReceivedUserDisconnect(playerData);
                 selectedID = "0";
-                Debug.Log("1번눌렀고, 플레이어 연결x selectedID는? " + selectedID);
             }
             else
             {
                 PlayerData playerData = new PlayerData();
                 playerData.conn_id = "1";
-                playerData.color_id = "1";
                 selectedID = "1";
                 ProtocolManager.instance.OnReceivedUserConnect(playerData);
-                Debug.Log("1번 눌렀고, 플레이어 연결O selectedID는? " + selectedID);
             }
-
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
@@ -43,7 +38,7 @@ public class DebugKeyboardControllManager : MonoBehaviour
             else
             {
                 PlayerData playerData = new PlayerData();
-                playerData.conn_id = "2";
+                playerData.conn_id = "2"; 
                 selectedID = "2";
                 ProtocolManager.instance.OnReceivedUserConnect(playerData);
             }
@@ -118,7 +113,6 @@ public class DebugKeyboardControllManager : MonoBehaviour
         {
             if (selectedID != "0")
             {
-                ProtocolManager.instance.OnReceivedControllerFall_Press(selectedID);
                 selectedID = "0";
             }
         }

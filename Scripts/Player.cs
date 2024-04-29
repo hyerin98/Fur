@@ -2,25 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using IMFINE.Utils;
-using IMFINE.Utils.ConfigManager;
 using IMFINE.Utils.JoyStream.Communicator;
-using Unity.VisualScripting;
 using System;
-using UnityEngine.UIElements;
-using Unity.Mathematics;
 
 public class Player : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private Animator Anim = null;
-    private ColorManager colorManager;
     private KeyCode downKeyCode = 0;
     private Rigidbody rigid;
     public delegate void OnPlayerEnd(Player target);
     public event OnPlayerEnd onPlayerEnd;
     public Transform destination;
-     public PlayerData playerData; 
+    public PlayerData playerData;
+
+    public PlayerSelector playerSelector;
 
     [Header("Bool")]
     public bool isFalled = false;
@@ -46,12 +42,17 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        colorManager = FindObjectOfType<ColorManager>();
         //playerID = System.Guid.NewGuid().ToString();
         Anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
         //rigid.sleepThreshold=0;
-        
+
+        playerSelector = FindObjectOfType<PlayerSelector>();
+        if (playerSelector == null)
+        {
+            Debug.LogError("PlayerSelector component not found in the scene!");
+        }
+
     }
 
     void Start()
@@ -110,33 +111,36 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            rigid.rotation = Quaternion.Euler(0, 0, -50f);
+            rigid.rotation = Quaternion.Euler(0, 0, 50f);
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            rigid.rotation = Quaternion.Euler(0, 0, 50f);
+            rigid.rotation = Quaternion.Euler(0, 0, -50f);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             this.rigid.isKinematic = false;
             isFalled = true;
+            RemovePlayer(); // 4.29 수정필
         }
+
     }
+
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Ground") && isFalled)
+        if (other.gameObject.CompareTag("Ground") && isFalled)
         {
             Debug.Log("바닥과 충~돌");
             rigid.isKinematic = true;
             isFalled = false;
 
-            foreach(var hinge in GetComponentsInChildren<HingeJoint>())
+            foreach (var hinge in GetComponentsInChildren<HingeJoint>())
             {
                 Destroy(hinge);
             }
-            RemovePlayer();
+            PlayerEnd();
         }
     }
 
@@ -169,28 +173,31 @@ public class Player : MonoBehaviour
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_FALL_PRESS:
-                downKeyCode = KeyCode.None;
-                PlayerEnd(); // 4.15 수정필
+                downKeyCode = KeyCode.Space;
+                RemovePlayer();
                 break;
         }
     }
 
     public void RemovePlayer()
     {
-        // if (!isFalled) return;
-        // else
-        // {
-        //     Debug.Log("삭제!");
-        //     DOVirtual.DelayedCall(6, PlayerEnd);
-        // }
+        if (!isFalled)
+            return;
+        else
+        {
+            Debug.Log("삭제!");
+            DOVirtual.DelayedCall(3, PlayerEnd).SetId(playerID);
+        }
+    }
 
-        Debug.Log("삭제!");
-        DOVirtual.DelayedCall(6, PlayerEnd);
-
+    private void RequestRemove()
+    {
+        Debug.Log("삭제요청");
     }
 
     private void PlayerEnd()
     {
+        Debug.Log("진짜삭제");
         onPlayerEnd?.Invoke(this);
         Destroy(gameObject);
     }
@@ -198,14 +205,8 @@ public class Player : MonoBehaviour
     private void PlayerStart()
     {
         isActive = true;
-        PlayerReady();
     }
 
-    private void PlayerReady()
-    {
-        // 플레이어 기본 idle동작 들어가기 
-        // 애니메이션
-    }
 
     public void SetPlayerColor(string color)
     {
@@ -215,17 +216,6 @@ public class Player : MonoBehaviour
     public void SetUserIndex(int index)
     {
         userIndex = index;
-    }
-
-
-    public string GetPlayerColor()
-    {
-        return playerColor;
-    }
-
-    public int GetUserIndex()
-    {
-        return userIndex;
     }
 
     public void Test()

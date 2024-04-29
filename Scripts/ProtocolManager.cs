@@ -1,9 +1,9 @@
+using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using IMFINE.Utils;
 using IMFINE.Utils.ConfigManager;
 using IMFINE.Utils.JoyStream.Communicator;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ProtocolManager : MonoSingleton<ProtocolManager>
@@ -85,6 +85,7 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
     {
         if (_enableDetaledLog) TraceBox.Log("User Exit / connID: " + playerData.conn_id + " / color " + playerData.color_id + " / index: " + playerData.player_index);
         OnReceivedUserDisconnect(playerData);
+
         if (JoyStreamCommunicator.instance.GetPlayerCount() == 0)
         {
             DOVirtual.DelayedCall(5, () => SendIdleModeEvent(true)).SetId("IdleTimer" + GetInstanceID());
