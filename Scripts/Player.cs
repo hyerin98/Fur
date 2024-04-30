@@ -35,6 +35,8 @@ public class Player : MonoBehaviour
     public float rotateSpeed = 5f;
     public float rotationAmount = 50f; // 한 번에 회전할 각도
     public float currentRotation = 0f; // 현재 회전 각도
+    public float torqueAmount = 50f; // 회전 토크 크기
+    public float rotateSpeedd = 90f;
 
 
     [Header("DOTween")]
@@ -59,11 +61,11 @@ public class Player : MonoBehaviour
     {
         PlayerStart();
         originalPos = transform.position;
+        //GetComponent<Player>().enabled = false; // 4.30 테스트
     }
 
     private void Update()
     {
-
         if (downKeyCode == KeyCode.UpArrow)
         {
             transform.DOMoveY(originalPos.y + 0.5f, 0.5f).SetEase(ease)
@@ -83,12 +85,12 @@ public class Player : MonoBehaviour
         }
         else if (downKeyCode == KeyCode.LeftArrow)
         {
-            rigid.rotation = Quaternion.Euler(0, 0, 50f);
+            rigid.rotation = Quaternion.Euler(0, 0, -45f);
 
         }
         else if (downKeyCode == KeyCode.RightArrow)
         {
-            rigid.rotation = Quaternion.Euler(0, 0, -50f);
+            rigid.rotation = Quaternion.Euler(0, 0, 45f);
         }
 
 
@@ -109,23 +111,41 @@ public class Player : MonoBehaviour
                 transform.DOMoveY(originalPos.y, 1).SetEase(ease);
             });
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            rigid.rotation = Quaternion.Euler(0, 0, 50f);
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            rigid.rotation = Quaternion.Euler(0, 0, -50f);
-        }
+        // if (Input.GetKeyDown(KeyCode.RightArrow))
+        // {
+        //     Debug.Log("눌럿지");
+        //     rigid.rotation = Quaternion.Euler(0, 0, -45f); 
+        // }
+        // if (Input.GetKeyDown(KeyCode.LeftArrow))
+        // {
+        //     rigid.rotation = Quaternion.Euler(0, 0, 45f); 
+        // }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             this.rigid.isKinematic = false;
             isFalled = true;
-            RemovePlayer(); // 4.29 수정필
         }
 
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            // 모든 자식의 HingeJoint를 순회
+            foreach (var hinge in GetComponentsInChildren<HingeJoint>())
+            {
+                Rigidbody childRigid = hinge.GetComponent<Rigidbody>();
+                if (childRigid != null)
+                {
+                    // 토크의 방향을 결정
+                    Vector3 torqueDirection = Input.GetKeyDown(KeyCode.RightArrow) ? Vector3.forward : Vector3.back;
+                    childRigid.AddTorque(torqueDirection * torqueAmount, ForceMode.Impulse);
+                }
+            }
+}
+
+
     }
+
+    
 
 
     private void OnTriggerEnter(Collider other)
@@ -140,7 +160,7 @@ public class Player : MonoBehaviour
             {
                 Destroy(hinge);
             }
-            PlayerEnd();
+            playerSelector.RemoveUser(playerID);
         }
     }
 
@@ -190,16 +210,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void RequestRemove()
-    {
-        Debug.Log("삭제요청");
-    }
 
     private void PlayerEnd()
     {
         Debug.Log("진짜삭제");
         onPlayerEnd?.Invoke(this);
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
     private void PlayerStart()

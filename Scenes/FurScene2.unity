@@ -1702,6 +1702,7 @@ MonoBehaviour:
   furPrefab: {fileID: 3248511060861053219, guid: c43fc6a51c2c7a140835e350021a6749, type: 3}
   newFurEffect: {fileID: 120410, guid: 6636b3078b0905e489f698a11b7a6b6b, type: 3}
   isSpawn: 0
+  particlePrefab: {fileID: 180128, guid: 6586ff0f14125534cae2f5d8f04b7871, type: 3}
   curve:
     serializedVersion: 2
     m_Curve:
@@ -1823,7 +1824,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 496392503}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 5}
+  m_LocalPosition: {x: 0, y: 18.27, z: 5}
   m_LocalScale: {x: 60, y: 1, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -29929,6 +29930,7 @@ MonoBehaviour:
     color_id: 
     conn_id: 
     player_index: 0
+  playerSelector: {fileID: 0}
   isFalled: 0
   isActive: 0
   playerColor: 
@@ -32821,14 +32823,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 995646203}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: -14, z: -15.7}
+  m_LocalRotation: {x: -0.17610604, y: -0, z: -0, w: 0.98437124}
+  m_LocalPosition: {x: 1, y: -21.24, z: -4.79}
   m_LocalScale: {x: 59.839947, y: 11.53, z: 44.45394}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2025240247}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -20.286, y: 0, z: 0}
 --- !u!23 &1878359158
 MeshRenderer:
   m_ObjectHideFlags: 0

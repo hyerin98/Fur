@@ -19,10 +19,11 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
     public event ModeDelegate enterModeChanged;
     public delegate void UserActionDelegate(string colorId);
     public event UserActionDelegate onUserReplayEvent;
-
+    private PlayerSelector playerSelector;
 
     private void Start()
     {
+        playerSelector = FindObjectOfType<PlayerSelector>();
         if (ConfigManager.instance.isPrepared) OnConfigDataPrepared();
         else ConfigManager.instance.Prepared += OnConfigDataPrepared;
     }
@@ -30,8 +31,8 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
     private void OnConfigDataPrepared()
     {
         JoyStreamCommunicator.instance.MessageReceived += ReceiveMessage; // 시그널 메세지 수신 
-        JoyStreamCommunicator.instance.UserEnter += OnUserEnter; // 사용자 들어왔을 때
-        JoyStreamCommunicator.instance.UserExit += OnUserExit; // 사용자 나갔을 때
+        //JoyStreamCommunicator.instance.UserEnter += OnUserEnter; // 사용자 들어왔을 때
+        //JoyStreamCommunicator.instance.UserExit += OnUserExit; // 사용자 나갔을 때
         JoyStreamCommunicator.instance.KeyDown += OnKeyDown; // 사용자가 키를 눌렀을 때
         JoyStreamCommunicator.instance.KeyUp += OnKeyUp; // 사용자가 키를 뗐을 때
         JoyStreamCommunicator.instance.Prepared += OnPrepared; // 준비가 되었을 때, 서버와 연결되었고 사용자 리스트를 서버로부터 받아왔을 때
@@ -55,7 +56,7 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
             case "game_replay":
                 {
                     onUserReplayEvent?.Invoke(conn_id);
-                    JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_color", color_id);// + "," + JoyStreamCommunicator.instance.GetPlayerIndex(conn_id).ToString()); // sd에게 보낼것
+                    JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_color", JoyStreamCommunicator.instance.GetPlayerIndex(color_id).ToString());
                     //JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_connect", JoyStreamCommunicator.instance.ThemeType + "," + JoyStreamCommunicator.instance.GetPlayerIndex(conn_id).ToString());
                     break;
                 }
@@ -67,34 +68,50 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         if (_enableDetaledLog) TraceBox.Log("JoyStream Communicator Prepared");
     }
 
-    private void OnUserEnter(PlayerData playerData) 
-    {
-        if (_enableDetaledLog) TraceBox.Log("User Enter / connID: " + playerData.conn_id + " / color: " + playerData.color_id + " / index: " + playerData.player_index);
-        OnReceivedUserConnect(playerData);
-        if (JoyStreamCommunicator.instance.GetPlayerCount() == 1)
-        {
-            SendIdleModeEvent(true);
-        }
-        else if (JoyStreamCommunicator.instance.GetPlayerCount() == 51)
-        {
-            enterModeChanged?.Invoke(false);
-        }
-    }
+    // private void OnUserEnter(PlayerData playerData) 
+    // {
+    //     if (_enableDetaledLog) TraceBox.Log("User Enter / connID: " + playerData.conn_id + " / color: " + playerData.color_id + " / index: " + playerData.player_index);
+    //     OnReceivedUserConnect(playerData);
+    //     if (JoyStreamCommunicator.instance.GetPlayerCount() == 1)
+    //     {
+    //         SendIdleModeEvent(true);
+    //     }
+    //     else if (JoyStreamCommunicator.instance.GetPlayerCount() == 51)
+    //     {
+    //         enterModeChanged?.Invoke(false);
+    //     }
+    // }
 
-    private void OnUserExit(PlayerData playerData)
-    {
-        if (_enableDetaledLog) TraceBox.Log("User Exit / connID: " + playerData.conn_id + " / color " + playerData.color_id + " / index: " + playerData.player_index);
-        OnReceivedUserDisconnect(playerData);
+    // private void OnUserExit(PlayerData playerData)
+    // {
+    //     if (_enableDetaledLog) TraceBox.Log("User Exit / connID: " + playerData.conn_id + " / color " + playerData.color_id + " / index: " + playerData.player_index);
+    //     OnReceivedUserDisconnect(playerData);
 
-        if (JoyStreamCommunicator.instance.GetPlayerCount() == 0)
-        {
-            DOVirtual.DelayedCall(5, () => SendIdleModeEvent(true)).SetId("IdleTimer" + GetInstanceID());
-        }
-        else if (JoyStreamCommunicator.instance.GetPlayerCount() == 49)
-        {
-            enterModeChanged?.Invoke(true);
-        }
-    }
+    //     if (JoyStreamCommunicator.instance.GetPlayerCount() == 0)
+    //     {
+    //         DOVirtual.DelayedCall(5, () => SendIdleModeEvent(true)).SetId("IdleTimer" + GetInstanceID());
+    //     }
+    //     else if (JoyStreamCommunicator.instance.GetPlayerCount() == 49)
+    //     {
+    //         enterModeChanged?.Invoke(true);
+    //     }
+    // }
+    //-----------
+    private void OnUserEnter(string connId)
+{
+    // ProtocolManager는 PlayerSelector에 사용자 추가를 요청
+     
+    PlayerData newPlayerData = new PlayerData(connId);
+    playerSelector.OnAddUser(newPlayerData);
+
+}
+
+private void OnUserExit(string connId)
+{
+    // ProtocolManager는 PlayerSelector에 사용자 제거를 요청
+    playerSelector.RemoveUser(connId);
+}
+
 
     private void SendIdleModeEvent(bool isActive)
     {
