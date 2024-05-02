@@ -61,7 +61,7 @@ public class Player : MonoBehaviour
     {
         PlayerStart();
         originalPos = transform.position;
-        //GetComponent<Player>().enabled = false; // 4.30 테스트
+        GetComponent<Player>().enabled = false; // 4.30 테스트
     }
 
     private void Update()
@@ -111,15 +111,14 @@ public class Player : MonoBehaviour
                 transform.DOMoveY(originalPos.y, 1).SetEase(ease);
             });
         }
-        // if (Input.GetKeyDown(KeyCode.RightArrow))
-        // {
-        //     Debug.Log("눌럿지");
-        //     rigid.rotation = Quaternion.Euler(0, 0, -45f); 
-        // }
-        // if (Input.GetKeyDown(KeyCode.LeftArrow))
-        // {
-        //     rigid.rotation = Quaternion.Euler(0, 0, 45f); 
-        // }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            rigid.rotation = Quaternion.Euler(0, 0, -45f); 
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            rigid.rotation = Quaternion.Euler(0, 0, 45f); 
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -127,20 +126,20 @@ public class Player : MonoBehaviour
             isFalled = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            // 모든 자식의 HingeJoint를 순회
-            foreach (var hinge in GetComponentsInChildren<HingeJoint>())
-            {
-                Rigidbody childRigid = hinge.GetComponent<Rigidbody>();
-                if (childRigid != null)
-                {
-                    // 토크의 방향을 결정
-                    Vector3 torqueDirection = Input.GetKeyDown(KeyCode.RightArrow) ? Vector3.forward : Vector3.back;
-                    childRigid.AddTorque(torqueDirection * torqueAmount, ForceMode.Impulse);
-                }
-            }
-}
+        // if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
+        // {
+        //     // 모든 자식의 HingeJoint를 순회
+        //     foreach (var hinge in GetComponentsInChildren<HingeJoint>())
+        //     {
+        //         Rigidbody childRigid = hinge.GetComponent<Rigidbody>();
+        //         if (childRigid != null)
+        //         {
+        //             // 토크의 방향을 결정
+        //             Vector3 torqueDirection = Input.GetKeyDown(KeyCode.RightArrow) ? Vector3.forward : Vector3.back;
+        //             childRigid.AddTorque(torqueDirection * torqueAmount, ForceMode.Impulse);
+        //         }
+        //     }
+        // }
 
 
     }

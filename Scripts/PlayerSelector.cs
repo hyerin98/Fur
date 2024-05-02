@@ -156,6 +156,9 @@ public class PlayerSelector : MonoBehaviour
             int furIndex = availableFur[randomIndex];
             GameObject assignedFur = furs[furIndex];
             playerData.player_index = furIndex;
+            
+
+            // 레이어 설정 . .?
 
             // 색상 할당 및 플레이어 설정 로직...
             Player targetPlayer = assignedFur.GetComponent<Player>();
@@ -179,10 +182,11 @@ public class PlayerSelector : MonoBehaviour
                 targetPlayer.playerID = playerData.color_id;
                 targetPlayer.SetPlayerColor(playerData.color_id);
                 targetPlayer.SetUserIndex(furIndex);
-                targetPlayer.transform.DOScale(2.1f, 0.5f).SetEase(ease); // 유저 접속 시 두트윈으로 효과주기
+                targetPlayer.transform.DOScale(1.3f, 0.5f).SetEase(ease); // 유저 접속 시 두트윈으로 효과주기
                 usedFur.Add(furIndex);
                 players.Add(playerData.color_id, targetPlayer);
-                Instantiate(newFurEffect, targetPlayer.transform.position, Quaternion.identity); // 접속할때 이펙트 효과
+                GameObject tempEffect = Instantiate(newFurEffect, targetPlayer.transform.position, Quaternion.identity);
+                Destroy(tempEffect, 2.0f);
                 playerData.player_index = players.Count;  // 플레이어 인덱스 설정
                 
                 Debug.Log("새로운 유저 들어옴: " + furIndex + " , " + "유저의 컬러값과 인덱스는: " + playerData.color_id + " , " + playerData.player_index);

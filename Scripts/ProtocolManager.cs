@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using DG.Tweening;
 using IMFINE.Utils;
 using IMFINE.Utils.ConfigManager;
@@ -31,8 +32,8 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
     private void OnConfigDataPrepared()
     {
         JoyStreamCommunicator.instance.MessageReceived += ReceiveMessage; // 시그널 메세지 수신 
-        //JoyStreamCommunicator.instance.UserEnter += OnUserEnter; // 사용자 들어왔을 때
-        //JoyStreamCommunicator.instance.UserExit += OnUserExit; // 사용자 나갔을 때
+        JoyStreamCommunicator.instance.UserEnter += OnUserEnter; // 사용자 들어왔을 때
+        JoyStreamCommunicator.instance.UserExit += OnUserExit; // 사용자 나갔을 때
         JoyStreamCommunicator.instance.KeyDown += OnKeyDown; // 사용자가 키를 눌렀을 때
         JoyStreamCommunicator.instance.KeyUp += OnKeyUp; // 사용자가 키를 뗐을 때
         JoyStreamCommunicator.instance.Prepared += OnPrepared; // 준비가 되었을 때, 서버와 연결되었고 사용자 리스트를 서버로부터 받아왔을 때
@@ -40,9 +41,9 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         JoyStreamCommunicator.instance.MaxPlayerCount = ConfigManager.instance.data.maxPlayerCount;
 
 #if !UNITY_EDITOR
-        JoyStreamCommunicator.instance.Connect(ConfigManager.instance.data.serverURL, "fur");
+        JoyStreamCommunicator.instance.Connect(ConfigManager.instance.data.serverURL, "grab");
 #else
-        JoyStreamCommunicator.instance.Connect(ConfigManager.instance.data.serverURL, "furtest");
+        JoyStreamCommunicator.instance.Connect(ConfigManager.instance.data.serverURL, "grab");
 #endif
         // DOTween라이브러리의 DelayedCall메서드. 지정된 시간이 지난 후에 지정된 작업을 실행
         DOVirtual.DelayedCall(5, () => SendIdleModeEvent(true)).SetId("IdleTimer" + GetInstanceID());
@@ -68,49 +69,50 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         if (_enableDetaledLog) TraceBox.Log("JoyStream Communicator Prepared");
     }
 
-    // private void OnUserEnter(PlayerData playerData) 
+    private void OnUserEnter(PlayerData playerData) 
+    {
+        if (_enableDetaledLog) 
+        TraceBox.Log("User Enter / connID: " + playerData.conn_id + " / color: " + playerData.color_id + " / index: " + playerData.player_index);
+        OnReceivedUserConnect(playerData);
+        if (JoyStreamCommunicator.instance.GetPlayerCount() == 1)
+        {
+            SendIdleModeEvent(true);   
+        }
+        else if (JoyStreamCommunicator.instance.GetPlayerCount() == 51)
+        {
+            enterModeChanged?.Invoke(false);
+        }
+    }
+
+    private void OnUserExit(PlayerData playerData)
+    {
+        if (_enableDetaledLog) TraceBox.Log("User Exit / connID: " + playerData.conn_id + " / color " + playerData.color_id + " / index: " + playerData.player_index);
+        OnReceivedUserDisconnect(playerData);
+
+        if (JoyStreamCommunicator.instance.GetPlayerCount() == 0)
+        {
+            DOVirtual.DelayedCall(5, () => SendIdleModeEvent(true)).SetId("IdleTimer" + GetInstanceID());
+        }
+        else if (JoyStreamCommunicator.instance.GetPlayerCount() == 49)
+        {
+            enterModeChanged?.Invoke(true);
+        }
+    }
+    //-----------
+    // private void OnUserEnter(PlayerData playerData)
     // {
-    //     if (_enableDetaledLog) TraceBox.Log("User Enter / connID: " + playerData.conn_id + " / color: " + playerData.color_id + " / index: " + playerData.player_index);
-    //     OnReceivedUserConnect(playerData);
-    //     if (JoyStreamCommunicator.instance.GetPlayerCount() == 1)
-    //     {
-    //         SendIdleModeEvent(true);
-    //     }
-    //     else if (JoyStreamCommunicator.instance.GetPlayerCount() == 51)
-    //     {
-    //         enterModeChanged?.Invoke(false);
-    //     }
+    //     // ProtocolManager는 PlayerSelector에 사용자 추가를 요청
+
+    //     PlayerData newPlayerData = new PlayerData();
+    //     playerSelector.OnAddUser(newPlayerData);
+    //     TraceBox.Log("추가" + newPlayerData);
     // }
 
     // private void OnUserExit(PlayerData playerData)
     // {
-    //     if (_enableDetaledLog) TraceBox.Log("User Exit / connID: " + playerData.conn_id + " / color " + playerData.color_id + " / index: " + playerData.player_index);
-    //     OnReceivedUserDisconnect(playerData);
-
-    //     if (JoyStreamCommunicator.instance.GetPlayerCount() == 0)
-    //     {
-    //         DOVirtual.DelayedCall(5, () => SendIdleModeEvent(true)).SetId("IdleTimer" + GetInstanceID());
-    //     }
-    //     else if (JoyStreamCommunicator.instance.GetPlayerCount() == 49)
-    //     {
-    //         enterModeChanged?.Invoke(true);
-    //     }
+    //     // ProtocolManager는 PlayerSelector에 사용자 제거를 요청
+    //     playerSelector.RemoveUser(playerData.conn_id);
     // }
-    //-----------
-    private void OnUserEnter(string connId)
-{
-    // ProtocolManager는 PlayerSelector에 사용자 추가를 요청
-     
-    PlayerData newPlayerData = new PlayerData(connId);
-    playerSelector.OnAddUser(newPlayerData);
-
-}
-
-private void OnUserExit(string connId)
-{
-    // ProtocolManager는 PlayerSelector에 사용자 제거를 요청
-    playerSelector.RemoveUser(connId);
-}
 
 
     private void SendIdleModeEvent(bool isActive)
@@ -176,11 +178,17 @@ private void OnUserExit(string connId)
     public void OnReceivedUserConnect(PlayerData userData)
     {
         onUserConnectEvent?.Invoke(ProtocolType.CONTROLLER_CONNECT, userData);
+        TraceBox.Log("들어온 유저의 컬러: "+ userData.color_id);
+        TraceBox.Log("들어온 유저의 아이디: "+ userData.conn_id);
+        TraceBox.Log("들어온 유저의 인덱스: "+ userData.player_index);
     }
 
     public void OnReceivedUserDisconnect(PlayerData userData)
     {
         onUserConnectEvent?.Invoke(ProtocolType.CONTROLLER_DISCONNECT, userData);
+         TraceBox.Log("나간 유저의 컬러: "+ userData.color_id);
+        TraceBox.Log("나간 유저의 아이디: "+ userData.conn_id);
+        TraceBox.Log("나간 유저의 인덱스: "+ userData.player_index);
     }
 
     public void OnReceivedControllerFall_Press(string conID) 
