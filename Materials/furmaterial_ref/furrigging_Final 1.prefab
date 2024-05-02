@@ -1012,7 +1012,7 @@ GameObject:
   - component: {fileID: 6982620896659040083}
   - component: {fileID: 8430808520439527570}
   m_Layer: 0
-  m_Name: furrigging_Final
+  m_Name: furrigging_Final 1
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1076,7 +1076,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ee6f2e92fdc592149ace6fe85a9459ef, type: 2}
+  - {fileID: 2100000, guid: 9ec1411f9eceb14439aa5f3657409019, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

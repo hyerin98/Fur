@@ -238,7 +238,7 @@ public class PlayerSelector : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Player not found with ID: " + playerID);
+            Debug.LogWarning("Player not found with ID: " + playerID); // 5.2 디버깅페이지에서 경고뜸
         }
     }
 
