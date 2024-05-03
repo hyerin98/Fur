@@ -17,6 +17,7 @@ public class PlayerSelector : MonoBehaviour
 
     [Header("DOtween & GameObject & Bool")]
     public Ease ease;
+    Sequence mySequence;
     public GameObject furPrefab;
     public GameObject newFurEffect;
     public bool isSpawn;
@@ -77,6 +78,7 @@ public class PlayerSelector : MonoBehaviour
         switch (protocolType)
         {
             case ProtocolType.CONTROLLER_UP_PRESS:
+                TraceBox.Log("위키누름!!");
                 if (players.ContainsKey(conID))
                 {
                     players[conID].OnPlayerMoveProtocol(protocolType);
@@ -149,20 +151,20 @@ public class PlayerSelector : MonoBehaviour
             if (availableFur.Count == 0)
             {
                 Debug.LogError("사용가능한 fur이 없다");
-                return; 
+                return;
             }
 
             int randomIndex = UnityEngine.Random.Range(0, availableFur.Count);
             int furIndex = availableFur[randomIndex];
             GameObject assignedFur = furs[furIndex];
             playerData.player_index = furIndex;
-            
+
 
             // 레이어 설정 . .?
 
             // 색상 할당 및 플레이어 설정 로직...
             Player targetPlayer = assignedFur.GetComponent<Player>();
-            
+
             targetPlayer.SetUserIndex(playerData.player_index);
             if (targetPlayer != null)
             {
@@ -174,7 +176,8 @@ public class PlayerSelector : MonoBehaviour
                     {
                         Material material = renderer.material;
                         material.color = color;
-                        StartCoroutine(ChangeColorGradually(renderer, color, 60f)); // 점진적 색상 변경
+                        renderer.material.DOColor(color, 5f);
+                        //StartCoroutine(ChangeColorGradually(renderer, color, 60f)); // 점진적 색상 변경
                         targetPlayer.enabled = true;
                     }
                     changedColors.Add(color); // 변경된 색상을 추적
@@ -182,13 +185,23 @@ public class PlayerSelector : MonoBehaviour
                 targetPlayer.playerID = playerData.color_id;
                 targetPlayer.SetPlayerColor(playerData.color_id);
                 targetPlayer.SetUserIndex(furIndex);
-                targetPlayer.transform.DOScale(1.3f, 0.5f).SetEase(ease); // 유저 접속 시 두트윈으로 효과주기
+                //targetPlayer.transform.DOScale(1.5f, 0.5f).SetEase(ease); // 유저 접속 시 두트윈으로 효과주기
+
+                mySequence = DOTween.Sequence()
+                .OnStart(() =>
+                {
+                    targetPlayer.transform.localScale = targetPlayer.transform.localScale;
+                })
+                .Append(targetPlayer.transform.DOScale(1.5f, 1).SetEase(Ease.OutBounce))
+                .SetDelay(0.5f);
+
+
                 usedFur.Add(furIndex);
                 players.Add(playerData.color_id, targetPlayer);
                 GameObject tempEffect = Instantiate(newFurEffect, targetPlayer.transform.position, Quaternion.identity);
                 Destroy(tempEffect, 2.0f);
                 playerData.player_index = players.Count;  // 플레이어 인덱스 설정
-                
+
                 Debug.Log("새로운 유저 들어옴: " + furIndex + " , " + "유저의 컬러값과 인덱스는: " + playerData.color_id + " , " + playerData.player_index);
                 //Debug.Log("Players before removing: " + string.Join(", ", players.Keys));
             }
@@ -205,6 +218,7 @@ public class PlayerSelector : MonoBehaviour
         if (players.ContainsKey(playerID))
         {
             Player player = players[playerID];
+            // player.rigid.isKinematic = false;
             GameObject furObject = player.gameObject; // 4.30 계속 삭제 시 missing이슈 -> 5번눌러서 삭제하는거랑 겹쳐서그런듯 
             if (player.playerColor != null)
             {
@@ -220,16 +234,16 @@ public class PlayerSelector : MonoBehaviour
                     furPositions.RemoveAt(furIndex);
                     usedFur.Remove(furIndex);
 
-                // 파티클 효과 실행
-                GameObject particles = Instantiate(particlePrefab, furObject.transform.position, Quaternion.identity);
-                Destroy(particles, 2.0f); // 파티클이 자동으로 사라지도록 설정
+                    // 파티클 효과 실행
+                    GameObject particles = Instantiate(particlePrefab, furObject.transform.position, Quaternion.identity);
+                    Destroy(particles, 2.0f); // 파티클이 자동으로 사라지도록 설정
 
-                // 오브젝트를 트윈 효과로 사라지게 함
-                furObject.transform.DOScale(Vector3.zero, 0.5f).OnComplete(() =>
-                {
-                    Destroy(furObject);
-                    StartCoroutine(RespawnFur(initialPosition)); 
-                });
+                    // 오브젝트를 트윈 효과로 사라지게 함
+                    furObject.transform.DOScale(Vector3.zero, 0.5f).OnComplete(() =>
+                    {
+                        Destroy(furObject);
+                        StartCoroutine(RespawnFur(initialPosition));
+                    });
                 }
             }
             //ColorManager.instance.ReturnColor(player.playerColor);
@@ -253,30 +267,30 @@ public class PlayerSelector : MonoBehaviour
             furPositions.Add(position); // 새 fur의 위치를 리스트에 추가
         }
     }
-    private IEnumerator ChangeColorGradually(Renderer renderer, Color targetColor, float duration)
-    {
-        Color initialColor = renderer.material.color;
-        float timer = 0.0f;
+    // private IEnumerator ChangeColorGradually(Renderer renderer, Color targetColor, float duration)
+    // {
+    //     Color initialColor = renderer.material.color;
+    //     float timer = 0.0f;
 
-        while (timer < duration)
-        {
-            if (renderer == null || renderer.gameObject == null)
-            {
-                yield break;
-            }
-            timer += Time.deltaTime;
-            float t = Mathf.Clamp01(timer / duration);
-            renderer.material.color = Color.Lerp(initialColor, targetColor, t);
-            yield return null; // 다음 프레임까지 대기
-        }
-        if (renderer != null && renderer.gameObject != null)
-        {
-            renderer.material.color = targetColor;
-        }
-    }
+    //     while (timer < duration)
+    //     {
+    //         if (renderer == null || renderer.gameObject == null)
+    //         {
+    //             yield break;
+    //         }
+    //         timer += Time.deltaTime;
+    //         float t = Mathf.Clamp01(timer / duration);
+    //         renderer.material.color = Color.Lerp(initialColor, targetColor, t);
+    //         yield return null; // 다음 프레임까지 대기
+    //     }
+    //     if (renderer != null && renderer.gameObject != null)
+    //     {
+    //         renderer.material.color = targetColor;
+    //     }
+    // }
 
 
-    
+
 
     void Update()
     {

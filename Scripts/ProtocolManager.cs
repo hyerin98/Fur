@@ -113,7 +113,7 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
     private void OnUserExit(PlayerData playerData)
     {
         // ProtocolManager는 PlayerSelector에 사용자 제거를 요청
-        playerSelector.RemoveUser(playerData.conn_id);
+        //playerSelector.RemoveUser(playerData.conn_id);
         OnReceivedUserDisconnect(playerData);
         if (_enableDetaledLog)
             TraceBox.Log("!!유저나감!! / connID: " + playerData.conn_id + " / color " + playerData.color_id + " / index: " + playerData.player_index);

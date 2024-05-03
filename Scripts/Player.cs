@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private Animator Anim = null;
     private KeyCode downKeyCode = 0;
-    private Rigidbody rigid;
+    public Rigidbody rigid;
     public delegate void OnPlayerEnd(Player target);
     public event OnPlayerEnd onPlayerEnd;
     public Transform destination;
@@ -55,6 +55,8 @@ public class Player : MonoBehaviour
             Debug.LogError("PlayerSelector component not found in the scene!");
         }
 
+       
+
     }
 
     void Start()
@@ -66,32 +68,37 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (downKeyCode == KeyCode.UpArrow)
-        {
-            transform.DOMoveY(originalPos.y + 0.5f, 0.5f).SetEase(ease)
-            .OnComplete(() =>
-            {
-                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-            });
-        }
+        // if (downKeyCode == KeyCode.UpArrow)
+        // {
+        //     transform.DOMoveY(originalPos.y + 1f, 0.5f).SetEase(ease)
+        //     .OnComplete(() =>
+        //     {
+        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
+        //     });
+        // }
 
-        else if (downKeyCode == KeyCode.DownArrow)
-        {
-            transform.DOMoveY(originalPos.y - 0.5f, 0.5f).SetEase(ease)
-            .OnComplete(() =>
-            {
-                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-            });
-        }
-        else if (downKeyCode == KeyCode.LeftArrow)
-        {
-            rigid.rotation = Quaternion.Euler(0, 0, -45f);
+        // else if (downKeyCode == KeyCode.DownArrow)
+        // {
+        //     transform.DOMoveY(originalPos.y - 1f, 0.5f).SetEase(ease)
+        //     .OnComplete(() =>
+        //     {
+        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
+        //     });
+        // }
+        // else if (downKeyCode == KeyCode.LeftArrow)
+        // {
+        //     rigid.rotation = Quaternion.Euler(0, 0, 45f);
 
-        }
-        else if (downKeyCode == KeyCode.RightArrow)
-        {
-            rigid.rotation = Quaternion.Euler(0, 0, 45f);
-        }
+        // }
+        // else if (downKeyCode == KeyCode.RightArrow)
+        // {
+        //     rigid.rotation = Quaternion.Euler(0, 0, -45f);
+        // }
+        // else if(downKeyCode == KeyCode.Space)
+        // {
+        //     this.rigid.isKinematic = false;
+        //     isFalled = true;
+        // }
 
 
         // 에디터에서 테스트
@@ -113,11 +120,11 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            rigid.rotation = Quaternion.Euler(0, 0, -45f); 
+            rigid.rotation = Quaternion.Euler(0, 0, -50f); 
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            rigid.rotation = Quaternion.Euler(0, 0, 45f); 
+            rigid.rotation = Quaternion.Euler(0, 0, 50f); 
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -125,44 +132,9 @@ public class Player : MonoBehaviour
             this.rigid.isKinematic = false;
             isFalled = true;
         }
-
-        // if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
-        // {
-        //     // 모든 자식의 HingeJoint를 순회
-        //     foreach (var hinge in GetComponentsInChildren<HingeJoint>())
-        //     {
-        //         Rigidbody childRigid = hinge.GetComponent<Rigidbody>();
-        //         if (childRigid != null)
-        //         {
-        //             // 토크의 방향을 결정
-        //             Vector3 torqueDirection = Input.GetKeyDown(KeyCode.RightArrow) ? Vector3.forward : Vector3.back;
-        //             childRigid.AddTorque(torqueDirection * torqueAmount, ForceMode.Impulse);
-        //         }
-        //     }
-        // }
-
-
     }
 
     
-
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Ground") && isFalled)
-        {
-            Debug.Log("바닥과 충~돌");
-            rigid.isKinematic = true;
-            isFalled = false;
-
-            foreach (var hinge in GetComponentsInChildren<HingeJoint>())
-            {
-                Destroy(hinge);
-            }
-            playerSelector.RemoveUser(playerID);
-        }
-    }
-
     public void OnPlayerMoveProtocol(ProtocolType protocolType)
     {
         switch (protocolType)
@@ -172,6 +144,7 @@ public class Player : MonoBehaviour
                 break;
             case ProtocolType.CONTROLLER_UP_RELEASE:
                 downKeyCode = KeyCode.None;
+                TraceBox.Log("밑키누름!!");
                 break;
             case ProtocolType.CONTROLLER_DOWN_PRESS:
                 downKeyCode = KeyCode.DownArrow;
@@ -197,6 +170,24 @@ public class Player : MonoBehaviour
                 break;
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Ground") && isFalled)
+        {
+            Debug.Log("바닥과 충~돌");
+            rigid.isKinematic = true;
+            isFalled = false;
+
+            foreach (var hinge in GetComponentsInChildren<HingeJoint>())
+            {
+                Destroy(hinge);
+            }
+            playerSelector.RemoveUser(playerID);
+        }
+    }
+
+    
 
     public void RemovePlayer()
     {

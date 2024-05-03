@@ -619,7 +619,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11dbac9272a006745a15a6c3213ce8ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedID: 0
 --- !u!1001 &78862634
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5378,283 +5377,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6900393763057827012, guid: 223b4e766cfc7964ba5e26e9dbd4202b, type: 3}
   m_PrefabInstance: {fileID: 654003351}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &660268282
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 837436596585570639, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698081910181, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.max
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698081910181, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.min
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698081910181, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Motor.force
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698081910181, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.damper
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698081910181, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.spring
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698429902682, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.max
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698429902682, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.min
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698429902682, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Motor.force
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698429902682, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.damper
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698429902682, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.spring
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819668, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.max
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819668, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.min
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819668, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Motor.force
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819668, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.damper
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819668, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.spring
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819669, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819670, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.max
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819670, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.min
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819670, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Motor.force
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819670, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.damper
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819670, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.spring
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819674, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.max
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819674, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.min
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819674, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Motor.force
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819674, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.damper
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819674, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.spring
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605698564819678, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699023830546, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.max
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699023830546, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.min
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699023830546, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Motor.force
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699023830546, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.damper
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699023830546, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.spring
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699238399603, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.max
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699238399603, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.min
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699238399603, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Motor.force
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699238399603, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.damper
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699238399603, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.spring
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699532135931, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.max
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699532135931, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.min
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699532135931, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Motor.force
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699532135931, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.damper
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699532135931, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.spring
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699838648697, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.max
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699838648697, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.min
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699838648697, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Motor.force
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699838648697, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.damper
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699838648697, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.spring
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699868983900, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.max
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699868983900, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Limits.min
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699868983900, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Motor.force
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699868983900, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.damper
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5071605699868983900, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Spring.spring
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827012, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_Name
-      value: FianlTest!
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827012, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827014, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: torqueAmount
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827133, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_RootOrder
-      value: 21
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827133, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827133, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.83
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827133, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827133, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827133, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827133, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827133, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827133, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827133, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6900393763057827133, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 72a16aa0396a3a84f801521bb90f39cb, type: 3}
 --- !u!1001 &661080555
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6252,13 +5974,13 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 0.1
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -6285,7 +6007,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 2
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -7240,7 +6962,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 772483847}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -8357,6 +8079,7 @@ GameObject:
   - component: {fileID: 963194229}
   - component: {fileID: 963194230}
   - component: {fileID: 963194231}
+  - component: {fileID: 963194232}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -8490,7 +8213,7 @@ MonoBehaviour:
   volumeTrigger: {fileID: 963194228}
   volumeLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 1
   stopNaNPropagation: 1
   finalBlitToCameraTarget: 0
   antialiasingMode: 1
@@ -8535,6 +8258,23 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &963194232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedProfile: {fileID: 11400000, guid: 4b241bd0958c3754081d078e03f5c359, type: 2}
+  isGlobal: 1
+  blendDistance: 0
+  weight: 1
+  priority: 0
 --- !u!1001 &964933536
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12694,6 +12434,14 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8865671967517647316, guid: db2d04d86556c62469e3afde50ab5520, type: 3}
+      propertyPath: m_FontData.m_MaxSize
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8865671967517647316, guid: db2d04d86556c62469e3afde50ab5520, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 8865671968706495290, guid: db2d04d86556c62469e3afde50ab5520, type: 3}
       propertyPath: showDebugLog
       value: 1
@@ -12789,6 +12537,10 @@ PrefabInstance:
     - target: {fileID: 8865671968706495292, guid: db2d04d86556c62469e3afde50ab5520, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8865671968795333335, guid: db2d04d86556c62469e3afde50ab5520, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 8865671968795333337, guid: db2d04d86556c62469e3afde50ab5520, type: 3}
       propertyPath: m_SizeDelta.y
@@ -14440,7 +14192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 2183aa49a09c2d64cb856568568c55f6, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 8b0554f62bbc4564a8d2a21641f50339, type: 2}
   isGlobal: 1
   blendDistance: 0
   weight: 1
@@ -17424,7 +17176,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2981639798367752178, guid: e5999cc5f9bd8d54ebb7afc4626a7f63, type: 3}
       propertyPath: m_Mass
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2981639798367752184, guid: e5999cc5f9bd8d54ebb7afc4626a7f63, type: 3}
       propertyPath: m_Name
@@ -17493,7 +17245,7 @@ PrefabInstance:
     - target: {fileID: 2981639798367752189, guid: e5999cc5f9bd8d54ebb7afc4626a7f63, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4711208715938537054, guid: 0380c8751014446c2b1751fd9b659040, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 2981639798367752190, guid: e5999cc5f9bd8d54ebb7afc4626a7f63, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
