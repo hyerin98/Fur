@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     public delegate void OnPlayerEnd(Player target);
     public event OnPlayerEnd onPlayerEnd;
     public Transform destination;
-    public PlayerData playerData;
+    //public PlayerData playerData;
 
     public PlayerSelector playerSelector;
 
@@ -63,7 +63,7 @@ public class Player : MonoBehaviour
     {
         PlayerStart();
         originalPos = transform.position;
-        GetComponent<Player>().enabled = false; // 4.30 테스트
+        GetComponent<Player>().enabled = false; // 4.30 테스트 -> 생성된 털들만 움직이도록
     }
 
     private void Update()
@@ -129,8 +129,9 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            this.rigid.isKinematic = false;
+            //this.rigid.isKinematic = false;
             isFalled = true;
+            //transform.DOMoveY(transform.position.y -15f, 8f).SetEase(Ease.OutBounce);
         }
     }
 
@@ -166,7 +167,8 @@ public class Player : MonoBehaviour
                 break;
             case ProtocolType.CONTROLLER_FALL_PRESS:
                 downKeyCode = KeyCode.Space;
-                RemovePlayer();
+                //RemovePlayer();
+                playerSelector.RemoveUser(playerID);
                 break;
         }
     }
@@ -179,11 +181,12 @@ public class Player : MonoBehaviour
             rigid.isKinematic = true;
             isFalled = false;
 
-            foreach (var hinge in GetComponentsInChildren<HingeJoint>())
-            {
-                Destroy(hinge);
-            }
+            // foreach (var hinge in GetComponentsInChildren<HingeJoint>())
+            // {
+            //     Destroy(hinge);
+            // }
             playerSelector.RemoveUser(playerID);
+            //Invoke("playerSelector.RemoveUser(playerID)",6f);
         }
     }
 

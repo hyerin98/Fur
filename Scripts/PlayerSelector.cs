@@ -23,6 +23,7 @@ public class PlayerSelector : MonoBehaviour
     public bool isSpawn;
     public GameObject particlePrefab;
     [SerializeField] AnimationCurve curve;
+    public Transform pos;
 
     private void Awake()
     {
@@ -31,6 +32,7 @@ public class PlayerSelector : MonoBehaviour
         isSpawn = false;
         InitializeFurPositions();
     }
+
     private void InitializeFurPositions()
     {
         //furPositions.Clear();
@@ -177,7 +179,7 @@ public class PlayerSelector : MonoBehaviour
                         Material material = renderer.material;
                         material.color = color;
                         renderer.material.DOColor(color, 5f);
-                        //StartCoroutine(ChangeColorGradually(renderer, color, 60f)); // 점진적 색상 변경
+                        StartCoroutine(ChangeColorGradually(renderer, color, 60f)); // 점진적 색상 변경
                         targetPlayer.enabled = true;
                     }
                     changedColors.Add(color); // 변경된 색상을 추적
@@ -187,19 +189,45 @@ public class PlayerSelector : MonoBehaviour
                 targetPlayer.SetUserIndex(furIndex);
                 //targetPlayer.transform.DOScale(1.5f, 0.5f).SetEase(ease); // 유저 접속 시 두트윈으로 효과주기
 
-                mySequence = DOTween.Sequence()
-                .OnStart(() =>
-                {
-                    targetPlayer.transform.localScale = targetPlayer.transform.localScale;
-                })
-                .Append(targetPlayer.transform.DOScale(1.5f, 1).SetEase(Ease.OutBounce))
-                .SetDelay(0.5f);
+                // 위치 이동과 스케일 변경을 시퀀스로 구성
+                // targetPlayer에 적용할 시퀀스 생성
+                Sequence mySequence = DOTween.Sequence();
 
+                // 시퀀스에 애니메이션 추가. 먼저 1.5배로 커지기
+                mySequence.Append(targetPlayer.transform.DOScale(3f, 0.25f).SetEase(Ease.OutBack));
 
+                // 그 다음 약간 줄어들기 (1.2배)
+                mySequence.Append(targetPlayer.transform.DOScale(1f, 0.15f).SetEase(Ease.InQuad));
+
+                // 마지막으로 원래 크기로 돌아가기
+                mySequence.Append(targetPlayer.transform.DOScale(1.8f, 0.1f).SetEase(Ease.InBack));
+
+                // 시퀀스 시작
+                mySequence.Play();
+
+                //-----------
+                // 자식 객체에 HingeJoint가 붙어 있다고 가정
+
+                // 자식 객체를 찾습니다.
+                GameObject childWithHinge = targetPlayer.transform.Find("Bone").gameObject;
+
+                // 흔들림 효과를 위해 자식 객체의 로컬 회전을 애니메이션합니다.
+                // mySequence.Append(childWithHinge.transform.DOLocalRotate(new Vector3(0, 0, -30), 0.25f, RotateMode.Fast).SetEase(Ease.InBounce));
+                // mySequence.Append(childWithHinge.transform.DOLocalRotate(new Vector3(0, 0, 30), 0.5f, RotateMode.Fast).SetEase(Ease.InElastic));
+                // mySequence.Append(childWithHinge.transform.DOLocalRotate(new Vector3(0, 0, 0), 0.25f, RotateMode.Fast).SetEase(Ease.OutElastic));
+
+                // // 동시에 targetPlayer의 스케일을 조정합니다.
+                // mySequence.Join(targetPlayer.transform.DOScale(2f, 0.25f).SetEase(Ease.OutBack));
+                // mySequence.Join(targetPlayer.transform.DOScale(0.5f, 0.15f).SetEase(Ease.InQuad));
+                // mySequence.Join(targetPlayer.transform.DOScale(1f, 0.1f).SetEase(Ease.InBack));
+
+                // // 시퀀스 시작
+                // mySequence.Play();
+                //----------------
                 usedFur.Add(furIndex);
                 players.Add(playerData.color_id, targetPlayer);
                 GameObject tempEffect = Instantiate(newFurEffect, targetPlayer.transform.position, Quaternion.identity);
-                Destroy(tempEffect, 2.0f);
+                Destroy(tempEffect, 1.0f);
                 playerData.player_index = players.Count;  // 플레이어 인덱스 설정
 
                 Debug.Log("새로운 유저 들어옴: " + furIndex + " , " + "유저의 컬러값과 인덱스는: " + playerData.color_id + " , " + playerData.player_index);
@@ -239,7 +267,9 @@ public class PlayerSelector : MonoBehaviour
                     Destroy(particles, 2.0f); // 파티클이 자동으로 사라지도록 설정
 
                     // 오브젝트를 트윈 효과로 사라지게 함
-                    furObject.transform.DOScale(Vector3.zero, 0.5f).OnComplete(() =>
+                    //furObject.transform.DOMoveY(furObject.transform.position.y -15f, 0.5f).SetEase(Ease.OutBounce);
+                    furObject.transform.DOMove(pos.transform.position, 3f).SetEase(Ease.InExpo).SetEase(Ease.OutBounce); // 5.7 위코드에서 수정했는데 다시 수정필
+                    furObject.transform.DOScale(1f, 0.5f).OnComplete(() =>
                     {
                         Destroy(furObject);
                         StartCoroutine(RespawnFur(initialPosition));
@@ -267,27 +297,27 @@ public class PlayerSelector : MonoBehaviour
             furPositions.Add(position); // 새 fur의 위치를 리스트에 추가
         }
     }
-    // private IEnumerator ChangeColorGradually(Renderer renderer, Color targetColor, float duration)
-    // {
-    //     Color initialColor = renderer.material.color;
-    //     float timer = 0.0f;
+    private IEnumerator ChangeColorGradually(Renderer renderer, Color targetColor, float duration)
+    {
+        Color initialColor = renderer.material.color;
+        float timer = 0.0f;
 
-    //     while (timer < duration)
-    //     {
-    //         if (renderer == null || renderer.gameObject == null)
-    //         {
-    //             yield break;
-    //         }
-    //         timer += Time.deltaTime;
-    //         float t = Mathf.Clamp01(timer / duration);
-    //         renderer.material.color = Color.Lerp(initialColor, targetColor, t);
-    //         yield return null; // 다음 프레임까지 대기
-    //     }
-    //     if (renderer != null && renderer.gameObject != null)
-    //     {
-    //         renderer.material.color = targetColor;
-    //     }
-    // }
+        while (timer < duration)
+        {
+            if (renderer == null || renderer.gameObject == null)
+            {
+                yield break;
+            }
+            timer += Time.deltaTime;
+            float t = Mathf.Clamp01(timer / duration);
+            renderer.material.color = Color.Lerp(initialColor, targetColor, t);
+            yield return null; // 다음 프레임까지 대기
+        }
+        if (renderer != null && renderer.gameObject != null)
+        {
+            renderer.material.color = targetColor;
+        }
+    }
 
 
 
