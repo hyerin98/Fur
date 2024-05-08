@@ -10,7 +10,7 @@ using UnityEngine;
 public class ProtocolManager : MonoSingleton<ProtocolManager>
 {
     [SerializeField] bool _enableDetaledLog = false;
-    public delegate void WebControllerEvent(ProtocolType protocolType, string colorId);
+    public delegate void WebControllerEvent(ProtocolType protocolType, string conID);
     public event WebControllerEvent onWebControllerEvent;
 
     public delegate void UserConnectEvent(ProtocolType protocolType, PlayerData playerData);
@@ -20,25 +20,23 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
     public event ModeDelegate enterModeChanged;
     public delegate void UserActionDelegate(string colorId);
     public event UserActionDelegate onUserReplayEvent;
-    private PlayerSelector playerSelector;
 
     private void Start()
     {
-        playerSelector = FindObjectOfType<PlayerSelector>();
         if (ConfigManager.instance.isPrepared) OnConfigDataPrepared();
         else ConfigManager.instance.Prepared += OnConfigDataPrepared;
     }
 
     private void OnConfigDataPrepared()
     {
-        JoyStreamCommunicator.instance.MessageReceived += ReceiveMessage; // 시그널 메세지 수신 
+        //JoyStreamCommunicator.instance.MessageReceived += ReceiveMessage; // 시그널 메세지 수신 
         JoyStreamCommunicator.instance.UserEnter += OnUserEnter; // 사용자 들어왔을 때
         JoyStreamCommunicator.instance.UserExit += OnUserExit; // 사용자 나갔을 때
         JoyStreamCommunicator.instance.KeyDown += OnKeyDown; // 사용자가 키를 눌렀을 때
         JoyStreamCommunicator.instance.KeyUp += OnKeyUp; // 사용자가 키를 뗐을 때
         JoyStreamCommunicator.instance.Prepared += OnPrepared; // 준비가 되었을 때, 서버와 연결되었고 사용자 리스트를 서버로부터 받아왔을 때
 
-        JoyStreamCommunicator.instance.MaxPlayerCount = ConfigManager.instance.data.maxPlayerCount;
+        //JoyStreamCommunicator.instance.MaxPlayerCount = ConfigManager.instance.data.maxPlayerCount;
 
 #if !UNITY_EDITOR
         JoyStreamCommunicator.instance.Connect(ConfigManager.instance.data.serverURL, "grab");
@@ -49,20 +47,20 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         DOVirtual.DelayedCall(5, () => SendIdleModeEvent(true)).SetId("IdleTimer" + GetInstanceID());
     }
 
-    private void ReceiveMessage(string conn_id, string key_code, string value)
-    {
-        TraceBox.Log("Message Received / connId: " + conn_id + " / key_code: " + key_code  + " / value: " + value);
-        switch (key_code)
-        {
-            case "game_replay":
-                {
-                    onUserReplayEvent?.Invoke(conn_id);
-                    JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_color", ColorManager.instance.AssignUserColor() + "," + JoyStreamCommunicator.instance.GetPlayerIndex(conn_id));
-                    //JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_connect", JoyStreamCommunicator.instance.ThemeType + "," + JoyStreamCommunicator.instance.GetPlayerIndex(conn_id).ToString());
-                    break;
-                }
-        }
-    }
+    // private void ReceiveMessage(string conn_id, string key_code, string value)
+    // {
+    //     TraceBox.Log("Message Received / connId: " + conn_id + " / key_code: " + key_code  + " / value: " + value);
+    //     switch (key_code)
+    //     {
+    //         case "game_replay":
+    //             {
+    //                 onUserReplayEvent?.Invoke(conn_id);
+    //                 JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_connect", ColorManager.instance.AssignUserColor());
+    //                 //JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_connect", JoyStreamCommunicator.instance.ThemeType + "," + JoyStreamCommunicator.instance.GetPlayerIndex(conn_id).ToString());
+    //                 break;
+    //             }
+    //     }
+    // }
 
     private void OnPrepared()
     {
@@ -180,20 +178,14 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         }
     }
 
-    public void OnReceivedUserConnect(PlayerData userData)
+    public void OnReceivedUserConnect(PlayerData playerData)
     {
-        onUserConnectEvent?.Invoke(ProtocolType.CONTROLLER_CONNECT, userData);
-        TraceBox.Log("들어온 유저의 컬러: "+ userData.color_id);
-        TraceBox.Log("들어온 유저의 아이디: "+ userData.conn_id);
-        TraceBox.Log("들어온 유저의 인덱스: "+ userData.player_index);
+        onUserConnectEvent?.Invoke(ProtocolType.CONTROLLER_CONNECT, playerData);
     }
 
-    public void OnReceivedUserDisconnect(PlayerData userData)
+    public void OnReceivedUserDisconnect(PlayerData playerData)
     {
-        onUserConnectEvent?.Invoke(ProtocolType.CONTROLLER_DISCONNECT, userData);
-         TraceBox.Log("나간 유저의 컬러: "+ userData.color_id);
-        TraceBox.Log("나간 유저의 아이디: "+ userData.conn_id);
-        TraceBox.Log("나간 유저의 인덱스: "+ userData.player_index);
+        onUserConnectEvent?.Invoke(ProtocolType.CONTROLLER_DISCONNECT, playerData);
     }
 
     public void OnReceivedControllerFall_Press(string conID) 

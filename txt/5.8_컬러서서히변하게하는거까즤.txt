@@ -23,13 +23,11 @@ public class PlayerSelector : MonoBehaviour
     public bool isSpawn;
     public GameObject particlePrefab;
     [SerializeField] AnimationCurve curve;
-    Tweener floatTweener;
-    Sequence showSequence, hideSequence;
     public Transform pos;
 
     void Start()
     {
-        DOTween.Init();
+         DOTween.Init();
     }
     private void Awake()
     {
@@ -56,7 +54,7 @@ public class PlayerSelector : MonoBehaviour
         {
             //Debug.Log("접속하기 전 유저의 컬러아이디: " + playerData.color_id);
             playerDataList[playerData.conn_id] = playerData;  // 연결된 사용자 정보 저장
-            OnAddUser(playerData);
+            OnAddUser(playerData );
             //Debug.Log("접속 후 유저의 컬러아이디: " + playerData.color_id);
         }
         else if (protocolType == ProtocolType.CONTROLLER_DISCONNECT)
@@ -144,9 +142,9 @@ public class PlayerSelector : MonoBehaviour
     }
 
 
-    // public static string set_color = "set_color";
-    // public static readonly string set_colro2 = "aaa";
-    // public const string set_colro3 = "asaaaa";
+// public static string set_color = "set_color";
+// public static readonly string set_colro2 = "aaa";
+// public const string set_colro3 = "asaaaa";
 
     public void OnAddUser(PlayerData playerData)
     {
@@ -178,6 +176,9 @@ public class PlayerSelector : MonoBehaviour
             GameObject assignedFur = furs[furIndex];
             playerData.player_index = furIndex;
 
+
+            // 레이어 설정 . .?
+
             // 색상 할당 및 플레이어 설정 로직...
             Player targetPlayer = assignedFur.GetComponent<Player>();
 
@@ -190,6 +191,7 @@ public class PlayerSelector : MonoBehaviour
                     Material material = renderer.material;
                     Color targetColor;
 
+                    //Color color;
                     if (UnityEngine.ColorUtility.TryParseHtmlString("#" + playerData.color_id, out targetColor))
                     {
                         // 색상이 파싱되면 서서히 색상 변경을 시작
@@ -198,7 +200,20 @@ public class PlayerSelector : MonoBehaviour
                             material.color = value;
                         });
                     }
+                // if (UnityEngine.ColorUtility.TryParseHtmlString("#" + playerData.color_id, out color))
+                // {
+
+                //     Material material = renderer.material;
+                //     material.color = color;
+
+                //     //renderer.sharedMaterial.DOColor(color, 5f);
+
+                //     DOVirtual.Color(material.color, color,10, (value) => {
+                //         renderer.material.color = value;
+                // });
+
                     targetPlayer.enabled = true;
+
                     changedColors.Add(targetColor); // 변경된 색상을 추적
                 }
                 targetPlayer.playerID = playerData.color_id;
@@ -211,11 +226,6 @@ public class PlayerSelector : MonoBehaviour
                 .Append(targetPlayer.transform.DOScale(1f, 0.15f).SetEase(Ease.InQuad))
                 .Append(targetPlayer.transform.DOScale(1.8f, 0.1f).SetEase(Ease.InBack))
                 .Play();
-
-                //             showSequence = DOTween.Sequence().SetAutoKill(false).Pause()
-                // .AppendCallback(() => floatTweener.Play())
-
-
 
                 usedFur.Add(furIndex);
                 players.Add(playerData.color_id, targetPlayer);
@@ -236,6 +246,7 @@ public class PlayerSelector : MonoBehaviour
         if (players.ContainsKey(playerID))
         {
             Player player = players[playerID];
+            // player.rigid.isKinematic = false;
             GameObject furObject = player.gameObject; // 4.30 계속 삭제 시 missing이슈 -> 5번눌러서 삭제하는거랑 겹쳐서그런듯 
             if (player.playerColor != null)
             {
@@ -255,24 +266,19 @@ public class PlayerSelector : MonoBehaviour
                     GameObject particles = Instantiate(particlePrefab, furObject.transform.position, Quaternion.identity);
                     Destroy(particles, 2.0f); // 파티클이 자동으로 사라지도록 설정
 
-                    // furObject.transform.DOMove(pos.transform.position, 3f).SetEase(Ease.InExpo).SetEase(Ease.OutBounce); // 5.7 위코드에서 수정했는데 다시 수정필
-                    // furObject.transform.DOScale(1f, 0.5f).OnComplete(() =>
-                    // {
-                    //     Destroy(furObject);
-                    //     StartCoroutine(RespawnFur(initialPosition));
-                    // });
-                    hideSequence = DOTween.Sequence().SetAutoKill(true)
-                    .Join(furObject.transform.DOLocalRotate(new Vector3(180, 180, 180), 1.5f).SetEase(Ease.InBack, 0.5f))
-                    .Join(furObject.transform.DOScale(0, 1.5f).SetEase(Ease.InBack, 1f))
-                    .OnComplete(() =>
+                    // 오브젝트를 트윈 효과로 사라지게 함
+                    //furObject.transform.DOMoveY(furObject.transform.position.y -15f, 0.5f).SetEase(Ease.OutBounce);
+                    furObject.transform.DOMove(pos.transform.position, 3f).SetEase(Ease.InExpo).SetEase(Ease.OutBounce); // 5.7 위코드에서 수정했는데 다시 수정필
+                    furObject.transform.DOScale(1f, 0.5f).OnComplete(() =>
                     {
                         Destroy(furObject);
                         StartCoroutine(RespawnFur(initialPosition));
                     });
                 }
             }
-            ColorManager.instance.ReturnColor(player.playerColor);
+            //ColorManager.instance.ReturnColor(player.playerColor);
             players.Remove(playerID);
+            //Debug.Log("Removed player with ID: " + playerID);
         }
         else
         {
@@ -281,30 +287,32 @@ public class PlayerSelector : MonoBehaviour
     }
 
     public IEnumerator RespawnFur(Vector3 position)
+{
+    yield return new WaitForSeconds(3.0f); // 3초 대기
+
+    if (furPrefab != null)
     {
-        yield return new WaitForSeconds(3.0f); // 3초 대기
+        GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
+        furs.Add(newFur);
+        furPositions.Add(position); // 새 fur의 위치를 리스트에 추가
 
-        if (furPrefab != null)
+        // Renderer 컴포넌트를 가져옴
+        Renderer furRenderer = newFur.GetComponent<Renderer>();
+        if (furRenderer != null)
         {
-            GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
-            furs.Add(newFur);
-            furPositions.Add(position); // 새 fur의 위치를 리스트에 추가
+            // Material 투명도를 초기에 0으로 설정
+            Color initialColor = furRenderer.material.color;
+            initialColor.a = 0f;
+            furRenderer.material.color = initialColor;
 
-            Renderer furRenderer = newFur.GetComponent<Renderer>(); // Renderer 컴포넌트를 가져옴
-            if (furRenderer != null)
-            {
-                // Material 투명도를 초기에 0으로 설정
-                Color initialColor = furRenderer.material.color;
-                initialColor.a = 0f;
-                furRenderer.material.color = initialColor;
-
-                Sequence seq = DOTween.Sequence();
-                seq.Append(newFur.transform.DOScale(1f, 0.5f)) // 처음 등장시 효과
-                    .Join(furRenderer.material.DOFade(3f, 1f)) // 동시에 페이드 인
-                    .Append(newFur.transform.DOScale(2.0f, 1f).SetEase(Ease.InOutElastic)); // 커지는 효과
-            }
+            // Sequence를 생성하여 애니메이션 단계를 추가합니다.
+            Sequence seq = DOTween.Sequence();
+            seq.Append(newFur.transform.DOScale(1f, 1.5f)) // 처음 등장시 효과
+                .Join(furRenderer.material.DOFade(3f, 3f)) // 동시에 페이드 인
+                .Append(newFur.transform.DOScale(2.0f, 1.5f).SetEase(Ease.InOutElastic)); // 커지는 효과
         }
     }
+}
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha5))

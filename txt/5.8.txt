@@ -1,0 +1,11 @@
+
+사용자가 접속해서 랜덤으로 눌리도록 해줄수있는지(시뮬레이션, 아이디어 생각)
+
+브랜치를 이용하자
+
+set_color 라는 key가 있고
+HEX가 value이고
+비고에는 #FF00FF 이런 식
+
+서버가 콘텐츠에게 보낼때 protocolManager이고
+콘텐츠가 서버에게 보내줄때는 joyStreamCommunicator를 쓴다

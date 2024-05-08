@@ -68,37 +68,37 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        // if (downKeyCode == KeyCode.UpArrow)
-        // {
-        //     transform.DOMoveY(originalPos.y + 1f, 0.5f).SetEase(ease)
-        //     .OnComplete(() =>
-        //     {
-        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-        //     });
-        // }
+        if (downKeyCode == KeyCode.UpArrow)
+        {
+            transform.DOMoveY(originalPos.y + 1f, 0.5f).SetEase(ease)
+            .OnComplete(() =>
+            {
+                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
+            });
+        }
 
-        // else if (downKeyCode == KeyCode.DownArrow)
-        // {
-        //     transform.DOMoveY(originalPos.y - 1f, 0.5f).SetEase(ease)
-        //     .OnComplete(() =>
-        //     {
-        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-        //     });
-        // }
-        // else if (downKeyCode == KeyCode.LeftArrow)
-        // {
-        //     rigid.rotation = Quaternion.Euler(0, 0, 45f);
+        else if (downKeyCode == KeyCode.DownArrow)
+        {
+            transform.DOMoveY(originalPos.y - 1f, 0.5f).SetEase(ease)
+            .OnComplete(() =>
+            {
+                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
+            });
+        }
+        else if (downKeyCode == KeyCode.LeftArrow)
+        {
+            rigid.rotation = Quaternion.Euler(0, 0, 45f);
 
-        // }
-        // else if (downKeyCode == KeyCode.RightArrow)
-        // {
-        //     rigid.rotation = Quaternion.Euler(0, 0, -45f);
-        // }
-        // else if(downKeyCode == KeyCode.Space)
-        // {
-        //     this.rigid.isKinematic = false;
-        //     isFalled = true;
-        // }
+        }
+        else if (downKeyCode == KeyCode.RightArrow)
+        {
+            rigid.rotation = Quaternion.Euler(0, 0, -45f);
+        }
+        else if(downKeyCode == KeyCode.Space)
+        {
+            this.rigid.isKinematic = false;
+            isFalled = true;
+        }
 
 
         // 에디터에서 테스트

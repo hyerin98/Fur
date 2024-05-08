@@ -1,0 +1,10 @@
+
+playerassignedColors = new List<string>(); // playerassignedColors 리스트를 초기화
+위에 코드를 awake와 start에 쓸 때 차이점
+
+awake는스크립트가 로드되고 해당 객체가 활성화될때 한번만 호출
+awake메서드가 호출된 후에는 게임 오브젝트가 활성화되더라도 다시 호출되지 않는다
+따라서 초기화나 설정에 적합하다
+
+start는 awake다음에 호출된다. start메서드도 한 번만 호출되지만, awake와는 달리 게임 오브젝트가 활성화된 후 호출된다.
+주로 초기화작업이나 스크립트와의 상호작용을 위한 준비가  완료된 후에 사용

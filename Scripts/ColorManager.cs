@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using IMFINE.Utils;
- 
-public class ColorManager : MonoSingleton<ColorManager> 
+
+public class ColorManager : MonoSingleton<ColorManager>
 {
     [Header("ColorSettings")]
     public List<string> availableColors = new List<string>(); // 사용가능한 컬러리스트
@@ -16,7 +16,7 @@ public class ColorManager : MonoSingleton<ColorManager>
     private float minBrightness = 0.6f;
     private float maxBrightness = 1.0f;
 
-    
+
     void Start()
     {
         maxUsers = 50;
@@ -24,9 +24,9 @@ public class ColorManager : MonoSingleton<ColorManager>
         //userIndex = players.Count;
     }
 
-     public void AddPlayer(Player player)
+    public void AddPlayer(Player player)
     {
-         players.Add(player.playerID, player); 
+        players.Add(player.playerID, player);
     }
 
 
@@ -35,8 +35,8 @@ public class ColorManager : MonoSingleton<ColorManager>
         List<string> randomColors = new List<string>();
         for (int i = 0; i < count; i++)
         {
-                string color = GenerateRandomColor();
-                randomColors.Add(color);
+            string color = GenerateRandomColor();
+            randomColors.Add(color);
         }
         return randomColors;
     }
@@ -52,10 +52,10 @@ public class ColorManager : MonoSingleton<ColorManager>
         } while (IsColorTooDark(color)); // 생성된 색상이 너무 어두운지 확인
 
         return ColorUtility.ToHtmlStringRGB(color);
-    
+
     }
 
-     bool IsColorTooDark(Color color)
+    bool IsColorTooDark(Color color)
     {
         // 색상의 밝기를 계산
         float brightness = color.r * 0.299f + color.g * 0.587f + color.b * 0.114f;
@@ -63,31 +63,32 @@ public class ColorManager : MonoSingleton<ColorManager>
         return brightness < 0.5f;
     }
 
-    
-   public string AssignUserColor()
-{
-    if (availableColors.Count > 0)
+
+    public string AssignUserColor()
     {
-        string color = availableColors[0]; // 첫 번째 사용 가능한 컬러 담기
-        availableColors.RemoveAt(0); // 할당되었으니까 사용가능한 컬러리스트에서 삭제
-        assignedColors.Add(color); // 할당된 색상 해시셋에 추가합니다.
-        //++userIndex; // 사용자 인덱스 증가
-        return color;
+        if (availableColors.Count > 0)
+        {
+            string color = availableColors[0]; // 첫 번째 사용 가능한 컬러 담기
+            availableColors.RemoveAt(0); // 할당되었으니까 사용가능한 컬러리스트에서 삭제
+            assignedColors.Add(color); // 할당된 색상 해시셋에 추가합니다.
+                                       //++userIndex; // 사용자 인덱스 증가
+            return color;
+        }
+        return null; // 사용 가능한 색상이 없을 경우 null 반환
     }
-    return null; // 사용 가능한 색상이 없을 경우 null 반환
-}
 
 
     public bool IsColorAvailable()
     {
         return assignedColors.Count < availableColors.Count;
     }
-public void ReturnColor(string color)
-{
-    if (assignedColors.Contains(color))
+    
+    public void ReturnColor(string color)
     {
-        assignedColors.Remove(color); // 할당된 색상 해시셋에서 제거
-        availableColors.Add(color); // 다시 사용 가능한 색상 리스트에 추가
+        if (assignedColors.Contains(color))
+        {
+            assignedColors.Remove(color); // 할당된 색상 해시셋에서 제거
+            availableColors.Add(color); // 다시 사용 가능한 색상 리스트에 추가
+        }
     }
-}
 }
