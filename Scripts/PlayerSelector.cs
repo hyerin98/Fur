@@ -51,32 +51,22 @@ public class PlayerSelector : MonoBehaviour
 
     private void OnUserConnectEvent(ProtocolType protocolType, PlayerData playerData)
     {
-        // Debug.Log($"Received {protocolType} event with PlayerData: {playerData}");
         if (protocolType == ProtocolType.CONTROLLER_CONNECT)
         {
-            //Debug.Log("접속하기 전 유저의 컬러아이디: " + playerData.color_id);
             playerDataList[playerData.conn_id] = playerData;  // 연결된 사용자 정보 저장
             OnAddUser(playerData);
-            //Debug.Log("접속 후 유저의 컬러아이디: " + playerData.color_id);
         }
         else if (protocolType == ProtocolType.CONTROLLER_DISCONNECT)
         {
-            //저장된 PlayerData를 사용하여 제거
-            if (playerDataList.TryGetValue(playerData.conn_id, out PlayerData storedPlayerData))
+            if (playerDataList.TryGetValue(playerData.conn_id, out PlayerData storedPlayerData)) //저장된 PlayerData를 사용하여 제거
             {
-                //Debug.Log("삭제하기 전 유저의 컬러아이디: " + storedPlayerData.color_id);
                 RemoveUser(storedPlayerData.color_id);
-
-                //Debug.Log("삭제 후 유저의 컬러아이디: " + storedPlayerData.color_id);
                 playerDataList.Remove(playerData.conn_id);  // 더 이상 필요 없으므로 삭제
             }
             else
             {
                 Debug.LogWarning("No player data found for disconnection.");
             }
-
-            //-------------------------------
-            //RequestRemovePlayer(playerData.conn_id); // 4.30 수정필
         }
     }
 
@@ -190,14 +180,27 @@ public class PlayerSelector : MonoBehaviour
                     Material material = renderer.material;
                     Color targetColor;
 
+                    // Emission을 활성화합니다.
+                    material.EnableKeyword("_EMISSION");
+
                     if (UnityEngine.ColorUtility.TryParseHtmlString("#" + playerData.color_id, out targetColor))
                     {
                         // 색상이 파싱되면 서서히 색상 변경을 시작
                         DOVirtual.Color(material.color, targetColor, 3.5f, value =>
                         {
                             material.color = value;
+
+                            // Emission 색상도 같이 변경합니다.
+                            material.SetColor("_EmissionColor", value);
                         });
                     }
+
+                    // 랜덤한 색상과 강도로 emission 색상을 설정
+                    Color randomEmissionColor = UnityEngine.Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.75f, 1f);
+                    float intensity = 10f; 
+                    randomEmissionColor *= intensity; // 색상에 강도를 곱하여 밝기 조절
+                    material.SetColor("_EmissionColor", randomEmissionColor);
+
                     targetPlayer.enabled = true;
                     changedColors.Add(targetColor); // 변경된 색상을 추적
                 }
@@ -212,16 +215,13 @@ public class PlayerSelector : MonoBehaviour
                 .Append(targetPlayer.transform.DOScale(1.8f, 0.1f).SetEase(Ease.InBack))
                 .Play();
 
-                //             showSequence = DOTween.Sequence().SetAutoKill(false).Pause()
-                // .AppendCallback(() => floatTweener.Play())
-
-
-
                 usedFur.Add(furIndex);
                 players.Add(playerData.color_id, targetPlayer);
                 GameObject tempEffect = Instantiate(newFurEffect, targetPlayer.transform.position, Quaternion.identity);
                 Destroy(tempEffect, 1.0f);
                 playerData.player_index = players.Count;  // 플레이어 인덱스 설정
+
+                //JoyStreamCommunicator.instance.SendToMobile(playerData.conn_id, "user_connect", playerData.color_id);
             }
             else
             {
@@ -252,8 +252,8 @@ public class PlayerSelector : MonoBehaviour
                     usedFur.Remove(furIndex);
 
                     // 파티클 효과 실행
-                    GameObject particles = Instantiate(particlePrefab, furObject.transform.position, Quaternion.identity);
-                    Destroy(particles, 2.0f); // 파티클이 자동으로 사라지도록 설정
+                    //GameObject particles = Instantiate(particlePrefab, furObject.transform.position, Quaternion.identity);
+                    //Destroy(particles, 2.0f); // 파티클이 자동으로 사라지도록 설정
 
                     // furObject.transform.DOMove(pos.transform.position, 3f).SetEase(Ease.InExpo).SetEase(Ease.OutBounce); // 5.7 위코드에서 수정했는데 다시 수정필
                     // furObject.transform.DOScale(1f, 0.5f).OnComplete(() =>
@@ -262,12 +262,16 @@ public class PlayerSelector : MonoBehaviour
                     //     StartCoroutine(RespawnFur(initialPosition));
                     // });
                     hideSequence = DOTween.Sequence().SetAutoKill(true)
-                    .Join(furObject.transform.DOLocalRotate(new Vector3(180, 180, 180), 1.5f).SetEase(Ease.InBack, 0.5f))
-                    .Join(furObject.transform.DOScale(0, 1.5f).SetEase(Ease.InBack, 1f))
+                    .Join(furObject.transform.DOLocalRotate(new Vector3(70, 30, 50), 0.5f).SetEase(Ease.InElastic, 0.5f))
+                    .Join(furObject.transform.DOScale(0, 3f).SetEase(Ease.InElastic, 0.1f))
                     .OnComplete(() =>
                     {
-                        Destroy(furObject);
-                        StartCoroutine(RespawnFur(initialPosition));
+                        if(player.isFalled)
+                        {
+                            Destroy(furObject);
+                            StartCoroutine(RespawnFur(initialPosition));
+                        }
+                        
                     });
                 }
             }

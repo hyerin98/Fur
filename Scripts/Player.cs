@@ -129,8 +129,8 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            //this.rigid.isKinematic = false;
-            isFalled = true;
+            this.rigid.isKinematic = false;
+           
             //transform.DOMoveY(transform.position.y -15f, 8f).SetEase(Ease.OutBounce);
         }
     }
@@ -175,11 +175,12 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Ground") && isFalled)
+        if (other.gameObject.CompareTag("Ground"))
         {
+             isFalled = true;
+              this.rigid.isKinematic = false;
             Debug.Log("바닥과 충~돌");
-            rigid.isKinematic = true;
-            isFalled = false;
+            //rigid.isKinematic = true;
 
             // foreach (var hinge in GetComponentsInChildren<HingeJoint>())
             // {
