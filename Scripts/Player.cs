@@ -54,9 +54,6 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("PlayerSelector component not found in the scene!");
         }
-
-       
-
     }
 
     void Start()
@@ -102,37 +99,37 @@ public class Player : MonoBehaviour
 
 
         // 에디터에서 테스트
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            transform.DOMoveY(originalPos.y + 0.5f, 0.5f).SetEase(ease)
-            .OnComplete(() =>
-            {
-                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-            });
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            transform.DOMoveY(originalPos.y - 0.5f, 0.5f).SetEase(ease)
-            .OnComplete(() =>
-            {
-                transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-            });
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            rigid.rotation = Quaternion.Euler(0, 0, -50f); 
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            rigid.rotation = Quaternion.Euler(0, 0, 50f); 
-        }
+        // if (Input.GetKeyDown(KeyCode.UpArrow))
+        // {
+        //     transform.DOMoveY(originalPos.y + 0.5f, 0.5f).SetEase(ease)
+        //     .OnComplete(() =>
+        //     {
+        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
+        //     });
+        // }
+        // if (Input.GetKeyDown(KeyCode.DownArrow))
+        // {
+        //     transform.DOMoveY(originalPos.y - 0.5f, 0.5f).SetEase(ease)
+        //     .OnComplete(() =>
+        //     {
+        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
+        //     });
+        // }
+        // if (Input.GetKeyDown(KeyCode.RightArrow))
+        // {
+        //     rigid.rotation = Quaternion.Euler(0, 0, -50f); 
+        // }
+        // if (Input.GetKeyDown(KeyCode.LeftArrow))
+        // {
+        //     rigid.rotation = Quaternion.Euler(0, 0, 50f); 
+        // }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            this.rigid.isKinematic = false;
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     rigid.isKinematic = false;
            
-            //transform.DOMoveY(transform.position.y -15f, 8f).SetEase(Ease.OutBounce);
-        }
+        //     //transform.DOMoveY(transform.position.y -15f, 8f).SetEase(Ease.OutBounce);
+        // }
     }
 
     
@@ -145,7 +142,6 @@ public class Player : MonoBehaviour
                 break;
             case ProtocolType.CONTROLLER_UP_RELEASE:
                 downKeyCode = KeyCode.None;
-                TraceBox.Log("밑키누름!!");
                 break;
             case ProtocolType.CONTROLLER_DOWN_PRESS:
                 downKeyCode = KeyCode.DownArrow;
@@ -177,8 +173,8 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
-             isFalled = true;
-              this.rigid.isKinematic = false;
+            isFalled = true;
+            this.rigid.isKinematic = false;
             Debug.Log("바닥과 충~돌");
             //rigid.isKinematic = true;
 

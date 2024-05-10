@@ -15,17 +15,19 @@ public class PlayerSelector : MonoBehaviour
     private List<Vector3> furPositions = new List<Vector3>(); // 삭제 후 다시 생기기위한 털위치 리스트
     private HashSet<int> usedFur = new HashSet<int>(); // 사용된 fur 해시셋
     private Dictionary<string, PlayerData> playerDataList = new Dictionary<string, PlayerData>(); // 플레이어데이터 딕셔너
+    private Dictionary<string, string> colorToConnIdMap = new Dictionary<string, string>();
 
     [Header("DOtween & GameObject & Bool")]
     public Ease ease;
     public GameObject furPrefab;
-    public GameObject newFurEffect;
+    //public GameObject newFurEffect;
     public bool isSpawn;
     public GameObject particlePrefab;
     [SerializeField] AnimationCurve curve;
     Tweener floatTweener;
     Sequence showSequence, hideSequence;
     public Transform pos;
+
 
     void Start()
     {
@@ -167,6 +169,7 @@ public class PlayerSelector : MonoBehaviour
             int furIndex = availableFur[randomIndex];
             GameObject assignedFur = furs[furIndex];
             playerData.player_index = furIndex;
+            //assignedFur.layer = LayerMask.NameToLayer("NoPostProcess");
 
             // 색상 할당 및 플레이어 설정 로직...
             Player targetPlayer = assignedFur.GetComponent<Player>();
@@ -174,6 +177,18 @@ public class PlayerSelector : MonoBehaviour
             targetPlayer.SetUserIndex(playerData.player_index);
             if (targetPlayer != null)
             {
+                Light childLight = assignedFur.GetComponentInChildren<Light>();
+                if (childLight != null)
+                {
+                    childLight.enabled = true; // Light 컴포넌트 활성화
+                }
+
+                Collider col = assignedFur.GetComponentInChildren<Collider>();
+                if (col != null)
+                {
+                    StartCoroutine(SetTriggerTemporarily(col, 3.0f));  
+                }
+
                 Renderer renderer = assignedFur.GetComponent<Renderer>();
                 if (renderer != null)
                 {
@@ -186,7 +201,7 @@ public class PlayerSelector : MonoBehaviour
                     if (UnityEngine.ColorUtility.TryParseHtmlString("#" + playerData.color_id, out targetColor))
                     {
                         // 색상이 파싱되면 서서히 색상 변경을 시작
-                        DOVirtual.Color(material.color, targetColor, 3.5f, value =>
+                        DOVirtual.Color(material.color, targetColor, 4f, value =>
                         {
                             material.color = value;
 
@@ -216,9 +231,11 @@ public class PlayerSelector : MonoBehaviour
                 .Play();
 
                 usedFur.Add(furIndex);
-                players.Add(playerData.color_id, targetPlayer);
-                GameObject tempEffect = Instantiate(newFurEffect, targetPlayer.transform.position, Quaternion.identity);
-                Destroy(tempEffect, 1.0f);
+                //players.Add(playerData.color_id, targetPlayer);
+                players.Add(playerData.conn_id, targetPlayer);
+                colorToConnIdMap.Add(playerData.color_id, playerData.conn_id);
+                //GameObject tempEffect = Instantiate(newFurEffect, targetPlayer.transform.position, Quaternion.identity);
+                //Destroy(tempEffect, 1.0f);
                 playerData.player_index = players.Count;  // 플레이어 인덱스 설정
 
                 //JoyStreamCommunicator.instance.SendToMobile(playerData.conn_id, "user_connect", playerData.color_id);
@@ -229,7 +246,15 @@ public class PlayerSelector : MonoBehaviour
             }
         }
     }
-
+    IEnumerator SetTriggerTemporarily(Collider collider, float delay)
+{
+    if (collider != null)
+    {
+        collider.isTrigger = false;  // 트리거 활성화
+        yield return new WaitForSeconds(delay);  // 지정된 시간 동안 대기
+        collider.isTrigger = true;  // 트리거 비활성화
+    }
+}
 
     public void RemoveUser(string playerID)
     {
@@ -261,21 +286,25 @@ public class PlayerSelector : MonoBehaviour
                     //     Destroy(furObject);
                     //     StartCoroutine(RespawnFur(initialPosition));
                     // });
-                    hideSequence = DOTween.Sequence().SetAutoKill(true)
-                    .Join(furObject.transform.DOLocalRotate(new Vector3(70, 30, 50), 0.5f).SetEase(Ease.InElastic, 0.5f))
-                    .Join(furObject.transform.DOScale(0, 3f).SetEase(Ease.InElastic, 0.1f))
-                    .OnComplete(() =>
-                    {
-                        if(player.isFalled)
-                        {
-                            Destroy(furObject);
-                            StartCoroutine(RespawnFur(initialPosition));
-                        }
+                    // hideSequence = DOTween.Sequence().SetAutoKill(true)
+                    // .Join(furObject.transform.DOLocalRotate(new Vector3(70, 30, 50), 0.5f).SetEase(Ease.InElastic, 0.5f))
+                    // .Join(furObject.transform.DOScale(0, 1f).SetEase(Ease.InElastic, 1f))
+                    // .OnComplete(() =>
+                    // {
+                    //     if(player.isFalled)
+                    //     {
+                    //         Destroy(furObject);
+                    //         StartCoroutine(RespawnFur(initialPosition));
+                    //     }
                         
-                    });
+                    // });
+                    //player.rigid.isKinematic = false;
+                    TraceBox.Log("삭줴쉦");
+                    Destroy(furObject);
+                    StartCoroutine(RespawnFur(initialPosition));
                 }
             }
-            ColorManager.instance.ReturnColor(player.playerColor);
+            //ColorManager.instance.ReturnColor(player.playerColor);
             players.Remove(playerID);
         }
         else
