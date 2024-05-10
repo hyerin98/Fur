@@ -52,10 +52,10 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
     //     TraceBox.Log("Message Received / connId: " + conn_id + " / key_code: " + key_code  + " / value: " + value);
     //     switch (key_code)
     //     {
-    //         case "game_replay":
+    //         case "user_add":
     //             {
     //                 onUserReplayEvent?.Invoke(conn_id);
-    //                 JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_connect", ColorManager.instance.AssignUserColor());
+    //                 JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_color", ColorManager.instance.AssignUserColor());
     //                 //JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_connect", JoyStreamCommunicator.instance.ThemeType + "," + JoyStreamCommunicator.instance.GetPlayerIndex(conn_id).ToString());
     //                 break;
     //             }
@@ -106,6 +106,8 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         OnReceivedUserConnect(playerData);
         if(_enableDetaledLog)
             TraceBox.Log("!!유저입장!!/ connID: " + playerData.conn_id + " / color: " + playerData.color_id + " / index: " + playerData.player_index);
+            UnityEngine.Debug.Log("!!유저입장!!/ connID: " + playerData.conn_id + " / color: " + playerData.color_id + " / index: " + playerData.player_index);
+        
     }
 
     private void OnUserExit(PlayerData playerData)
@@ -115,6 +117,7 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         OnReceivedUserDisconnect(playerData);
         if (_enableDetaledLog)
             TraceBox.Log("!!유저나감!! / connID: " + playerData.conn_id + " / color " + playerData.color_id + " / index: " + playerData.player_index);
+            UnityEngine.Debug.Log("!!유저나감!!/ connID: " + playerData.conn_id + " / color: " + playerData.color_id + " / index: " + playerData.player_index);
     }
 
 

@@ -96,40 +96,6 @@ public class Player : MonoBehaviour
             this.rigid.isKinematic = false;
             isFalled = true;
         }
-
-
-        // 에디터에서 테스트
-        // if (Input.GetKeyDown(KeyCode.UpArrow))
-        // {
-        //     transform.DOMoveY(originalPos.y + 0.5f, 0.5f).SetEase(ease)
-        //     .OnComplete(() =>
-        //     {
-        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-        //     });
-        // }
-        // if (Input.GetKeyDown(KeyCode.DownArrow))
-        // {
-        //     transform.DOMoveY(originalPos.y - 0.5f, 0.5f).SetEase(ease)
-        //     .OnComplete(() =>
-        //     {
-        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-        //     });
-        // }
-        // if (Input.GetKeyDown(KeyCode.RightArrow))
-        // {
-        //     rigid.rotation = Quaternion.Euler(0, 0, -50f); 
-        // }
-        // if (Input.GetKeyDown(KeyCode.LeftArrow))
-        // {
-        //     rigid.rotation = Quaternion.Euler(0, 0, 50f); 
-        // }
-
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     rigid.isKinematic = false;
-           
-        //     //transform.DOMoveY(transform.position.y -15f, 8f).SetEase(Ease.OutBounce);
-        // }
     }
 
     
@@ -174,7 +140,7 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("Ground"))
         {
             isFalled = true;
-            this.rigid.isKinematic = false;
+            //this.rigid.isKinematic = false;
             Debug.Log("바닥과 충~돌");
             //rigid.isKinematic = true;
 
@@ -182,7 +148,7 @@ public class Player : MonoBehaviour
             // {
             //     Destroy(hinge);
             // }
-            playerSelector.RemoveUser(playerID);
+            //playerSelector.RemoveUser(playerID);
             //Invoke("playerSelector.RemoveUser(playerID)",6f);
         }
     }

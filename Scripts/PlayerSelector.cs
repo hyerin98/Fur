@@ -78,7 +78,6 @@ public class PlayerSelector : MonoBehaviour
         switch (protocolType)
         {
             case ProtocolType.CONTROLLER_UP_PRESS:
-                TraceBox.Log("위키누름!!");
                 if (players.ContainsKey(conID))
                 {
                     players[conID].OnPlayerMoveProtocol(protocolType);
@@ -183,11 +182,11 @@ public class PlayerSelector : MonoBehaviour
                     childLight.enabled = true; // Light 컴포넌트 활성화
                 }
 
-                Collider col = assignedFur.GetComponentInChildren<Collider>();
-                if (col != null)
-                {
-                    StartCoroutine(SetTriggerTemporarily(col, 3.0f));  
-                }
+                // Collider col = assignedFur.GetComponentInChildren<Collider>();
+                // if (col != null)
+                // {
+                //     StartCoroutine(SetTriggerTemporarily(col, 3.0f));  
+                // }
 
                 Renderer renderer = assignedFur.GetComponent<Renderer>();
                 if (renderer != null)
@@ -219,7 +218,8 @@ public class PlayerSelector : MonoBehaviour
                     targetPlayer.enabled = true;
                     changedColors.Add(targetColor); // 변경된 색상을 추적
                 }
-                targetPlayer.playerID = playerData.color_id;
+                //targetPlayer.playerID = playerData.color_id;
+                targetPlayer.playerID = playerData.conn_id;
                 targetPlayer.SetPlayerColor(playerData.color_id);
                 targetPlayer.SetUserIndex(furIndex);
 
@@ -247,14 +247,14 @@ public class PlayerSelector : MonoBehaviour
         }
     }
     IEnumerator SetTriggerTemporarily(Collider collider, float delay)
-{
-    if (collider != null)
     {
-        collider.isTrigger = false;  // 트리거 활성화
-        yield return new WaitForSeconds(delay);  // 지정된 시간 동안 대기
-        collider.isTrigger = true;  // 트리거 비활성화
+        if (collider != null)
+        {
+            collider.isTrigger = false;  // 트리거 활성화
+            yield return new WaitForSeconds(delay);  // 지정된 시간 동안 대기
+            collider.isTrigger = true;  // 트리거 비활성화
+        }
     }
-}
 
     public void RemoveUser(string playerID)
     {
@@ -276,41 +276,28 @@ public class PlayerSelector : MonoBehaviour
                     furPositions.RemoveAt(furIndex);
                     usedFur.Remove(furIndex);
 
-                    // 파티클 효과 실행
-                    //GameObject particles = Instantiate(particlePrefab, furObject.transform.position, Quaternion.identity);
-                    //Destroy(particles, 2.0f); // 파티클이 자동으로 사라지도록 설정
-
-                    // furObject.transform.DOMove(pos.transform.position, 3f).SetEase(Ease.InExpo).SetEase(Ease.OutBounce); // 5.7 위코드에서 수정했는데 다시 수정필
-                    // furObject.transform.DOScale(1f, 0.5f).OnComplete(() =>
-                    // {
-                    //     Destroy(furObject);
-                    //     StartCoroutine(RespawnFur(initialPosition));
-                    // });
-                    // hideSequence = DOTween.Sequence().SetAutoKill(true)
-                    // .Join(furObject.transform.DOLocalRotate(new Vector3(70, 30, 50), 0.5f).SetEase(Ease.InElastic, 0.5f))
-                    // .Join(furObject.transform.DOScale(0, 1f).SetEase(Ease.InElastic, 1f))
-                    // .OnComplete(() =>
-                    // {
-                    //     if(player.isFalled)
-                    //     {
-                    //         Destroy(furObject);
-                    //         StartCoroutine(RespawnFur(initialPosition));
-                    //     }
+                    hideSequence = DOTween.Sequence().SetAutoKill(true)
+                    .Join(furObject.transform.DOLocalRotate(new Vector3(70, 30, 50), 0.5f).SetEase(Ease.InElastic, 0.5f))
+                    .Join(furObject.transform.DOScale(0, 1f).SetEase(Ease.InElastic, 1f))
+                    .OnComplete(() =>
+                    {
+                        if(player.isFalled)
+                        {
+                            Destroy(furObject);
+                            StartCoroutine(RespawnFur(initialPosition));
+                        }
                         
-                    // });
-                    //player.rigid.isKinematic = false;
-                    TraceBox.Log("삭줴쉦");
-                    Destroy(furObject);
-                    StartCoroutine(RespawnFur(initialPosition));
+                     });
+
                 }
             }
             //ColorManager.instance.ReturnColor(player.playerColor);
             players.Remove(playerID);
         }
-        else
-        {
-            TraceBox.Log("Player not found with ID: " + playerID);
-        }
+        // else
+        // {
+        //     TraceBox.Log("Player not found with ID: " + playerID);
+        // }
     }
 
     public IEnumerator RespawnFur(Vector3 position)
