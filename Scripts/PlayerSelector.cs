@@ -141,11 +141,10 @@ public class PlayerSelector : MonoBehaviour
 
     public void OnAddUser(PlayerData playerData)
     {
+         Debug.Log("OnAddUser called with conn_id: " + playerData.conn_id);
         // var r = JoyStreamCommunicator.instance.CustomSample(10, 20);
         // TraceBox.Log(">>>>>>>>>" +r);
         //JoyStreamCommunicator.instance.SendMessage("set_color");
-
-        //JoyStreamCommunicator.instance.SendToMobile("user_connect",playerData.color_id);
 
         if (!players.ContainsKey(playerData.conn_id))
         {
@@ -195,7 +194,7 @@ public class PlayerSelector : MonoBehaviour
                     Color targetColor;
 
                     // Emission을 활성화합니다.
-                    material.EnableKeyword("_EMISSION");
+                    //material.EnableKeyword("_EMISSION");
 
                     if (UnityEngine.ColorUtility.TryParseHtmlString("#" + playerData.color_id, out targetColor))
                     {
@@ -205,15 +204,21 @@ public class PlayerSelector : MonoBehaviour
                             material.color = value;
 
                             // Emission 색상도 같이 변경합니다.
-                            material.SetColor("_EmissionColor", value);
+                            //material.SetColor("_EmissionColor", value);
+                        });
+                        //childLight.color = targetColor;
+
+                        DOVirtual.Color(childLight.color, targetColor, 4f, value =>
+                        {
+                            childLight.color = value;
                         });
                     }
 
                     // 랜덤한 색상과 강도로 emission 색상을 설정
-                    Color randomEmissionColor = UnityEngine.Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.75f, 1f);
-                    float intensity = 10f; 
-                    randomEmissionColor *= intensity; // 색상에 강도를 곱하여 밝기 조절
-                    material.SetColor("_EmissionColor", randomEmissionColor);
+                    // Color randomEmissionColor = UnityEngine.Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.75f, 1f);
+                    // float intensity = 10f; 
+                    // randomEmissionColor *= intensity; // 색상에 강도를 곱하여 밝기 조절
+                    // material.SetColor("_EmissionColor", randomEmissionColor);
 
                     targetPlayer.enabled = true;
                     changedColors.Add(targetColor); // 변경된 색상을 추적
@@ -225,10 +230,10 @@ public class PlayerSelector : MonoBehaviour
 
                 Sequence mySequence = DOTween.Sequence();
 
-                mySequence.Append(targetPlayer.transform.DOScale(3f, 0.25f).SetEase(Ease.OutBack))
-                .Append(targetPlayer.transform.DOScale(1f, 0.15f).SetEase(Ease.InQuad))
-                .Append(targetPlayer.transform.DOScale(1.8f, 0.1f).SetEase(Ease.InBack))
-                .Play();
+                // mySequence.Append(targetPlayer.transform.DOScale(3f, 0.25f).SetEase(Ease.OutBack))
+                // .Append(targetPlayer.transform.DOScale(1f, 0.15f).SetEase(Ease.InQuad))
+                // .Append(targetPlayer.transform.DOScale(1.8f, 0.1f).SetEase(Ease.InBack))
+                // .Play();
 
                 usedFur.Add(furIndex);
                 //players.Add(playerData.color_id, targetPlayer);
@@ -258,8 +263,8 @@ public class PlayerSelector : MonoBehaviour
 
     public void RemoveUser(string playerID)
     {
-        if (players.ContainsKey(playerID))
-        {
+        // if (players.ContainsKey(playerID))
+        // {
             Player player = players[playerID];
             GameObject furObject = player.gameObject; // 4.30 계속 삭제 시 missing이슈 -> 5번눌러서 삭제하는거랑 겹쳐서그런듯 
             if (player.playerColor != null)
@@ -290,14 +295,14 @@ public class PlayerSelector : MonoBehaviour
                      });
 
                 }
-            }
+            // }
             //ColorManager.instance.ReturnColor(player.playerColor);
             players.Remove(playerID);
         }
-        // else
-        // {
-        //     TraceBox.Log("Player not found with ID: " + playerID);
-        // }
+        else
+        {
+            TraceBox.Log("Player not found with ID: " + playerID); // 5.10 이 부분 수정필 
+        }
     }
 
     public IEnumerator RespawnFur(Vector3 position)

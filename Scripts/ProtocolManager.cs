@@ -39,9 +39,9 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         //JoyStreamCommunicator.instance.MaxPlayerCount = ConfigManager.instance.data.maxPlayerCount;
 
 #if !UNITY_EDITOR
-        JoyStreamCommunicator.instance.Connect(ConfigManager.instance.data.serverURL, "grab");
+        JoyStreamCommunicator.instance.Connect(ConfigManager.instance.data.serverURL, "fur");
 #else
-        JoyStreamCommunicator.instance.Connect(ConfigManager.instance.data.serverURL, "grab");
+        JoyStreamCommunicator.instance.Connect(ConfigManager.instance.data.serverURL, "fur");
 #endif
         // DOTween라이브러리의 DelayedCall메서드. 지정된 시간이 지난 후에 지정된 작업을 실행
         DOVirtual.DelayedCall(5, () => SendIdleModeEvent(true)).SetId("IdleTimer" + GetInstanceID());

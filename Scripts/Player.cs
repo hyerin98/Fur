@@ -84,12 +84,12 @@ public class Player : MonoBehaviour
         }
         else if (downKeyCode == KeyCode.LeftArrow)
         {
-            rigid.rotation = Quaternion.Euler(0, 0, 45f);
+            rigid.rotation = Quaternion.Euler(0, 0, 30f);
 
         }
         else if (downKeyCode == KeyCode.RightArrow)
         {
-            rigid.rotation = Quaternion.Euler(0, 0, -45f);
+            rigid.rotation = Quaternion.Euler(0, 0, -30f);
         }
         else if(downKeyCode == KeyCode.Space)
         {
