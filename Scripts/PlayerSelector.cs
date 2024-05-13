@@ -46,7 +46,7 @@ public class PlayerSelector : MonoBehaviour
         //furPositions.Clear();
         foreach (var fur in furs)
         {
-            furPositions.Add(fur.transform.position); // 각 fur의 초기 위치를 저장
+            furPositions.Add(fur.transform.position); // 각 fur의 초기 위치를 저장 
         }
     }
 
@@ -73,7 +73,7 @@ public class PlayerSelector : MonoBehaviour
     }
 
 
-    private void OnWebControllerEvent(ProtocolType protocolType, string conID)
+    private void OnWebControllerEvent(ProtocolType protocolType, string conID) // 이건 웹이랑 통신
     {
         switch (protocolType)
         {
@@ -141,7 +141,7 @@ public class PlayerSelector : MonoBehaviour
 
     public void OnAddUser(PlayerData playerData)
     {
-         Debug.Log("OnAddUser called with conn_id: " + playerData.conn_id);
+        Debug.Log("OnAddUser called with conn_id: " + playerData.conn_id);
         // var r = JoyStreamCommunicator.instance.CustomSample(10, 20);
         // TraceBox.Log(">>>>>>>>>" +r);
         //JoyStreamCommunicator.instance.SendMessage("set_color");
@@ -261,49 +261,107 @@ public class PlayerSelector : MonoBehaviour
         }
     }
 
+    // public void RemoveUser(string playerID)
+    // {
+    //     // if (players.ContainsKey(playerID))
+    //     // {
+    //     Player player = players[playerID];
+    //     GameObject furObject = player.gameObject; // 4.30 계속 삭제 시 missing이슈 -> 5번눌러서 삭제하는거랑 겹쳐서그런듯 
+    //     if (player.playerColor != null)
+    //     {
+    //         ColorManager.instance.ReturnColor(player.playerColor);
+    //     }
+    //     if (furObject != null)
+    //     {
+    //         int furIndex = furs.IndexOf(furObject);
+    //         if (furIndex != -1)
+    //         {
+    //             Vector3 initialPosition = furPositions[furIndex];
+    //             furs.RemoveAt(furIndex);
+    //             furPositions.RemoveAt(furIndex);
+    //             usedFur.Remove(furIndex);
+
+    //             hideSequence = DOTween.Sequence().SetAutoKill(true)
+    //             .Join(furObject.transform.DOLocalMoveZ(furObject.transform.position.z + 10, 20f).SetEase(Ease.Linear)) // y축으로 10만큼 이동
+    //             .Join(furObject.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InElastic)); // 크기를 0으로 줄임
+
+    //             hideSequence.OnComplete(() =>
+    //             {
+    //                 if (player.isFalled)
+    //                 {
+    //                     Destroy(furObject);
+    //                     StartCoroutine(RespawnFur(initialPosition));
+    //                 }
+    //             });
+
+
+    //         }
+    //         // }
+    //         //ColorManager.instance.ReturnColor(player.playerColor);
+    //         players.Remove(playerID);
+    //     }
+    //     else
+    //     {
+    //         TraceBox.Log("Player not found with ID: " + playerID); // 5.10 이 부분 수정필 
+    //     }
+    // }
+
     public void RemoveUser(string playerID)
+{
+    Player player = players[playerID];
+    GameObject furObject = player.gameObject;
+
+    if (player.playerColor != null)
     {
-        // if (players.ContainsKey(playerID))
-        // {
-            Player player = players[playerID];
-            GameObject furObject = player.gameObject; // 4.30 계속 삭제 시 missing이슈 -> 5번눌러서 삭제하는거랑 겹쳐서그런듯 
-            if (player.playerColor != null)
-            {
-                ColorManager.instance.ReturnColor(player.playerColor);
-            }
-            if (furObject != null)
-            {
-                int furIndex = furs.IndexOf(furObject);
-                if (furIndex != -1)
-                {
-                    Vector3 initialPosition = furPositions[furIndex];
-                    furs.RemoveAt(furIndex);
-                    furPositions.RemoveAt(furIndex);
-                    usedFur.Remove(furIndex);
+        ColorManager.instance.ReturnColor(player.playerColor);
+    }
 
-                    hideSequence = DOTween.Sequence().SetAutoKill(true)
-                    .Join(furObject.transform.DOLocalRotate(new Vector3(70, 30, 50), 0.5f).SetEase(Ease.InElastic, 0.5f))
-                    .Join(furObject.transform.DOScale(0, 1f).SetEase(Ease.InElastic, 1f))
-                    .OnComplete(() =>
-                    {
-                        if(player.isFalled)
-                        {
-                            Destroy(furObject);
-                            StartCoroutine(RespawnFur(initialPosition));
-                        }
-                        
-                     });
-
-                }
-            // }
-            //ColorManager.instance.ReturnColor(player.playerColor);
-            players.Remove(playerID);
-        }
-        else
+    if (furObject != null)
+    {
+        int furIndex = furs.IndexOf(furObject);
+        if (furIndex != -1)
         {
-            TraceBox.Log("Player not found with ID: " + playerID); // 5.10 이 부분 수정필 
+            Vector3 initialPosition = furPositions[furIndex];
+            furs.RemoveAt(furIndex);
+            furPositions.RemoveAt(furIndex);
+            usedFur.Remove(furIndex);
+
+            // 부모 객체(furObject)의 자식 객체 중 Light를 찾아서 해당 Light를 서서히 사라지도록 애니메이션 설정
+            Light childLight = furObject.GetComponentInChildren<Light>();
+            if (childLight != null)
+            {
+                // Light가 존재하면 서서히 감소하는 Tweener를 추가
+                childLight.DOIntensity(0f, 10f).SetDelay(10f).OnComplete(() => Destroy(childLight.gameObject)); // Light가 사라진 후에 Light 객체 삭제
+            }
+
+            // furObject를 비활성화하고 10초 후에 삭제되도록 설정
+            StartCoroutine(DisableParentAndEnableChild(furObject));
         }
     }
+}
+
+IEnumerator DisableParentAndEnableChild(GameObject parentObject)
+{
+    // 부모 객체를 비활성화
+    parentObject.SetActive(false);
+
+    // 부모 객체의 모든 자식 객체를 가져와서 활성화
+    foreach (Transform child in parentObject.transform)
+    {
+        child.gameObject.SetActive(true);
+
+        // 만약 자식 객체가 Light 컴포넌트를 포함하고 있다면 활성화
+        Light childLight = child.GetComponent<Light>();
+        if (childLight != null)
+        {
+            childLight.enabled = true;
+        }
+    }
+
+    yield return null; // 한 프레임을 대기하여 변경 사항이 적용되도록 함
+}
+
+
 
     public IEnumerator RespawnFur(Vector3 position)
     {
@@ -323,10 +381,10 @@ public class PlayerSelector : MonoBehaviour
                 initialColor.a = 0f;
                 furRenderer.material.color = initialColor;
 
-                Sequence seq = DOTween.Sequence();
-                seq.Append(newFur.transform.DOScale(1f, 0.5f)) // 처음 등장시 효과
-                    .Join(furRenderer.material.DOFade(3f, 1f)) // 동시에 페이드 인
-                    .Append(newFur.transform.DOScale(2.0f, 1f).SetEase(Ease.InOutElastic)); // 커지는 효과
+                // Sequence seq = DOTween.Sequence();
+                // seq.Append(newFur.transform.DOScale(1f, 0.5f)) // 처음 등장시 효과
+                //     .Join(furRenderer.material.DOFade(3f, 1f)) // 동시에 페이드 인
+                //     .Append(newFur.transform.DOScale(2.0f, 1f).SetEase(Ease.InOutElastic)); // 커지는 효과
             }
         }
     }
