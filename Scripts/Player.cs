@@ -8,14 +8,11 @@ using System;
 public class Player : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private Animator Anim = null;
     private KeyCode downKeyCode = 0;
     public Rigidbody rigid;
     public delegate void OnPlayerEnd(Player target);
     public event OnPlayerEnd onPlayerEnd;
-    public Transform destination;
-    //public PlayerData playerData;
-
+    public List<Rigidbody> childRigidbodies;
     public PlayerSelector playerSelector;
 
     [Header("Bool")]
@@ -28,18 +25,8 @@ public class Player : MonoBehaviour
     public int userIndex;
 
     [Header("PlayerMovement")]
-    Vector3 originalPos;
-    public float fallDistance = 1f;
-    public float fallTime = 1f;
-    public float moveStep = 0.3f;
-    public float rotateSpeed = 5f;
-    public float rotationAmount = 50f; // 한 번에 회전할 각도
-    public float currentRotation = 0f; // 현재 회전 각도
-    public float torqueAmount = 50f; // 회전 토크 크기
-    public float rotateSpeedd = 90f;
-
     public float forceMagnitude = 10f;
-    public float pullMagnitude = 20f;
+    public float pushForce = 3f;
     private HingeJoint[] hingeJoints;
 
 
@@ -49,10 +36,9 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         //playerID = System.Guid.NewGuid().ToString();
-        Anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
         //rigid.sleepThreshold=0;
-       hingeJoints = GetComponentsInChildren<HingeJoint>();
+        hingeJoints = GetComponentsInChildren<HingeJoint>();
 
         playerSelector = FindObjectOfType<PlayerSelector>();
         if (playerSelector == null)
@@ -64,111 +50,85 @@ public class Player : MonoBehaviour
     void Start()
     {
         PlayerStart();
-        originalPos = transform.position;
         GetComponent<Player>().enabled = false; // 4.30 테스트 -> 생성된 털들만 움직이도록
+
+        childRigidbodies = new List<Rigidbody>(GetComponentsInChildren<Rigidbody>());
+        childRigidbodies.Remove(rigid);
     }
 
     private void Update()
     {
-        // if (downKeyCode == KeyCode.UpArrow)
-        // {
-        //     transform.DOMoveY(originalPos.y + 1f, 0.5f).SetEase(ease)
-        //     .OnComplete(() =>
-        //     {
-        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-        //     });
-        // }
+        if (downKeyCode == KeyCode.UpArrow)
+        {
+            PushHingeJoint("fur", "pull", 1000f);
+        }
 
-        // else if (downKeyCode == KeyCode.DownArrow)
-        // {
-        //     transform.DOMoveY(originalPos.y - 1f, 0.5f).SetEase(ease)
-        //     .OnComplete(() =>
-        //     {
-        //         transform.DOMoveY(originalPos.y, 1).SetEase(ease);
-        //     });
-        // }
-        // else if (downKeyCode == KeyCode.LeftArrow)
-        // {
-        //     rigid.rotation = Quaternion.Euler(0, 0, 30f);
+        else if (downKeyCode == KeyCode.DownArrow)
+        {
+            PushHingeJoint("fur", "push", 1000f);
+        }
+        else if (downKeyCode == KeyCode.LeftArrow)
+        {
+            ApplyForceToHingeJoints(-transform.right);
 
-        // }
-        // else if (downKeyCode == KeyCode.RightArrow)
-        // {
-        //     rigid.rotation = Quaternion.Euler(0, 0, -30f);
-        // }
-        // else if(downKeyCode == KeyCode.Space)
-        // {
-        //     this.rigid.isKinematic = false;
-        //     isFalled = true;
-        // }
-
-       if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            ApplyForceToHingeJoints(-transform.right); // 왼쪽 방향으로 힘을 가하도록 변경
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        else if (downKeyCode == KeyCode.RightArrow)
         {
-            ApplyForceToHingeJoints(transform.right); // 오른쪽 방향으로 힘을 가하도록 변경
+            ApplyForceToHingeJoints(transform.right);
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            PushHingeJoint(); // HingeJoint 이름을 사용하여 잡아당기기
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            PushHingeJoint(); // HingeJoint 이름을 사용하여 밀어당기기
-        }
-        else if (Input.GetKeyDown(KeyCode.Space))
+        else if (downKeyCode == KeyCode.Space)
         {
             this.rigid.isKinematic = false;
             isFalled = true;
         }
+
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            rigid.isKinematic = false;
+            isFalled = true;
+        }
     }
 
-    void PushHingeJoint()
-    {
-        foreach (HingeJoint hingeJoint in hingeJoints) 
-        {
-            if (hingeJoint.name == "fur")
-            {
-                hingeJoint.connectedBody.AddForce(transform.up * pullMagnitude); // 위 방향으로 힘을 가하여 밀어내기
-            }
-        }
-
-        Debug.LogWarning("No HingeJoint found with the name: fur");
-}
-
-
-
-
-     void ApplyForceToHingeJoints(Vector3 forceDirection)
+    void PushHingeJoint(string jointName, string action, float pushForce)
     {
         foreach (HingeJoint hingeJoint in hingeJoints)
         {
-            // Calculate the force vector
-            Vector3 force = forceDirection.normalized * forceMagnitude;
+            if (hingeJoint.name == jointName)
+            {
+                if (action == "pull")
+                {
+                   JointSpring spring = hingeJoint.spring;
+                    spring.targetPosition = -2f;
+                    spring.spring = pushForce; 
+                    hingeJoint.spring = spring;
 
-            // Apply force to the connected body of each HingeJoint
+                    hingeJoint.connectedBody.MovePosition(hingeJoint.transform.position + hingeJoint.transform.up * 0.3f); 
+
+                }
+                else if (action == "push")
+                {
+                    JointSpring spring = hingeJoint.spring;
+                    spring.targetPosition = 2f;
+                    spring.spring = pushForce; 
+                    hingeJoint.spring = spring;
+
+                    hingeJoint.connectedBody.MovePosition(hingeJoint.transform.position + hingeJoint.transform.up * 0.3f); 
+                }
+                return;
+            }
+        }
+    }
+
+
+    void ApplyForceToHingeJoints(Vector3 forceDirection)
+    {
+        foreach (HingeJoint hingeJoint in hingeJoints)
+        {
+            Vector3 force = forceDirection.normalized * forceMagnitude;
             hingeJoint.connectedBody.AddForce(force);
         }
     }
 
-// 밑에는 velocity를 이용한 방법  // 아니 위에가 ㅁ에드포스코드고 밑에가 벨로쉬튀인데 아까 돼서 주석처리 해노사는데;;엇 아니 계속 지금 벨로시티야 밑에 코드
-//     void ApplyForceToHingeJoints(Vector3 forceDirection)
-// {
-//     foreach (HingeJoint hingeJoint in hingeJoints)
-//     {
-//         // Calculate the force vector
-//         Vector3 force = forceDirection.normalized * forceMagnitude;
-
-//         // Apply force to the connected body of each HingeJoint using Rigidbody's velocity
-//         hingeJoint.connectedBody.velocity = force;
-//     }
-// }
-
- 
-
-    
     public void OnPlayerMoveProtocol(ProtocolType protocolType)
     {
         switch (protocolType)
@@ -198,9 +158,11 @@ public class Player : MonoBehaviour
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_FALL_PRESS:
+                TraceBox.Log("누름");
                 downKeyCode = KeyCode.Space;
                 //RemovePlayer();
-                playerSelector.RemoveUser(playerID);
+                //  PlayerData playerData = new PlayerData();
+                //  playerSelector.RemoveUser(playerData);
                 break;
         }
     }
@@ -210,39 +172,62 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("Ground"))
         {
             isFalled = true;
-            //this.rigid.isKinematic = false;
-            Debug.Log("바닥과 충~돌");
-            //rigid.isKinematic = true;
+            // 부모 객체의 물리 시뮬레이션 비활성화
+            rigid.isKinematic = true;
 
-            foreach (var hinge in GetComponentsInChildren<HingeJoint>())
+            // 자식 객체들의 물리 시뮬레이션 비활성화 및 떨어뜨리기
+            foreach (var childRigidbody in childRigidbodies)
             {
-                Destroy(hinge);
+                childRigidbody.isKinematic = false;
+                childRigidbody.AddForce(Vector3.down * 5f, ForceMode.Impulse); // 특정 힘을 가해 아래로 떨어지게 함
             }
-            playerSelector.RemoveUser(playerID);
-            //Invoke("playerSelector.RemoveUser(playerID)",6f);
+
+            if (playerSelector != null)
+            {
+                PlayerData playerData = new PlayerData();
+                playerSelector.RemoveUser(playerData);
+            }
+
+            // 자식 객체들을 제거하기 위한 코루틴 시작
+            StartCoroutine(DestroyChildrenAfterDelay(3f));
         }
     }
 
-    
-
-    public void RemovePlayer()
+    private IEnumerator DestroyChildrenAfterDelay(float delay)
     {
-        if (!isFalled)
-            return;
-        else
+        yield return new WaitForSeconds(5f);
+
+        foreach (var childRigidbody in childRigidbodies)
         {
-            Debug.Log("삭제!");
-            DOVirtual.DelayedCall(3, PlayerEnd).SetId(playerID);
+            if (childRigidbody != null && childRigidbody.gameObject != null)
+            {
+                Destroy(childRigidbody.gameObject);
+            }
         }
+
+        // 플레이어 객체 파괴
+        Destroy(gameObject);
     }
 
 
-    private void PlayerEnd()
-    {
-        Debug.Log("진짜삭제");
-        onPlayerEnd?.Invoke(this);
-        //Destroy(gameObject);
-    }
+    // public void RemovePlayer()
+    // {
+    //     if (!isFalled)
+    //         return;
+    //     else
+    //     {
+    //         Debug.Log("삭제!");
+    //         DOVirtual.DelayedCall(3, PlayerEnd).SetId(playerID);
+    //     }
+    // }
+
+
+    // private void PlayerEnd()
+    // {
+    //     Debug.Log("진짜삭제");
+    //     onPlayerEnd?.Invoke(this);
+    //     //Destroy(gameObject);
+    // }
 
     private void PlayerStart()
     {
@@ -260,8 +245,4 @@ public class Player : MonoBehaviour
         userIndex = index;
     }
 
-    public void Test()
-    {
-        Debug.Log(playerID + "!!!!!!!!!!!!!!!!!!!!!!!!" + GetInstanceID());
-    }
 }

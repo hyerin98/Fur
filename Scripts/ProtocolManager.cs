@@ -106,7 +106,6 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         OnReceivedUserConnect(playerData);
         if(_enableDetaledLog)
             TraceBox.Log("!!유저입장!!/ connID: " + playerData.conn_id + " / color: " + playerData.color_id + " / index: " + playerData.player_index);
-            UnityEngine.Debug.Log("!!유저입장!!/ connID: " + playerData.conn_id + " / color: " + playerData.color_id + " / index: " + playerData.player_index);
         
     }
 
@@ -117,7 +116,6 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         OnReceivedUserDisconnect(playerData);
         if (_enableDetaledLog)
             TraceBox.Log("!!유저나감!! / connID: " + playerData.conn_id + " / color " + playerData.color_id + " / index: " + playerData.player_index);
-            UnityEngine.Debug.Log("!!유저나감!!/ connID: " + playerData.conn_id + " / color: " + playerData.color_id + " / index: " + playerData.player_index);
     }
 
 
