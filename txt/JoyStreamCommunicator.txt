@@ -1,0 +1,234 @@
+namespace IMFINE.Utils.JoyStream.Communicator
+{
+    using IMFINE.Utils;
+    using UnityEngine;
+    using System;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using DG.Tweening;
+    using Microsoft.AspNetCore.SignalR.Client;
+
+    public class JoyStreamCommunicator : MonoSingleton<JoyStreamCommunicator>
+    {
+        public static string METHOD_WallMessage = "wall_msg";
+        public static string METHOD_MobileConnMessage = "mobileconn_msg"; // 특정사용자에게만
+        public static string METHOD_MobileGroupMessage = "mobilegroup_msg"; // 모두에게 동시에
+        public static string METHOD_GameControl = "game_ctrl";
+
+        private static HubConnection hub;
+
+        public delegate void JoyStreamCommunicationEvent();
+        public delegate void JoyStreamMessageEvent(string conn_id, string key_code, string value);
+        public delegate void JoyStreamKeyEvent(string conn_id, int key_code);
+        public delegate void JoyStreamPlayerEvent(PlayerData player_data);
+        public event JoyStreamCommunicationEvent Prepared;
+        public event JoyStreamMessageEvent MessageReceived;
+        public event JoyStreamKeyEvent KeyUp;
+        public event JoyStreamKeyEvent KeyDown;
+        public event JoyStreamPlayerEvent UserEnter;
+        public event JoyStreamPlayerEvent UserExit;
+
+        [SerializeField]
+        private bool _enableDetaledLog = false;
+        private string _connectUrl = "";
+        private string _serverUrl = "";
+        private string _groupID = "fur";
+         private bool _isPreapred = false;
+        //private int _maxPlayerCount = 50;
+        //public int MaxPlayerCount { get => _maxPlayerCount; set => _maxPlayerCount = value; }
+        //private bool _isNoEntry;
+        //public bool IsNoEntry { get => _isNoEntry; set => _isNoEntry = value; }
+        // public enum THEME_TYPE
+        // {
+        //     A, B, C
+        // }
+
+        // private THEME_TYPE _themeType = THEME_TYPE.A;
+        // public THEME_TYPE ThemeType { get => _themeType; set => _themeType = value; }
+
+        private List<PlayerData> _playerDataList = new List<PlayerData>();
+        //public int GetPlayerCount() { return _playerDataList.Count; }
+
+        private void Awake()
+        {
+            var obj = FindObjectsOfType<JoyStreamCommunicator>();
+            if (obj.Length == 1)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+            else { Destroy(gameObject); }
+        }
+
+        public async void Connect(string url, string group_id)
+        {
+            _serverUrl = url;
+            _connectUrl = $"{_serverUrl}/hub/playuserhub?group_id={group_id}&device_type=wall";
+            TraceBox.Log("[JoyStream Communicator] Connect URL: " + _connectUrl);
+            Debug.Log("Connect URL: " + _connectUrl);
+            _groupID = group_id;
+
+            hub = new HubConnectionBuilder()
+               .WithUrl(_connectUrl)
+               .Build();
+
+            hub.On(METHOD_WallMessage, (string conn_id, string key, string value) =>
+            {
+                if (_enableDetaledLog) TraceBox.Log($"< ReceiveServerMessage / conn_id: {conn_id}, key: {key}, value: {value}");
+                switch (key)
+                {
+                    case "user_add":
+                        AddPlayer(conn_id);
+                        break;
+
+                    case "user_remove":
+                        RemovePlayer(conn_id);
+                        break;
+
+                    case "user_color":
+                        string assignedColor = ColorManager.instance.AssignUserColor();
+                        if (assignedColor != null)
+                        {
+                            TraceBox.Log("유저의 컬러값: " + assignedColor);
+                        }
+                        break;
+
+                    default: MessageReceived?.Invoke(conn_id, key, value); break;
+                }
+            });
+
+            hub.On(METHOD_GameControl, (string conn_id, string key, int value1) =>
+            {
+
+                if (_enableDetaledLog) TraceBox.Log($"< ReceiveControlDataㅁㅁㅁ / conn_id: {conn_id}, key: {key}, value: {value1}");
+                if (key.ToUpper() == "KEYUP") KeyUp?.Invoke(conn_id, value1);
+                else if (key.ToUpper() == "KEYDOWN") KeyDown?.Invoke(conn_id, value1);
+            });
+
+            try
+            {
+                await hub.StartAsync();
+                hub.Closed += OnClosed;
+                DOTween.Kill("Reconnect" + GetInstanceID());
+                OnPrepared();
+                TraceBox.Log("[JoyStream Communicator] Connection started");
+            }
+            catch (System.Exception ex)
+            {
+                TraceBox.Log("[JoyStream Communicator] " + ex.Message);
+                DOVirtual.DelayedCall(5, ReConnect).SetId("Reconnect" + GetInstanceID());
+            }
+
+        }
+
+        private async Task OnClosed(Exception arg)
+        {
+            //서버로 부터 접속이 끊겼을경우 다시 시작하기
+            //(서버 재시작 , 업데이트등의 사유로 재시작할 가능성이 있음)
+            TraceBox.Log("[JoyStream Communicator] Connection closed");
+            _isPreapred = false;
+            hub.Closed -= OnClosed;
+            await hub.StopAsync();
+            hub = null;
+            Connect(_serverUrl, _groupID);
+        }
+         private void OnPrepared()
+        {
+            _isPreapred = true;
+            Prepared?.Invoke();
+        }
+
+        private void OnApplicationQuit()
+        {
+            SendToMobile("user_remove", "game_complete");
+            SendMessage("게임이 종료되면 게임종료라는 간단한 문구 띄우고 user_remove");
+            StopConnection();
+        }
+
+        private async void StopConnection()
+        {
+            await hub.StopAsync();
+            hub = null;
+            TraceBox.Log("[JoyStream Communicator] Connection closed");
+        }
+
+        void ReConnect()
+        {
+            TraceBox.Log("[JoyStream Communicator] Try reconnect");
+            Connect(_serverUrl, _groupID);
+        }
+
+        public void AddPlayer(string conn_id)
+        {
+            PlayerData playerData = new PlayerData();
+            //conn_id = playerData.color_id;
+            foreach (PlayerData player in _playerDataList)
+            {
+                if (player.conn_id.Equals(conn_id)) return;
+            }
+
+            if (ColorManager.instance.availableColors != null && ColorManager.instance.availableColors.Count == 0)
+            {
+                SendToMobile(conn_id, "user_noentry");
+                TraceBox.Log($"[JoyStream Communicator] User No Entry !: {conn_id}");
+                return;
+            }
+            PlayerData newPlayer = new PlayerData(conn_id);
+            _playerDataList.Add(newPlayer);
+            UserEnter?.Invoke(newPlayer);
+
+            // 컬러아이디와 플레이어 인덱스 전송
+            string message = newPlayer.color_id + " , " + newPlayer.player_index;
+            SendToMobile(conn_id, "user_connect", message);
+            TraceBox.Log($"Sending to mobile - conn_id: {conn_id}, color_id: {newPlayer.color_id}, player_index: {newPlayer.player_index}");
+        }
+
+
+        public void RemovePlayer(string conn_id)
+        {
+            PlayerData playerToRemove = null;
+            foreach (PlayerData player in _playerDataList)
+            {
+                if (player.conn_id.Equals(conn_id))
+                {
+                    playerToRemove = player;
+                    break;
+                }
+            }
+
+            if (playerToRemove != null)
+            {
+                _playerDataList.Remove(playerToRemove);
+                UserExit?.Invoke(playerToRemove);
+
+                string message = playerToRemove.color_id + " , " + playerToRemove.player_index;
+                SendToMobile(conn_id, "user_remove", message);
+                TraceBox.Log($"Sending to mobile - conn_id: {conn_id}, color_id: {playerToRemove.color_id}, player_index: {playerToRemove.player_index}");
+            }
+            else
+            {
+                TraceBox.Log($"Player with conn_id {conn_id} not found in _playerDataList.");
+            }
+        }
+
+        public async void SendToMobile(string send_id, string key, string value = "")
+        {
+            try
+            {
+                if (send_id.ToUpper().Equals("ALL"))
+                {
+                    await hub.SendAsync(METHOD_MobileGroupMessage, _groupID, key, value);
+                }
+                else
+                {
+                    await hub.SendAsync(METHOD_MobileConnMessage, send_id, key, value);
+                }
+                TraceBox.Log($" > SendToMobile / send_id: {send_id} / key: {key} / value: {value}");
+            }
+            catch (System.Exception ex)
+            {
+                TraceBox.Log("[JoyStream Communicator] " + ex.Message);
+            }
+        }
+    }
+
+}
