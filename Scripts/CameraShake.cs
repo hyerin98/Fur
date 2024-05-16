@@ -4,24 +4,31 @@ using UnityEngine;
 
 public class CameraShake : MonoBehaviour
 {
- public float shakeAmount = 3.0f;
-    public float shakeTime = 1.0f;
+    public float ShakeAmount;
+    float ShakeTime;
+    Vector3 initialPosition; 
 
     private void Start()
     {
-        StartCoroutine(Shake(shakeAmount, shakeTime));
+        initialPosition = new Vector3(0f, 0f, -39.84f);
     }
 
-    IEnumerator Shake(float ShakeAmount, float ShakeTime)
+    public void VibrateForTime(float time)
     {
-        float timer = 0;
-        while (timer <= ShakeTime)
+        ShakeTime = time; 
+    }
+
+    private void Update()
+    {
+        if (ShakeTime > 0)
         {
-            Camera.main.transform.position = 
-                (Vector3)UnityEngine.Random.insideUnitCircle * ShakeAmount;
-            timer += Time.deltaTime;
-            yield return null;
+            transform.position = Random.insideUnitSphere * ShakeAmount + initialPosition;
+            ShakeTime -= Time.deltaTime;
         }
-        Camera.main.transform.position = new Vector3(0f, 0f, -40f);
+        else
+        {
+            ShakeTime = 0.0f;
+            transform.position = initialPosition;
+        }
     }
 }

@@ -1,5 +1,120 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &420595646539885577
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8542261154841981638}
+  - component: {fileID: 5158010273475606108}
+  - component: {fileID: 7342322533417421385}
+  m_Layer: 0
+  m_Name: Point Light (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &8542261154841981638
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420595646539885577}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.49, y: -3.45, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8939951640331388351}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &5158010273475606108
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420595646539885577}
+  m_Enabled: 1
+  serializedVersion: 10
+  m_Type: 2
+  m_Shape: 0
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Intensity: 30
+  m_Range: 3
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+--- !u!114 &7342322533417421385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420595646539885577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &1451679523206233168
 GameObject:
   m_ObjectHideFlags: 0
@@ -45,8 +160,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_Intensity: 80
-  m_Range: 10
+  m_Intensity: 60
+  m_Range: 5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -180,7 +295,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8178801793560530460, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_Name
-      value: Bone
+      value: fur
       objectReference: {fileID: 0}
     - target: {fileID: -4321248749723214521, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_Name
@@ -208,7 +323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1230651142743150165, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_Name
-      value: Bone
+      value: fur
       objectReference: {fileID: 0}
     - target: {fileID: 4754464913175306903, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_Name
@@ -256,8 +371,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.8169123
+  m_Center: {x: -0.003172357, y: -0.0000000010677306, z: 0.012223521}
 --- !u!59 &6300150217851391403
 HingeJoint:
   m_ObjectHideFlags: 0
@@ -288,6 +403,30 @@ HingeJoint:
     bounciness: 0
     bounceMinVelocity: 0.2
     contactDistance: 0
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
+--- !u!145 &9072301519027261643
+SpringJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465677197075613718}
+  m_ConnectedBody: {fileID: 2943210145561559271}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_AutoConfigureConnectedAnchor: 0
+  m_ConnectedAnchor: {x: 0.07, y: 0.37632984, z: 0.96}
+  serializedVersion: 2
+  m_Spring: 10
+  m_Damper: 0.2
+  m_MinDistance: 0
+  m_MaxDistance: 100
+  m_Tolerance: 0.025
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
   m_EnableCollision: 0
@@ -331,8 +470,32 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.8384025
+  m_Center: {x: -0.015230774, y: 3.4352826e-10, z: 0.00044425236}
+--- !u!145 &7434971629438690211
+SpringJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809676680112666535}
+  m_ConnectedBody: {fileID: 2249933487202640935}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_AutoConfigureConnectedAnchor: 0
+  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.87999976, z: -9.77374e-15}
+  serializedVersion: 2
+  m_Spring: 45
+  m_Damper: 0.2
+  m_MinDistance: 0
+  m_MaxDistance: 100
+  m_Tolerance: 0.025
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!59 &9194735972787561677
 HingeJoint:
   m_ObjectHideFlags: 0
@@ -345,7 +508,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00000012945702, y: 1.012509, z: -9.77374e-15}
+  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.87999976, z: -9.77374e-15}
   m_UseSpring: 0
   m_Spring:
     spring: 10
@@ -492,7 +655,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c064eebd2f440e4cae4a47ee7081350, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigid: {fileID: 0}
+  rigid: {fileID: 3275851174432681513}
   childRigidbodies: []
   playerSelector: {fileID: 0}
   isFalled: 0
@@ -501,7 +664,8 @@ MonoBehaviour:
   playerID: 
   userIndex: 0
   forceMagnitude: 10
-  pushForce: 10
+  pushMagnitude: 10
+  pushForce: 0
   ease: 0
 --- !u!1 &2064295694412291460 stripped
 GameObject:
@@ -535,8 +699,32 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.46150762
-  m_Center: {x: -0.0000000029822327, y: -0.038492337, z: -4.59251e-10}
+  m_Radius: 0.66532093
+  m_Center: {x: -0.037486605, y: -0.038492337, z: -0.000000002693626}
+--- !u!145 &3009596888162788307
+SpringJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064295694412291460}
+  m_ConnectedBody: {fileID: 8405291986206414001}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_AutoConfigureConnectedAnchor: 0
+  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.99617946, z: -9.773738e-15}
+  serializedVersion: 2
+  m_Spring: 45
+  m_Damper: 0.2
+  m_MinDistance: 0
+  m_MaxDistance: 100
+  m_Tolerance: 0.025
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!59 &5330335243438203444
 HingeJoint:
   m_ObjectHideFlags: 0
@@ -549,10 +737,10 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.99617934, z: -9.773738e-15}
+  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.99617946, z: -9.773738e-15}
   m_UseSpring: 0
   m_Spring:
-    spring: 10
+    spring: 0
     damper: 20
     targetPosition: 180
   m_UseMotor: 0
@@ -605,8 +793,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.8455581
+  m_Center: {x: -0.05625884, y: 0.0000000036414198, z: -0.023621323}
 --- !u!59 &6325039419264576915
 HingeJoint:
   m_ObjectHideFlags: 0
@@ -711,8 +899,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.8219316
+  m_Center: {x: -0.053152636, y: 0.000000002725423, z: 0.000000006336288}
 --- !u!59 &8193774691363586039
 HingeJoint:
   m_ObjectHideFlags: 0
@@ -791,8 +979,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.8396593
+  m_Center: {x: -0.0014762083, y: 3.7339513e-11, z: -8.7988866e-11}
 --- !u!59 &2866593149265691975
 HingeJoint:
   m_ObjectHideFlags: 0
@@ -861,8 +1049,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.84116
+  m_Center: {x: -0.0047699604, y: -4.9346077e-10, z: 0.006539026}
 --- !u!59 &3340780248367453053
 HingeJoint:
   m_ObjectHideFlags: 0
@@ -936,8 +1124,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.83803
+  m_Center: {x: 0.0106739, y: -2.699878e-10, z: 6.3621397e-10}
 --- !u!59 &1574386953908648749
 HingeJoint:
   m_ObjectHideFlags: 0
@@ -1006,8 +1194,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.8380149
+  m_Center: {x: -0.029427607, y: 7.4434814e-10, z: -0.0000000017540219}
 --- !u!59 &8501578993185337968
 HingeJoint:
   m_ObjectHideFlags: 0
@@ -1086,8 +1274,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5101811
-  m_Center: {x: 0.0000000069954176, y: 0.09029141, z: 0.0000000010772642}
+  m_Radius: 0.65612394
+  m_Center: {x: -0.04376937, y: 0.09029142, z: -0.000000001531593}
 --- !u!59 &137430208960617188
 HingeJoint:
   m_ObjectHideFlags: 0

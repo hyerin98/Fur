@@ -4,7 +4,6 @@ using DG.Tweening;
 using IMFINE.Utils.JoyStream.Communicator;
 using UnityEngine;
 using System.Linq;
-using System.Runtime.CompilerServices;
 //using IMFINE.Utils.JoyStream.Communicator.ext;
 
 public class PlayerSelector : MonoBehaviour
@@ -17,34 +16,26 @@ public class PlayerSelector : MonoBehaviour
     private HashSet<int> usedFur = new HashSet<int>(); // 사용된 fur 해시셋
     private Dictionary<string, PlayerData> playerDataList = new Dictionary<string, PlayerData>(); // 플레이어데이터 딕셔너
     private Dictionary<string, string> colorToConnIdMap = new Dictionary<string, string>();
-    private Rigidbody rigid;
 
     [Header("DOtween & GameObject & Bool")]
     public Ease ease;
     public GameObject furPrefab;
-    //public GameObject newFurEffect;
     public bool isSpawn;
     public GameObject particlePrefab;
-    [SerializeField] AnimationCurve curve;
-    Tweener floatTweener;
-    Sequence showSequence, hideSequence;
-    public Transform pos;
-    private HingeJoint[] hingeJoints;
 
     private void Awake()
     {
         ProtocolManager.instance.onWebControllerEvent += OnWebControllerEvent;
         ProtocolManager.instance.onUserConnectEvent += OnUserConnectEvent;
         isSpawn = false;
-        InitializeFurPositions();
-        rigid = GetComponent<Rigidbody>();
+        InitializeFurPositions(); ;
     }
 
     void Start()
     {
         DOTween.Init();
     }
-    
+
 
     private void InitializeFurPositions()
     {
@@ -60,16 +51,15 @@ public class PlayerSelector : MonoBehaviour
     {
         if (protocolType == ProtocolType.CONTROLLER_CONNECT)
         {
-            playerDataList[playerData.conn_id] = playerData;  // 연결된 사용자 정보 저장
+            playerDataList[playerData.conn_id] = playerData;
             OnAddUser(playerData);
         }
         else if (protocolType == ProtocolType.CONTROLLER_DISCONNECT)
         {
-            if (playerDataList.TryGetValue(playerData.conn_id, out PlayerData storedPlayerData)) //저장된 PlayerData를 사용하여 제거
+            if (playerDataList.ContainsKey(playerData.conn_id))
             {
                 RemoveUser(playerData);
-                //RemoveUser(storedPlayerData.color_id);
-                playerDataList.Remove(playerData.conn_id); 
+                playerDataList.Remove(playerData.conn_id);
                 TraceBox.Log("삭제한 아이디와 컬러값은?: " + playerData.conn_id + " , " + playerData.color_id);
             }
             else
@@ -80,6 +70,7 @@ public class PlayerSelector : MonoBehaviour
     }
 
 
+
     private void OnWebControllerEvent(ProtocolType protocolType, string conID)
     {
         switch (protocolType)
@@ -87,6 +78,7 @@ public class PlayerSelector : MonoBehaviour
             case ProtocolType.CONTROLLER_UP_PRESS:
                 if (players.ContainsKey(conID))
                 {
+                    TraceBox.Log("위키눌렀고 현재 conID:" + conID);
                     players[conID].OnPlayerMoveProtocol(protocolType);
                 }
                 break;
@@ -135,7 +127,6 @@ public class PlayerSelector : MonoBehaviour
             case ProtocolType.CONTROLLER_FALL_PRESS:
                 if (players.ContainsKey(conID))
                 {
-                    TraceBox.Log("플레이어셀렉터에서 스페이스");
                     players[conID].OnPlayerMoveProtocol(protocolType);
                 }
                 break;
@@ -161,11 +152,10 @@ public class PlayerSelector : MonoBehaviour
                 return;
             }
 
-            int randomIndex = UnityEngine.Random.Range(0, availableFur.Count);
+            int randomIndex = Random.Range(0, availableFur.Count);
             int furIndex = availableFur[randomIndex];
             GameObject assignedFur = furs[furIndex];
             playerData.player_index = furIndex;
-            //assignedFur.layer = LayerMask.NameToLayer("NoPostProcess");
 
             // 색상 할당 및 플레이어 설정 로직...
             Player targetPlayer = assignedFur.GetComponent<Player>();
@@ -176,7 +166,7 @@ public class PlayerSelector : MonoBehaviour
                 Light childLight = assignedFur.GetComponentInChildren<Light>();
                 if (childLight != null)
                 {
-                    childLight.enabled = true; // Light 컴포넌트 활성화
+                    childLight.enabled = true;
                 }
 
                 Renderer renderer = assignedFur.GetComponent<Renderer>();
@@ -185,54 +175,32 @@ public class PlayerSelector : MonoBehaviour
                     Material material = renderer.material;
                     Color targetColor;
 
-                    // Emission을 활성화합니다.
-                    //material.EnableKeyword("_EMISSION");
-
-                    if (UnityEngine.ColorUtility.TryParseHtmlString("#" + playerData.color_id, out targetColor))
+                    if (ColorUtility.TryParseHtmlString("#" + playerData.color_id, out targetColor))
                     {
                         // 색상이 파싱되면 서서히 색상 변경을 시작
-                        DOVirtual.Color(material.color, targetColor, 4f, value =>
+                        DOVirtual.Color(material.color, targetColor, 3f, value =>
                         {
                             material.color = value;
-
-                            // Emission 색상도 같이 변경합니다.
-                            //material.SetColor("_EmissionColor", value);
                         });
-                        //childLight.color = targetColor;
 
-                        DOVirtual.Color(childLight.color, targetColor, 4f, value =>
+                        DOVirtual.Color(childLight.color, targetColor, 2f, value =>
                         {
                             childLight.color = value;
                         });
                     }
 
-                    // 랜덤한 색상과 강도로 emission 색상을 설정
-                    // Color randomEmissionColor = UnityEngine.Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.75f, 1f);
-                    // float intensity = 10f; 
-                    // randomEmissionColor *= intensity; // 색상에 강도를 곱하여 밝기 조절
-                    // material.SetColor("_EmissionColor", randomEmissionColor);
-
                     targetPlayer.enabled = true;
                     changedColors.Add(targetColor); // 변경된 색상을 추적
                 }
-                //targetPlayer.playerID = playerData.color_id;
                 targetPlayer.playerID = playerData.conn_id;
                 targetPlayer.SetPlayerColor(playerData.color_id);
                 targetPlayer.SetUserIndex(furIndex);
 
                 Sequence mySequence = DOTween.Sequence();
 
-                // mySequence.Append(targetPlayer.transform.DOScale(3f, 0.25f).SetEase(Ease.OutBack))
-                // .Append(targetPlayer.transform.DOScale(1f, 0.15f).SetEase(Ease.InQuad))
-                // .Append(targetPlayer.transform.DOScale(1.8f, 0.1f).SetEase(Ease.InBack))
-                // .Play();
-
                 usedFur.Add(furIndex);
-                //players.Add(playerData.color_id, targetPlayer);
                 players.Add(playerData.conn_id, targetPlayer);
                 colorToConnIdMap.Add(playerData.color_id, playerData.conn_id);
-                //GameObject tempEffect = Instantiate(newFurEffect, targetPlayer.transform.position, Quaternion.identity);
-                //Destroy(tempEffect, 1.0f);
                 playerData.player_index = players.Count;  // 플레이어 인덱스 설정
             }
             else
@@ -248,103 +216,89 @@ public class PlayerSelector : MonoBehaviour
         if (players.ContainsKey(playerID))
         {
             Player player = players[playerID];
-            GameObject furObject = player.gameObject; // 4.30 계속 삭제 시 missing이슈 -> 5번눌러서 삭제하는거랑 겹쳐서그런듯 
-                                                      // if (player.playerColor != null)
-                                                      // {
-                                                      //     ColorManager.instance.ReturnColor(player.playerColor);
-                                                      // }
+            GameObject furObject = player.gameObject;
+
             if (furObject != null)
             {
                 int furIndex = furs.IndexOf(furObject);
-                if (furIndex != -1)
-                {
-                    Vector3 initialPosition = furPositions[furIndex];
-                    furs.RemoveAt(furIndex);
-                    furPositions.RemoveAt(furIndex);
-                    usedFur.Remove(furIndex);
+                Vector3 initialPosition = furPositions[furIndex];
 
-                    Destroy(furObject,3f);
-                    StartCoroutine(RespawnFur(initialPosition));
+                furs.RemoveAt(furIndex);
+                furPositions.RemoveAt(furIndex);
+                usedFur.Remove(furIndex);
+
+                Rigidbody furRigidbody = furObject.GetComponent<Rigidbody>();
+                if (furRigidbody != null)
+                {
+                    furRigidbody.isKinematic = false; // 컨트롤러 space고치면 필요없음
+                    Light childLight = furObject.GetComponentInChildren<Light>();
+                    Renderer renderer = furObject.GetComponent<Renderer>();
+                    if (childLight != null && renderer != null)
+                    {
+                        StartCoroutine(DimLightIntensity(childLight, 3f));
+                        childLight.transform.localPosition = new Vector3(childLight.transform.localPosition.x, 0f, childLight.transform.localPosition.z);
+                        renderer.material.DOFade(0f, 3f).SetEase(ease);
+                        Destroy(furObject, 10f);
+                        StartCoroutine(RespawnFur(initialPosition));
+                    }
                 }
+
             }
             ColorManager.instance.ReturnColor(player.playerColor);
             players.Remove(playerID);
-            TraceBox.Log("remove player with ID: " + playerID);
-        }
-        else
-        {
-            TraceBox.Log("Player not found with ID: " + playerID); // 5.10 이 부분 수정필 
+            TraceBox.Log("삭제된 플레이어의 아이디: " + playerID);
         }
     }
 
+    private IEnumerator DimLightIntensity(Light light, float duration)
+    {
+        float startIntensity = light.intensity;
+        float timeElapsed = 0f;
 
-    // public void RemoveUser(PlayerData playerData)
-    // {
-    //     string playerID = playerData.conn_id;
-    //     if (players.ContainsKey(playerID))
-    //     {
-    //         Player player = players[playerID];
-    //         GameObject furObject = player.gameObject; // 4.30 계속 삭제 시 missing이슈 -> 5번눌러서 삭제하는거랑 겹쳐서그런듯 
-    //                                                   // if (player.playerColor != null)
-    //                                                   // {
-    //                                                   //     ColorManager.instance.ReturnColor(player.playerColor);
-    //                                                   // }
-    //         if (furObject != null)
-    //         {
-    //             int furIndex = furs.IndexOf(furObject);
-    //             if (furIndex != -1)
-    //             {
-    //                 Vector3 initialPosition = furPositions[furIndex];
-    //                 furs.RemoveAt(furIndex);
-    //                 furPositions.RemoveAt(furIndex);
-    //                 usedFur.Remove(furIndex);
+        while (timeElapsed < duration)
+        {
+            float t = timeElapsed / duration;
 
-    //                 // if (player.isFalled)
-    //                 // {
-    //                 //     Destroy(furObject);
-    //                 //     StartCoroutine(RespawnFur(initialPosition));
-    //                 // }
-    //                 Destroy(furObject,5f);
-    //                 StartCoroutine(RespawnFur(initialPosition));
+            light.intensity = Mathf.Lerp(startIntensity, 0f, t);
 
-                   
-    //             }
-    //         }
-    //         ColorManager.instance.ReturnColor(player.playerColor);
-    //         players.Remove(playerID);
-    //         TraceBox.Log("remove player with ID: " + playerID);
-    //     }
-    //     else
-    //     {
-    //         TraceBox.Log("Player not found with ID: " + playerID); // 5.10 이 부분 수정필 
-    //     }
-    // }
+            timeElapsed += Time.deltaTime;
 
-
+            yield return null;
+        }
+        light.intensity = 0f;
+    }
 
     public IEnumerator RespawnFur(Vector3 position)
     {
-        yield return new WaitForSeconds(3.0f); // 3초 대기
+        yield return new WaitForSeconds(3.0f);
 
         if (furPrefab != null)
         {
             GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
             furs.Add(newFur);
-            furPositions.Add(position); // 새 fur의 위치를 리스트에 추가
+            furPositions.Add(position);
 
-            Renderer furRenderer = newFur.GetComponent<Renderer>(); // Renderer 컴포넌트를 가져옴
+            Renderer furRenderer = newFur.GetComponent<Renderer>();
             if (furRenderer != null)
             {
-                // Material 투명도를 초기에 0으로 설정
                 Color initialColor = furRenderer.material.color;
-                initialColor.a = 0f;
+                initialColor.a = 1f; // 알파 값을 1로 설정하여 투명하지 않도록 함
                 furRenderer.material.color = initialColor;
-
-                // Sequence seq = DOTween.Sequence();
-                // seq.Append(newFur.transform.DOScale(1f, 0.5f)) // 처음 등장시 효과
-                //     .Join(furRenderer.material.DOFade(3f, 1f)) // 동시에 페이드 인
-                //     .Append(newFur.transform.DOScale(2.0f, 1f).SetEase(Ease.InOutElastic)); // 커지는 효과
             }
         }
     }
+
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            PlayerData newPlayerData = new PlayerData(); // 새로운 PlayerData 생성
+                                                         // PlayerData를 원하는 값으로 설정
+            newPlayerData.conn_id = "NewPlayer_" + Time.time.ToString(); // 예시: 새로운 플레이어의 conn_id를 고유하게 만듭니다.
+            OnAddUser(newPlayerData); // 새로운 PlayerData로 OnAddUser 호출
+        }
+    }
+
+
 }

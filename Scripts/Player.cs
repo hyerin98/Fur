@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using IMFINE.Utils.JoyStream.Communicator;
 using System;
+using System.Diagnostics;
 
 public class Player : MonoBehaviour
 {
@@ -11,9 +12,9 @@ public class Player : MonoBehaviour
     private KeyCode downKeyCode = 0;
     public Rigidbody rigid;
     public delegate void OnPlayerEnd(Player target);
-    public event OnPlayerEnd onPlayerEnd;
+    //public event OnPlayerEnd onPlayerEnd;
     public List<Rigidbody> childRigidbodies;
-    public PlayerSelector playerSelector;
+    private PlayerSelector playerSelector;
 
     [Header("Bool")]
     public bool isFalled = false;
@@ -26,8 +27,15 @@ public class Player : MonoBehaviour
 
     [Header("PlayerMovement")]
     public float forceMagnitude = 10f;
-    public float pushForce = 3f;
-    private HingeJoint[] hingeJoints;
+    public float pushMagnitude;
+     private HingeJoint[] hingeJoints;
+
+    private SpringJoint[] springJoints;
+    CameraShake Camera;
+
+    public float pushForce;
+
+   
 
 
     [Header("DOTween")]
@@ -35,15 +43,14 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        //playerID = System.Guid.NewGuid().ToString();
         rigid = GetComponent<Rigidbody>();
-        //rigid.sleepThreshold=0;
         hingeJoints = GetComponentsInChildren<HingeJoint>();
+        springJoints = GetComponentsInChildren<SpringJoint>();
 
         playerSelector = FindObjectOfType<PlayerSelector>();
         if (playerSelector == null)
         {
-            Debug.LogError("PlayerSelector component not found in the scene!");
+            //Debug.LogError("PlayerSelector component not found in the scene!");
         }
     }
 
@@ -54,18 +61,19 @@ public class Player : MonoBehaviour
 
         childRigidbodies = new List<Rigidbody>(GetComponentsInChildren<Rigidbody>());
         childRigidbodies.Remove(rigid);
+        Camera = GameObject.FindWithTag("MainCamera").GetComponent<CameraShake>();
     }
 
     private void Update()
     {
         if (downKeyCode == KeyCode.UpArrow)
         {
-            PushHingeJoint("fur", "pull", 1000f);
+            PushHingeJoint("fur","pull", 10f);
         }
 
         else if (downKeyCode == KeyCode.DownArrow)
         {
-            PushHingeJoint("fur", "push", 1000f);
+            PushHingeJoint("fur","push", 10f);
         }
         else if (downKeyCode == KeyCode.LeftArrow)
         {
@@ -78,41 +86,41 @@ public class Player : MonoBehaviour
         }
         else if (downKeyCode == KeyCode.Space)
         {
-            this.rigid.isKinematic = false;
-            isFalled = true;
-        }
-
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
             rigid.isKinematic = false;
             isFalled = true;
         }
     }
 
+
     void PushHingeJoint(string jointName, string action, float pushForce)
     {
-        foreach (HingeJoint hingeJoint in hingeJoints)
+        foreach (SpringJoint springJoint in springJoints)
         {
-            if (hingeJoint.name == jointName)
+            if (springJoint.name == jointName)
             {
-                if (action == "pull")
+                if (action == "push")
                 {
-                   JointSpring spring = hingeJoint.spring;
-                    spring.targetPosition = -2f;
-                    spring.spring = pushForce; 
-                    hingeJoint.spring = spring;
-
-                    hingeJoint.connectedBody.MovePosition(hingeJoint.transform.position + hingeJoint.transform.up * 0.3f); 
-
+                    Transform furTransform = springJoint.transform.Find("fur");
+                    if (furTransform != null)
+                    {
+                        Rigidbody furRigidbody = furTransform.GetComponent<Rigidbody>();
+                        if (furRigidbody != null)
+                        {
+                            furRigidbody.AddForce(furTransform.up * pushForce, ForceMode.Impulse);
+                        }
+                    }
                 }
-                else if (action == "push")
+                else if(action == "pull")
                 {
-                    JointSpring spring = hingeJoint.spring;
-                    spring.targetPosition = 2f;
-                    spring.spring = pushForce; 
-                    hingeJoint.spring = spring;
-
-                    hingeJoint.connectedBody.MovePosition(hingeJoint.transform.position + hingeJoint.transform.up * 0.3f); 
+                    Transform furTransform = springJoint.transform.Find("fur");
+                    if (furTransform != null)
+                    {
+                        Rigidbody furRigidbody = furTransform.GetComponent<Rigidbody>();
+                        if (furRigidbody != null)
+                        {
+                            furRigidbody.AddForce(-furTransform.up * pushForce, ForceMode.Impulse);
+                        }
+                    }
                 }
                 return;
             }
@@ -158,7 +166,6 @@ public class Player : MonoBehaviour
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_FALL_PRESS:
-                TraceBox.Log("누름");
                 downKeyCode = KeyCode.Space;
                 //RemovePlayer();
                 //  PlayerData playerData = new PlayerData();
@@ -172,23 +179,24 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("Ground"))
         {
             isFalled = true;
-            // 부모 객체의 물리 시뮬레이션 비활성화
             rigid.isKinematic = true;
+            
 
-            // 자식 객체들의 물리 시뮬레이션 비활성화 및 떨어뜨리기
             foreach (var childRigidbody in childRigidbodies)
             {
                 childRigidbody.isKinematic = false;
-                childRigidbody.AddForce(Vector3.down * 5f, ForceMode.Impulse); // 특정 힘을 가해 아래로 떨어지게 함
+                childRigidbody.AddForce(Vector3.down * 5f, ForceMode.Impulse);
             }
 
             if (playerSelector != null)
             {
-                PlayerData playerData = new PlayerData();
+                PlayerData playerData = new PlayerData
+                {
+                    conn_id = playerID
+                };
                 playerSelector.RemoveUser(playerData);
             }
-
-            // 자식 객체들을 제거하기 위한 코루틴 시작
+            Camera.VibrateForTime(0.05f);
             StartCoroutine(DestroyChildrenAfterDelay(3f));
         }
     }
@@ -206,7 +214,7 @@ public class Player : MonoBehaviour
         }
 
         // 플레이어 객체 파괴
-        Destroy(gameObject);
+       Destroy(gameObject);
     }
 
 
