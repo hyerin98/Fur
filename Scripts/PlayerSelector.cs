@@ -15,13 +15,14 @@ public class PlayerSelector : MonoBehaviour
     private List<Vector3> furPositions = new List<Vector3>(); // 삭제 후 다시 생기기위한 털위치 리스트
     private HashSet<int> usedFur = new HashSet<int>(); // 사용된 fur 해시셋
     private Dictionary<string, PlayerData> playerDataList = new Dictionary<string, PlayerData>(); // 플레이어데이터 딕셔너
-    private Dictionary<string, string> colorToConnIdMap = new Dictionary<string, string>();
+    //private Dictionary<string, string> colorToConnIdMap = new Dictionary<string, string>();
 
     [Header("DOtween & GameObject & Bool")]
     public Ease ease;
     public GameObject furPrefab;
     public bool isSpawn;
     public GameObject particlePrefab;
+    
 
     private void Awake()
     {
@@ -53,6 +54,7 @@ public class PlayerSelector : MonoBehaviour
         {
             playerDataList[playerData.conn_id] = playerData;
             OnAddUser(playerData);
+            TraceBox.Log("들어온 유저다: " + playerData.conn_id + " , " + playerData.color_id + " , " + playerData.player_index);
         }
         else if (protocolType == ProtocolType.CONTROLLER_DISCONNECT)
         {
@@ -78,7 +80,6 @@ public class PlayerSelector : MonoBehaviour
             case ProtocolType.CONTROLLER_UP_PRESS:
                 if (players.ContainsKey(conID))
                 {
-                    TraceBox.Log("위키눌렀고 현재 conID:" + conID);
                     players[conID].OnPlayerMoveProtocol(protocolType);
                 }
                 break;
@@ -133,7 +134,7 @@ public class PlayerSelector : MonoBehaviour
         }
     }
 
-    public void OnAddUser(PlayerData playerData)
+     public void OnAddUser(PlayerData playerData)
     {
         if (!players.ContainsKey(playerData.conn_id))
         {
@@ -200,7 +201,7 @@ public class PlayerSelector : MonoBehaviour
 
                 usedFur.Add(furIndex);
                 players.Add(playerData.conn_id, targetPlayer);
-                colorToConnIdMap.Add(playerData.color_id, playerData.conn_id);
+                //colorToConnIdMap.Add(playerData.color_id, playerData.conn_id); // 5.17 수정 -> 최대컬러수 할당받고 나면 컨트롤러 흰색으로 뜨는 이슈 원인 
                 playerData.player_index = players.Count;  // 플레이어 인덱스 설정
             }
             else
@@ -209,6 +210,9 @@ public class PlayerSelector : MonoBehaviour
             }
         }
     }
+
+    
+
 
     public void RemoveUser(PlayerData playerData)
     {
@@ -227,16 +231,17 @@ public class PlayerSelector : MonoBehaviour
                 furPositions.RemoveAt(furIndex);
                 usedFur.Remove(furIndex);
 
-                Rigidbody furRigidbody = furObject.GetComponent<Rigidbody>();
-                if (furRigidbody != null)
+                //Rigidbody furRigidbody = furObject.GetComponent<Rigidbody>();
+                if (player.isFalled)
                 {
-                    furRigidbody.isKinematic = false; // 컨트롤러 space고치면 필요없음
+                    
+                    //furRigidbody.isKinematic = false; // 컨트롤러 space고치면 필요없음
                     Light childLight = furObject.GetComponentInChildren<Light>();
                     Renderer renderer = furObject.GetComponent<Renderer>();
                     if (childLight != null && renderer != null)
                     {
                         StartCoroutine(DimLightIntensity(childLight, 3f));
-                        childLight.transform.localPosition = new Vector3(childLight.transform.localPosition.x, 0f, childLight.transform.localPosition.z);
+                        //childLight.transform.localPosition = new Vector3(childLight.transform.localPosition.x, 0f, childLight.transform.localPosition.z);
                         renderer.material.DOFade(0f, 3f).SetEase(ease);
                         Destroy(furObject, 10f);
                         StartCoroutine(RespawnFur(initialPosition));
@@ -249,6 +254,8 @@ public class PlayerSelector : MonoBehaviour
             TraceBox.Log("삭제된 플레이어의 아이디: " + playerID);
         }
     }
+
+
 
     private IEnumerator DimLightIntensity(Light light, float duration)
     {

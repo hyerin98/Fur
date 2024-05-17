@@ -33,10 +33,8 @@ public class Player : MonoBehaviour
     private SpringJoint[] springJoints;
     CameraShake Camera;
 
-    public float pushForce;
-
-   
-
+    [Header("Sound")]
+    public AudioSource splatSount;
 
     [Header("DOTween")]
     public Ease ease;
@@ -168,8 +166,8 @@ public class Player : MonoBehaviour
             case ProtocolType.CONTROLLER_FALL_PRESS:
                 downKeyCode = KeyCode.Space;
                 //RemovePlayer();
-                //  PlayerData playerData = new PlayerData();
-                //  playerSelector.RemoveUser(playerData);
+                  //PlayerData playerData = new PlayerData();
+              //playerSelector.RemoveUser(playerData);
                 break;
         }
     }
@@ -178,25 +176,28 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
+            //splatSount.Play();  // 5.17 수정 필
             isFalled = true;
             rigid.isKinematic = true;
+            
             
 
             foreach (var childRigidbody in childRigidbodies)
             {
                 childRigidbody.isKinematic = false;
-                childRigidbody.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+                childRigidbody.AddForce(Vector3.down * 0.5f, ForceMode.Impulse);
             }
 
-            if (playerSelector != null)
-            {
-                PlayerData playerData = new PlayerData
-                {
-                    conn_id = playerID
-                };
-                playerSelector.RemoveUser(playerData);
-            }
-            Camera.VibrateForTime(0.05f);
+            // if (playerSelector != null)
+            // {
+            //     PlayerData playerData = new PlayerData
+            //     {
+            //         conn_id = playerID
+            //     };
+            //     playerSelector.RemoveUser(playerData);
+                
+            // }
+            Camera.VibrateForTime(0.01f);
             StartCoroutine(DestroyChildrenAfterDelay(3f));
         }
     }

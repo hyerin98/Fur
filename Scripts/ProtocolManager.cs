@@ -28,7 +28,7 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
 
     private void OnConfigDataPrepared()
     {
-        //JoyStreamCommunicator.instance.MessageReceived += ReceiveMessage; // 시그널 메세지 수신 
+        JoyStreamCommunicator.instance.MessageReceived += ReceiveMessage; // 시그널 메세지 수신 
         JoyStreamCommunicator.instance.UserEnter += OnUserEnter; // 사용자 들어왔을 때
         JoyStreamCommunicator.instance.UserExit += OnUserExit; // 사용자 나갔을 때
         JoyStreamCommunicator.instance.KeyDown += OnKeyDown; // 사용자가 키를 눌렀을 때
@@ -42,6 +42,20 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
 #endif
         // DOTween라이브러리의 DelayedCall메서드. 지정된 시간이 지난 후에 지정된 작업을 실행
         DOVirtual.DelayedCall(5, () => SendIdleModeEvent(true)).SetId("IdleTimer" + GetInstanceID());
+    }
+
+    private void ReceiveMessage(string conn_id, string key_code, string value)
+    {
+        TraceBox.Log("Message Received / connId: " + conn_id + " / key_code: " + key_code + " / value: " + value);
+        switch (key_code)
+        {
+            case "game_replay":
+                {
+                    onUserReplayEvent?.Invoke(conn_id);
+                    JoyStreamCommunicator.instance.SendToMobile(conn_id, "user_color", ColorManager.instance.AssignUserColor());
+                    break;
+                }
+        }
     }
 
      private void OnPrepared()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,7 +20,7 @@ public class ColorManager : MonoSingleton<ColorManager>
 
     void Start()
     {
-        maxUsers = 50;
+        maxUsers = 3;
         availableColors = GenerateRandomColors(maxUsers);
         //userIndex = players.Count;
     }
@@ -48,7 +49,7 @@ public class ColorManager : MonoSingleton<ColorManager>
         do
         {
             // 랜덤한 HSV 범위에서 색상을 생성합니다.
-            color = Random.ColorHSV(0f, 1f, minSaturation, maxSaturation, minBrightness, maxBrightness);
+            color = UnityEngine.Random.ColorHSV(0f, 1f, minSaturation, maxSaturation, minBrightness, maxBrightness);
         } while (IsColorTooDark(color)); // 생성된 색상이 너무 어두운지 확인
 
         return ColorUtility.ToHtmlStringRGB(color);

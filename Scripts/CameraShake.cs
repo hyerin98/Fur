@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class CameraShake : MonoBehaviour
 {
-    public float ShakeAmount;
+    public float ShakeAmount = 0.05f; // 흔들림 강도
     float ShakeTime;
-    Vector3 initialPosition; 
+    Vector3 initialPosition;
 
     private void Start()
     {
-        initialPosition = new Vector3(0f, 0f, -39.84f);
+        initialPosition = transform.position;
     }
 
     public void VibrateForTime(float time)
     {
-        ShakeTime = time; 
+        ShakeTime = time;
     }
 
     private void Update()

@@ -657,15 +657,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigid: {fileID: 3275851174432681513}
   childRigidbodies: []
-  playerSelector: {fileID: 0}
   isFalled: 0
   isActive: 0
   playerColor: 
   playerID: 
   userIndex: 0
-  forceMagnitude: 10
-  pushMagnitude: 10
+  forceMagnitude: 50
+  pushMagnitude: 30
   pushForce: 0
+  splatSount: {fileID: 8765782357263362402, guid: 8bc1707b9e9bdd84494d88737bc11adf, type: 3}
   ease: 0
 --- !u!1 &2064295694412291460 stripped
 GameObject:
