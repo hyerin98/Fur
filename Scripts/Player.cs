@@ -4,7 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using IMFINE.Utils.JoyStream.Communicator;
 using System;
-using System.Diagnostics;
+
 
 public class Player : MonoBehaviour
 {
@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
 
     [Header("Bool")]
     public bool isFalled = false;
+    public bool isFalling = false;
     public bool isActive = false;
 
     [Header("String & Int")]
@@ -28,13 +29,15 @@ public class Player : MonoBehaviour
     [Header("PlayerMovement")]
     public float forceMagnitude = 10f;
     public float pushMagnitude;
-     private HingeJoint[] hingeJoints;
+    private HingeJoint[] hingeJoints;
 
     private SpringJoint[] springJoints;
     CameraShake Camera;
+    float time;
 
     [Header("Sound")]
-    public AudioSource splatSount;
+    public AudioSource splatSound;
+    public AudioSource colSound;
 
     [Header("DOTween")]
     public Ease ease;
@@ -55,7 +58,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         PlayerStart();
-        GetComponent<Player>().enabled = false; // 4.30 테스트 -> 생성된 털들만 움직이도록
+        GetComponent<Player>().enabled = false; 
 
         childRigidbodies = new List<Rigidbody>(GetComponentsInChildren<Rigidbody>());
         childRigidbodies.Remove(rigid);
@@ -67,27 +70,32 @@ public class Player : MonoBehaviour
         if (downKeyCode == KeyCode.UpArrow)
         {
             PushHingeJoint("fur","pull", 10f);
+            colSound.Play();
         }
 
         else if (downKeyCode == KeyCode.DownArrow)
         {
             PushHingeJoint("fur","push", 10f);
+            colSound.Play();
         }
         else if (downKeyCode == KeyCode.LeftArrow)
         {
             ApplyForceToHingeJoints(-transform.right);
+            colSound.Play();
 
         }
         else if (downKeyCode == KeyCode.RightArrow)
         {
             ApplyForceToHingeJoints(transform.right);
+            colSound.Play();
         }
         else if (downKeyCode == KeyCode.Space)
         {
             rigid.isKinematic = false;
-            isFalled = true;
+            isFalling = true;
         }
     }
+
 
 
     void PushHingeJoint(string jointName, string action, float pushForce)
@@ -165,9 +173,6 @@ public class Player : MonoBehaviour
                 break;
             case ProtocolType.CONTROLLER_FALL_PRESS:
                 downKeyCode = KeyCode.Space;
-                //RemovePlayer();
-                  //PlayerData playerData = new PlayerData();
-              //playerSelector.RemoveUser(playerData);
                 break;
         }
     }
@@ -176,47 +181,34 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
-            //splatSount.Play();  // 5.17 수정 필
+            splatSound.Play();  // 5.17 수정 필
             isFalled = true;
-            rigid.isKinematic = true;
+            //rigid.isKinematic = true;
             
-            
-
             foreach (var childRigidbody in childRigidbodies)
             {
                 childRigidbody.isKinematic = false;
-                childRigidbody.AddForce(Vector3.down * 0.5f, ForceMode.Impulse);
+                childRigidbody.AddForce(Vector3.down * 10f, ForceMode.Impulse);
             }
-
-            // if (playerSelector != null)
-            // {
-            //     PlayerData playerData = new PlayerData
-            //     {
-            //         conn_id = playerID
-            //     };
-            //     playerSelector.RemoveUser(playerData);
-                
-            // }
-            Camera.VibrateForTime(0.01f);
-            StartCoroutine(DestroyChildrenAfterDelay(3f));
+            //StartCoroutine(DestroyChildrenAfterDelay(3f));
         }
     }
 
-    private IEnumerator DestroyChildrenAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(5f);
+    // private IEnumerator DestroyChildrenAfterDelay(float delay)
+    // {
+    //     yield return new WaitForSeconds(5f);
 
-        foreach (var childRigidbody in childRigidbodies)
-        {
-            if (childRigidbody != null && childRigidbody.gameObject != null)
-            {
-                Destroy(childRigidbody.gameObject);
-            }
-        }
+    //     foreach (var childRigidbody in childRigidbodies)
+    //     {
+    //         if (childRigidbody != null && childRigidbody.gameObject != null)
+    //         {
+    //             Destroy(childRigidbody.gameObject);
+    //         }
+    //     }
 
-        // 플레이어 객체 파괴
-       Destroy(gameObject);
-    }
+    //     // 플레이어 객체 파괴
+    //    Destroy(gameObject);
+    // }
 
 
     // public void RemovePlayer()

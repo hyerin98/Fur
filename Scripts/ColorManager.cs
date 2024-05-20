@@ -17,10 +17,9 @@ public class ColorManager : MonoSingleton<ColorManager>
     private float minBrightness = 0.6f;
     private float maxBrightness = 1.0f;
 
-
     void Start()
     {
-        maxUsers = 3;
+        maxUsers = 50;
         availableColors = GenerateRandomColors(maxUsers);
         //userIndex = players.Count;
     }
@@ -29,7 +28,6 @@ public class ColorManager : MonoSingleton<ColorManager>
     {
         players.Add(player.playerID, player);
     }
-
 
     List<string> GenerateRandomColors(int count)
     {
@@ -45,25 +43,9 @@ public class ColorManager : MonoSingleton<ColorManager>
     string GenerateRandomColor()
     {
         // 임의의 색상을 생성하여 반환
-        Color color;
-        do
-        {
-            // 랜덤한 HSV 범위에서 색상을 생성합니다.
-            color = UnityEngine.Random.ColorHSV(0f, 1f, minSaturation, maxSaturation, minBrightness, maxBrightness);
-        } while (IsColorTooDark(color)); // 생성된 색상이 너무 어두운지 확인
-
+        Color color = UnityEngine.Random.ColorHSV(0f, 1f, minSaturation, maxSaturation, minBrightness, maxBrightness);
         return ColorUtility.ToHtmlStringRGB(color);
-
     }
-
-    bool IsColorTooDark(Color color)
-    {
-        // 색상의 밝기를 계산
-        float brightness = color.r * 0.299f + color.g * 0.587f + color.b * 0.114f;
-        // 만약 밝기가 너무 낮다면 어두운 색상으로 판단
-        return brightness < 0.5f;
-    }
-
 
     public string AssignUserColor()
     {
@@ -72,18 +54,17 @@ public class ColorManager : MonoSingleton<ColorManager>
             string color = availableColors[0]; // 첫 번째 사용 가능한 컬러 담기
             availableColors.RemoveAt(0); // 할당되었으니까 사용가능한 컬러리스트에서 삭제
             assignedColors.Add(color); // 할당된 색상 해시셋에 추가합니다.
-                                       //++userIndex; // 사용자 인덱스 증가
+            //++userIndex; // 사용자 인덱스 증가
             return color;
         }
         return null; // 사용 가능한 색상이 없을 경우 null 반환
     }
 
-
     public bool IsColorAvailable()
     {
         return assignedColors.Count < availableColors.Count;
     }
-    
+
     public void ReturnColor(string color)
     {
         if (assignedColors.Contains(color))

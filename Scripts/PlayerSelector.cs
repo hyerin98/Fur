@@ -22,7 +22,7 @@ public class PlayerSelector : MonoBehaviour
     public GameObject furPrefab;
     public bool isSpawn;
     public GameObject particlePrefab;
-    
+    CameraShake Camera;
 
     private void Awake()
     {
@@ -35,6 +35,7 @@ public class PlayerSelector : MonoBehaviour
     void Start()
     {
         DOTween.Init();
+        Camera = GameObject.FindWithTag("MainCamera").GetComponent<CameraShake>();
     }
 
 
@@ -134,7 +135,7 @@ public class PlayerSelector : MonoBehaviour
         }
     }
 
-     public void OnAddUser(PlayerData playerData)
+    public void OnAddUser(PlayerData playerData)
     {
         if (!players.ContainsKey(playerData.conn_id))
         {
@@ -211,7 +212,7 @@ public class PlayerSelector : MonoBehaviour
         }
     }
 
-    
+
 
 
     public void RemoveUser(PlayerData playerData)
@@ -231,23 +232,23 @@ public class PlayerSelector : MonoBehaviour
                 furPositions.RemoveAt(furIndex);
                 usedFur.Remove(furIndex);
 
-                //Rigidbody furRigidbody = furObject.GetComponent<Rigidbody>();
-                if (player.isFalled)
+                Light childLight = furObject.GetComponentInChildren<Light>();
+                Renderer renderer = furObject.GetComponent<Renderer>();
+                Rigidbody furRigidbody = furObject.GetComponent<Rigidbody>();
+                if (childLight != null && renderer != null && furRigidbody != null)
                 {
-                    
-                    //furRigidbody.isKinematic = false; // 컨트롤러 space고치면 필요없음
-                    Light childLight = furObject.GetComponentInChildren<Light>();
-                    Renderer renderer = furObject.GetComponent<Renderer>();
-                    if (childLight != null && renderer != null)
-                    {
-                        StartCoroutine(DimLightIntensity(childLight, 3f));
-                        //childLight.transform.localPosition = new Vector3(childLight.transform.localPosition.x, 0f, childLight.transform.localPosition.z);
-                        renderer.material.DOFade(0f, 3f).SetEase(ease);
-                        Destroy(furObject, 10f);
-                        StartCoroutine(RespawnFur(initialPosition));
-                    }
+                    furRigidbody.isKinematic = false;
+                    StartCoroutine(DimLightIntensity(childLight, 3f));
+
+                    renderer.material.DOFade(0f, 3f).SetEase(ease);
+                    Destroy(furObject, 10f);
+                    StartCoroutine(RespawnFur(initialPosition));
                 }
 
+                // if(player.isFalled)
+                // {
+                //     childLight.transform.localPosition = new Vector3(childLight.transform.localPosition.x, childLight.transform.localPosition.y, 10f);
+                // }
             }
             ColorManager.instance.ReturnColor(player.playerColor);
             players.Remove(playerID);
@@ -289,7 +290,7 @@ public class PlayerSelector : MonoBehaviour
             if (furRenderer != null)
             {
                 Color initialColor = furRenderer.material.color;
-                initialColor.a = 1f; // 알파 값을 1로 설정하여 투명하지 않도록 함
+                initialColor.a = 1f; 
                 furRenderer.material.color = initialColor;
             }
         }
@@ -300,12 +301,14 @@ public class PlayerSelector : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            PlayerData newPlayerData = new PlayerData(); // 새로운 PlayerData 생성
-                                                         // PlayerData를 원하는 값으로 설정
-            newPlayerData.conn_id = "NewPlayer_" + Time.time.ToString(); // 예시: 새로운 플레이어의 conn_id를 고유하게 만듭니다.
-            OnAddUser(newPlayerData); // 새로운 PlayerData로 OnAddUser 호출
+            PlayerData newPlayerData = new PlayerData(); 
+            newPlayerData.conn_id = "NewPlayer_" + Time.time.ToString(); 
+            OnAddUser(newPlayerData); 
+        }
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            PlayerData playerData = new PlayerData();
+            RemoveUser(playerData);
         }
     }
-
-
 }

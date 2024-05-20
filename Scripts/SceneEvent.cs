@@ -1,50 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using IMFINE.Utils;
-using IMFINE.Utils.ConfigManager;
-using IMFINE.Utils.JoyStream.Communicator;
-using UnityEngine.UIElements;
-using Unity.Mathematics;
 
 public class SceneEvent : MonoBehaviour
 {
-    public bool isLight = false;
+    public float moveDistance = 0.1f;
+    public float moveDuration = 60f;
 
-    public Vector3 light_originalPosition;
-    public float light_moveDistance;
-    public float light_delayDuration;
-    public Ease light_ease;
-    public float light_waitTime;
+    public Ease ease;
 
     void Start()
     {
-        if (isLight)
-        {
-            DOVirtual.DelayedCall(light_waitTime, StartLightMovement);
-        }
+        // x축으로 왔다갔다하는 애니메이션을 설정
+        Vector3 targetPositionRight = transform.position + new Vector3(moveDistance, 0, 0);
+        Vector3 targetPositionLeft = transform.position - new Vector3(moveDistance, 0, 0);
+
+        // 반복해서 왔다갔다하는 애니메이션을 DOTween을 사용하여 설정
+        transform.DOMoveX(targetPositionRight.x, moveDuration)
+            .SetEase(ease)
+            .SetLoops(-1, LoopType.Yoyo);
     }
-
-    void StartLightMovement()
-{
-    transform.DOMoveX(light_originalPosition.x + light_moveDistance, light_delayDuration)
-        .SetEase(light_ease)
-        .OnComplete(() =>
-        {
-            // 도착 후 일정 시간 대기 후 원래 위치로 돌아가기
-            DOVirtual.DelayedCall(light_waitTime, () =>
-            {
-                transform.DOMoveX(light_originalPosition.x, light_delayDuration)
-                    .SetEase(light_ease)
-                    .OnComplete(() =>
-                    {
-                        // 다시 처음부터 반복
-                        DOVirtual.DelayedCall(light_waitTime, StartLightMovement);
-                    });
-            });
-        });
-}
-
-
 }
