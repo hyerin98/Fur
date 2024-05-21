@@ -1,14 +1,28 @@
-using Unity.VisualScripting;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
-public class Test : MonoBehaviour
+public class test : MonoBehaviour
 {
-     public Material material; // 사용할 머티리얼
-    public float speed = 0.5f; // 오프셋 변화 속도
+    public GameObject[] obj;
+    public Vector3[] targetPositions;
+    public Ease ease;
 
-    void Update()
+    void Start()
     {
-        float offset = Time.time * speed; // 시간에 따라 오프셋 계산
-        material.SetTextureOffset("_MainTex", new Vector2(offset, 0)); // X축 오프셋 적용
+        if (targetPositions.Length != obj.Length)
+        {
+            Debug.LogError("The number of target positions must match the number of objects.");
+            return;
+        }
+
+        for (int i = 0; i < obj.Length; i++)
+        {
+            if (obj[i] != null)
+            {
+                obj[i].transform.DOMove(targetPositions[i], 3.0f).SetEase(ease); 
+            }
+        }
     }
 }

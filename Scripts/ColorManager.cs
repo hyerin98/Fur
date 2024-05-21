@@ -7,21 +7,19 @@ using IMFINE.Utils;
 public class ColorManager : MonoSingleton<ColorManager>
 {
     [Header("ColorSettings")]
-    public List<string> availableColors = new List<string>(); // 사용가능한 컬러리스트
-    private HashSet<string> assignedColors = new HashSet<string>(); // 할당받은 컬러 해시셋
+    public List<string> availableColors = new List<string>(); // 사용 가능한 컬러 리스트
+    private HashSet<string> assignedColors = new HashSet<string>(); // 할당 받은 컬러 해시셋
     private Dictionary<string, Player> players = new Dictionary<string, Player>();
     private int maxUsers;
-    //private int userIndex; 
-    private float minSaturation = 0.2f;
-    private float maxSaturation = 0.8f;
-    private float minBrightness = 0.6f;
-    private float maxBrightness = 1.0f;
+    private float minSaturation = 0.5f; // 최소 채도를 높여서 연한 색상 방지
+    private float maxSaturation = 1.0f;
+    private float minBrightness = 0.5f; // 최소 밝기를 높여서 너무 밝은 색상 방지
+    private float maxBrightness = 0.9f; // 최대 밝기를 낮춰서 하얀색 방지
 
     void Start()
     {
         maxUsers = 50;
         availableColors = GenerateRandomColors(maxUsers);
-        //userIndex = players.Count;
     }
 
     public void AddPlayer(Player player)
@@ -52,9 +50,8 @@ public class ColorManager : MonoSingleton<ColorManager>
         if (availableColors.Count > 0)
         {
             string color = availableColors[0]; // 첫 번째 사용 가능한 컬러 담기
-            availableColors.RemoveAt(0); // 할당되었으니까 사용가능한 컬러리스트에서 삭제
-            assignedColors.Add(color); // 할당된 색상 해시셋에 추가합니다.
-            //++userIndex; // 사용자 인덱스 증가
+            availableColors.RemoveAt(0); // 할당되었으니까 사용 가능한 컬러 리스트에서 삭제
+            assignedColors.Add(color); // 할당된 색상 해시셋에 추가
             return color;
         }
         return null; // 사용 가능한 색상이 없을 경우 null 반환

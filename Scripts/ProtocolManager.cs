@@ -16,7 +16,7 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
     public event UserConnectEvent onUserConnectEvent;
     public delegate void ModeDelegate(bool isActive);
     public event ModeDelegate idleModeChanged;
-    public event ModeDelegate enterModeChanged;
+    //public event ModeDelegate enterModeChanged;
     public delegate void UserActionDelegate(string conn_id);
     public event UserActionDelegate onUserReplayEvent;
 
