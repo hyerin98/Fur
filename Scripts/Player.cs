@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     public bool isFalled = false;
     public bool isFalling = false;
     public bool isActive = false;
+    public bool isSmall = false;
 
     [Header("String & Int")]
     public string playerColor;
@@ -35,7 +36,6 @@ public class Player : MonoBehaviour
     private SpringJoint[] springJoints;
     CameraShake Camera;
     float time;
-    public float idleSpeed;
 
     [Header("Sound")]
     public AudioSource splatSound;
@@ -115,7 +115,7 @@ public class Player : MonoBehaviour
         {
             if(gameObject.CompareTag("Fur1"))
             {
-                ApplyForceToHingeJoints(transform.right*idleSpeed);
+                ApplyForceToHingeJoints(transform.right);
             }
             Invoke("idleMotion3",1.0f);
             Invoke("idleMotion4",2f);
@@ -125,11 +125,23 @@ public class Player : MonoBehaviour
         {
             if (gameObject.CompareTag("Fur1"))
             {
-                ApplyForceToHingeJoints(-transform.right*idleSpeed);
+                ApplyForceToHingeJoints(-transform.right);
             }
             Invoke("idleMotion4",1f);
             Invoke("idleMotion3",2.0f);
-            
+        }
+        
+        if(Input.GetKeyDown(KeyCode.C) && !isSmall)
+        {
+            isSmall= true;
+            Vector3 smallFur = new Vector3(0.2f,0.2f,0.2f);
+            this.transform.DOScale(smallFur, 1f).SetEase(ease);
+        }
+        if(Input.GetKeyDown(KeyCode.O) && isSmall)
+        {
+            isSmall = false;
+            Vector3 oriFur = new Vector3(0.3f,0.35f,0.3f);
+            this.transform.DOScale(oriFur, 1f).SetEase(ease);
         }
     }
 
@@ -137,7 +149,7 @@ public class Player : MonoBehaviour
     {
         if(gameObject.CompareTag("Fur2"))
         {
-            ApplyForceToHingeJoints(-transform.right*idleSpeed);
+            ApplyForceToHingeJoints(-transform.right);
         }
     }
 
@@ -145,41 +157,8 @@ public class Player : MonoBehaviour
     {
         if(gameObject.CompareTag("Fur3"))
         {
-            ApplyForceToHingeJoints(transform.right*idleSpeed);
+            ApplyForceToHingeJoints(transform.right);
         }
-    }
-
-    void MoveChildWithSpringEffect()
-    {
-        foreach (SpringJoint springJoint in springJoints)
-        {
-            // 원하는 SpringJoint를 찾기 위해 이름이나 다른 기준을 사용하세요
-            if (springJoint.CompareTag("springFur"))
-            {
-                
-                StartCoroutine(SpringEffectCoroutine(springJoint));
-                break;
-            }
-        }
-    }
-
-    IEnumerator SpringEffectCoroutine(SpringJoint springJoint)
-    {
-        Rigidbody childRigidbody = springJoint.GetComponent<Rigidbody>();
-        Vector3 originalPosition = childRigidbody.transform.localPosition;
-
-        // 아래로 이동
-        Vector3 newPosition = originalPosition + Vector3.up * 1.0f; // 원하는 거리만큼 이동
-        float duration = 0.2f; // 이동 시간
-
-        childRigidbody.DOMove(newPosition, duration).SetEase(Ease.InBounce);
-
-        yield return new WaitForSeconds(duration);
-
-        // 스프링 효과로 원래 위치로 돌아옴
-        springJoint.connectedAnchor = originalPosition;
-        springJoint.spring = 5.0f; // 스프링 강도
-        springJoint.damper = 5.0f; // 감쇠
     }
 
     public void idleMotion1()
@@ -238,8 +217,16 @@ public class Player : MonoBehaviour
     {
         foreach (HingeJoint hingeJoint in hingeJoints)
         {
-            Vector3 force = forceDirection.normalized * forceMagnitude;
-            hingeJoint.connectedBody.AddForce(force);
+            if(!isSmall)
+            {
+                Vector3 force = forceDirection.normalized * forceMagnitude;
+                hingeJoint.connectedBody.AddForce(force);
+            }
+            else if(isSmall)
+            {
+                Vector3 force = forceDirection.normalized * forceMagnitude / 3f;
+                hingeJoint.connectedBody.AddForce(force);
+            }
         }
     }
 
@@ -288,48 +275,12 @@ public class Player : MonoBehaviour
             foreach (var childRigidbody in childRigidbodies)
             {
                 childRigidbody.isKinematic = false;
-                childRigidbody.AddForce(Vector3.down * 10f, ForceMode.Impulse);
+                childRigidbody.AddForce(Vector3.down * 2f, ForceMode.Impulse);
             }
-            //StartCoroutine(DestroyChildrenAfterDelay(3f));
+            this.transform.DOPunchPosition(Vector3.down, 0.02f, 10, 0.05f, false); // 5.22 추가
+            
         }
     }
-
-    // private IEnumerator DestroyChildrenAfterDelay(float delay)
-    // {
-    //     yield return new WaitForSeconds(5f);
-
-    //     foreach (var childRigidbody in childRigidbodies)
-    //     {
-    //         if (childRigidbody != null && childRigidbody.gameObject != null)
-    //         {
-    //             Destroy(childRigidbody.gameObject);
-    //         }
-    //     }
-
-    //     // 플레이어 객체 파괴
-    //    Destroy(gameObject);
-    // }
-
-
-    // public void RemovePlayer()
-    // {
-    //     if (!isFalled)
-    //         return;
-    //     else
-    //     {
-    //         Debug.Log("삭제!");
-    //         DOVirtual.DelayedCall(3, PlayerEnd).SetId(playerID);
-    //     }
-    // }
-
-
-    // private void PlayerEnd()
-    // {
-    //     Debug.Log("진짜삭제");
-    //     onPlayerEnd?.Invoke(this);
-    //     //Destroy(gameObject);
-    // }
-
     private void PlayerStart()
     {
         isActive = true;

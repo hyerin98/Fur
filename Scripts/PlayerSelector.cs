@@ -212,9 +212,6 @@ public class PlayerSelector : MonoBehaviour
         }
     }
 
-
-
-
     public void RemoveUser(PlayerData playerData)
     {
         string playerID = playerData.conn_id;
@@ -244,11 +241,6 @@ public class PlayerSelector : MonoBehaviour
                     Destroy(furObject, 10f);
                     StartCoroutine(RespawnFur(initialPosition));
                 }
-
-                // if(player.isFalled)
-                // {
-                //     childLight.transform.localPosition = new Vector3(childLight.transform.localPosition.x, childLight.transform.localPosition.y, 10f);
-                // }
             }
             ColorManager.instance.ReturnColor(player.playerColor);
             players.Remove(playerID);
@@ -290,25 +282,25 @@ public class PlayerSelector : MonoBehaviour
             if (furRenderer != null)
             {
                 Color initialColor = furRenderer.material.color;
-                initialColor.a = 1f; 
+                initialColor.a = 1f;
                 furRenderer.material.color = initialColor;
             }
         }
     }
 
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            PlayerData newPlayerData = new PlayerData(); 
-            newPlayerData.conn_id = "NewPlayer_" + Time.time.ToString(); 
-            OnAddUser(newPlayerData); 
+            PlayerData newPlayerData = new PlayerData();
+            newPlayerData.conn_id = "NewPlayer_" + Time.time.ToString();
+            OnAddUser(newPlayerData);
         }
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             PlayerData playerData = new PlayerData();
             RemoveUser(playerData);
         }
     }
+
 }
