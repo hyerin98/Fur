@@ -8,6 +8,8 @@ using System.Linq;
 
 public class PlayerSelector : MonoBehaviour
 {
+    public IdleMotion idleMotion;
+
     [Header("Settings")]
     private Dictionary<string, Player> players = new Dictionary<string, Player>();
     public HashSet<Color> changedColors = new HashSet<Color>(); // 변경된 색상을 추적하기 위한 HashSet
@@ -17,26 +19,41 @@ public class PlayerSelector : MonoBehaviour
     private Dictionary<string, PlayerData> playerDataList = new Dictionary<string, PlayerData>(); // 플레이어데이터 딕셔너
     //private Dictionary<string, string> colorToConnIdMap = new Dictionary<string, string>();
 
+    //public List<GameObject> idleFurs = new List<GameObject>(); // idle일때 움직이는 털 리스트 
+    //private Dictionary<GameObject, bool> furColorAssigned = new Dictionary<GameObject, bool>(); // fur의 색상 할당 상태를 추적
+    
+
+
     [Header("DOtween & GameObject & Bool")]
     public Ease ease;
     public GameObject furPrefab;
     public bool isSpawn;
     public GameObject particlePrefab;
     CameraShake Camera;
+    public bool idle;
 
     private void Awake()
     {
         ProtocolManager.instance.onWebControllerEvent += OnWebControllerEvent;
         ProtocolManager.instance.onUserConnectEvent += OnUserConnectEvent;
         isSpawn = false;
-        InitializeFurPositions(); ;
+        InitializeFurPositions();
     }
 
     void Start()
     {
         DOTween.Init();
         Camera = GameObject.FindWithTag("MainCamera").GetComponent<CameraShake>();
+        idle = true;
+        idleMotion = GetComponent<IdleMotion>();
+
+        // 초기화: 모든 fur의 색상 할당 상태를 false로 설정
+        // foreach (var fur in furs)
+        // {
+        //     furColorAssigned[fur] = false;
+        // }
     }
+
 
 
     private void InitializeFurPositions()
@@ -193,7 +210,9 @@ public class PlayerSelector : MonoBehaviour
 
                     targetPlayer.enabled = true;
                     changedColors.Add(targetColor); // 변경된 색상을 추적
+                    //idleMotion.furColorAssigned[assignedFur] = true; // 색상 할당 상태를 true로 설정
                 }
+
                 targetPlayer.playerID = playerData.conn_id;
                 targetPlayer.SetPlayerColor(playerData.color_id);
                 targetPlayer.SetUserIndex(furIndex);
@@ -203,14 +222,122 @@ public class PlayerSelector : MonoBehaviour
                 usedFur.Add(furIndex);
                 players.Add(playerData.conn_id, targetPlayer);
                 //colorToConnIdMap.Add(playerData.color_id, playerData.conn_id); // 5.17 수정 -> 최대컬러수 할당받고 나면 컨트롤러 흰색으로 뜨는 이슈 원인 
-                playerData.player_index = players.Count;  // 플레이어 인덱스 설정
+                playerData.player_index = players.Count;
             }
             else
             {
                 TraceBox.Log("할당된 GameObject에 Player 컴포넌트가 없습니다.");
             }
+
+            if (players.Count == 0 || playerData.player_index == 0)
+            {
+                idle = true;
+            }
+            else if (playerData.player_index > 0)
+            {
+                idle = false;
+            }
+
         }
     }
+
+    // public void IdleMotionn()
+    // {
+    //     if (idle)
+    //     {
+    //         StartCoroutine(AssignColorsWithDelay());
+    //     }
+
+    // }
+
+//     private IEnumerator AssignColorsWithDelay()
+//     {
+//     List<Color> redColors = new List<Color> { Color.red, new Color(1f, 0.5f, 0.5f), new Color(1f, 0.2f, 0.2f) };
+//     List<Color> blueColors = new List<Color> { Color.blue, new Color(0.5f, 0.5f, 1f), new Color(0.2f, 0.2f, 1f) };
+
+//     List<Color> selectedColors = Random.Range(0, 2) == 0 ? redColors : blueColors;
+
+//     for (int i = 0; i < idleMotion.idleFurs.Count; i++)
+//     {
+//         GameObject idleFur = idleMotion.idleFurs[i];
+//         Renderer renderer_idle = idleFur.GetComponent<Renderer>();
+//         Light childLight_idle = idleFur.GetComponentInChildren<Light>();
+//         Player player = idleFur.GetComponent<Player>(); // idleFur에서 Player 컴포넌트를 가져옴
+
+//         if (childLight_idle != null)
+//         {
+//             childLight_idle.enabled = true;
+//         }
+
+//         if (renderer_idle != null)
+//         {
+//             Material material_idle = renderer_idle.material;
+//             Color initialColor_idle = material_idle.color; // 초기 색상 저장
+//             Color targetColor_idle = selectedColors[Random.Range(0, selectedColors.Count)];
+
+//             DOVirtual.Color(material_idle.color, targetColor_idle, 3f, value =>
+//             {
+//                 material_idle.color = value;
+//             });
+//             DOVirtual.Color(childLight_idle.color, targetColor_idle, 2f, value =>
+//             {
+//                 childLight_idle.color = value;
+//                 childLight_idle.intensity = 5f;
+//                 childLight_idle.range = 1f;
+//             });
+
+//             // 일정 시간이 지난 후 다시 초기 색상으로 되돌리는 코루틴을 시작
+//             StartCoroutine(RevertColorAfterDelay(material_idle, childLight_idle, initialColor_idle, 3f, 3f));
+//         }
+//         else
+//         {
+//             Debug.LogWarning("Renderer가 존재하지 않습니다: " + idleFur.name);
+//         }
+
+//         if (player != null)
+//         {
+//             if(player.CompareTag("Fur1"))
+//             {
+//                 player.ApplyForceToHingeJoints(transform.right);
+//             }
+//             else if(player.CompareTag("Fur2"))
+//             {
+//                 player.ApplyForceToHingeJoints(-transform.right);
+//             }
+//             else if(player.CompareTag("Fur3"))
+//             {
+//                 player.ApplyForceToHingeJoints(transform.right);
+//             }
+//             //player.PushHingeJoint("fur", "push", 20f); // Player 컴포넌트의 PushHingeJoint 함수 호출
+//         }
+//         else
+//         {
+//             Debug.LogWarning("Player 컴포넌트가 존재하지 않습니다: " + idleFur.name);
+//         }
+
+//         yield return new WaitForSeconds(0.05f); // 다음 fur로 넘어가기 전에 약간의 대기
+//     }
+// }
+
+// private IEnumerator RevertColorAfterDelay(Material material_idle, Light childLight_idle, Color initialColor_idle, float delay, float duration)
+// {
+//     yield return new WaitForSeconds(delay);
+
+//     DOVirtual.Color(material_idle.color, initialColor_idle, duration, value =>
+//     {
+//         material_idle.color = value;
+//     });
+//     if (childLight_idle != null)
+//     {
+//         DOVirtual.Color(childLight_idle.color, initialColor_idle, duration, value =>
+//         {
+//             childLight_idle.color = value;
+//         });
+//     }
+// }
+
+
+
 
     public void RemoveUser(PlayerData playerData)
     {
@@ -301,6 +428,11 @@ public class PlayerSelector : MonoBehaviour
             PlayerData playerData = new PlayerData();
             RemoveUser(playerData);
         }
+
+        // if (Input.GetKeyDown(KeyCode.I))
+        // {
+        //     IdleMotionn();
+        // }
     }
 
 }

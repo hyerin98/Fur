@@ -79,13 +79,13 @@ public class Player : MonoBehaviour
         else if (downKeyCode == KeyCode.LeftArrow)
         {
             ApplyForceToHingeJoints(-transform.right);
-            colSound.Play();
+            
 
         }
         else if (downKeyCode == KeyCode.RightArrow)
         {
             ApplyForceToHingeJoints(transform.right);
-            colSound.Play();
+            
         }
         else if (downKeyCode == KeyCode.Space)
         {
@@ -177,8 +177,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    void PushHingeJoint(string jointName, string action, float pushForce)
+    public void PushHingeJoint(string jointName, string action, float pushForce)
     {
+        colSound.Play();
         foreach (SpringJoint springJoint in springJoints)
         {
             if (springJoint.name == jointName)
@@ -213,8 +214,9 @@ public class Player : MonoBehaviour
     }
 
 
-    void ApplyForceToHingeJoints(Vector3 forceDirection)
+    public void ApplyForceToHingeJoints(Vector3 forceDirection)
     {
+        colSound.Play();
         foreach (HingeJoint hingeJoint in hingeJoints)
         {
             if(!isSmall)

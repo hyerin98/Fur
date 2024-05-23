@@ -719,7 +719,7 @@ MonoBehaviour:
   forceMagnitude: 50
   splatSound: {fileID: 5547365970262525027, guid: 9fc95808673af1d4099a67ee8611722d, type: 3}
   colSound: {fileID: 7305549575540559428, guid: 10de0eeca5103dd4a92f64d301ae6538, type: 3}
-  ease: 7
+  ease: 19
 --- !u!1 &2064295694412291460 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8374560334186062905, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
