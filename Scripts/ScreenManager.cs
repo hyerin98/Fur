@@ -17,29 +17,27 @@ public class ScreenManager : MonoBehaviour
 
     private void ResolutionFix()
 {
-    // 가로 세로 비율
+    // 목표 비율
     float targetWidthAspect = 16.0f;
     float targetHeightAspect = 9.0f;
- 
-    Camera.main.aspect = targetWidthAspect / targetHeightAspect;
- 
-    float widthRatio = (float)Screen.width / targetWidthAspect;
-    float heightRatio = (float)Screen.height / targetHeightAspect;
- 
-    float heightadd = ((widthRatio / (heightRatio / 100)) - 100) / 200;
-    float widthadd = ((heightRatio / (widthRatio / 100)) - 100) / 200;
- 
-    // 시작지점을 0으로 만들어준다.
-    if (heightRatio > widthRatio)
-        widthRatio = 0.0f;
-    else
-        heightRatio = 0.0f;
- 
-    Camera.main.rect = new Rect(
-        Camera.main.rect.x + Mathf.Abs(widthadd),
-        Camera.main.rect.x + Mathf.Abs(heightadd),
-        Camera.main.rect.width + (widthadd * 2),
-        Camera.main.rect.height + (heightadd * 2));
+
+    // 현재 화면의 비율
+    float currentAspect = (float)Screen.width / Screen.height;
+
+    // 현재 화면이 목표 비율보다 가로로 더 긴 경우
+    if (currentAspect > targetWidthAspect)
+    {
+        // 카메라의 시야를 위아래로 잘라냅니다.
+        float widthRatio = targetWidthAspect / currentAspect;
+        Camera.main.rect = new Rect(0, (1 - widthRatio) / 2, 1, widthRatio);
+    }
+    else // 현재 화면이 목표 비율보다 세로로 더 긴 경우
+    {
+        // 카메라의 시야를 좌우로 잘라냅니다.
+        float heightRatio = currentAspect / targetHeightAspect;
+        Camera.main.rect = new Rect((1 - heightRatio) / 2, 0, heightRatio, 1);
+    }
 }
+
 
 }
