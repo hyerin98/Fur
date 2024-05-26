@@ -31,6 +31,10 @@ public class PlayerSelector : MonoBehaviour
     private bool isIdleMotionRunning = false;
     public List<GameObject> idleFurs = new List<GameObject>(); // idle일때 움직이는 털 리스트 
     private Dictionary<GameObject, bool> furColorAssigned = new Dictionary<GameObject, bool>(); // fur의 색상 할당 상태를 추적
+private HashSet<string> removedFurNames = new HashSet<string>(); // 삭제된 fur 이름을 저장할 HashSet
+private int furCounter = 0; // fur 이름에 사용할 인덱스
+
+
 
     private void Awake()
     {
@@ -386,13 +390,12 @@ public class PlayerSelector : MonoBehaviour
             int furIndex = furs.IndexOf(furObject);
             Vector3 initialPosition = furPositions[furIndex];
 
+            // fur의 이름을 저장
+            removedFurNames.Add(furObject.name);
+
             furs.RemoveAt(furIndex);
             furPositions.RemoveAt(furIndex);
             usedFur.Remove(furIndex);
-
-            // 해당 위치를 빈 자리로 만듭니다.
-            furs.Insert(furIndex, null);
-            furPositions.Insert(furIndex, Vector3.zero);
 
             // idleFurs에서 직접 요소 제거
             idleFurs.Remove(furObject);
@@ -407,6 +410,7 @@ public class PlayerSelector : MonoBehaviour
 
                 renderer.material.DOFade(0f, 3f).SetEase(ease);
                 Destroy(furObject, 4f);
+                StartCoroutine(RespawnFur(initialPosition)); // RespawnFur 메서드 호출
             }
         }
         ColorManager.instance.ReturnColor(player.playerColor);
@@ -420,62 +424,44 @@ public class PlayerSelector : MonoBehaviour
     }
 }
 
-public IEnumerator RespawnFur(Vector3 position)
+    public IEnumerator RespawnFur(Vector3 position)
 {
     yield return new WaitForSeconds(3.0f);
 
     if (furPrefab != null)
     {
-        // 삭제된 위치에 새로운 fur를 추가합니다.
-        for (int i = 0; i < furPositions.Count; i++)
+        GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
+
+        // 삭제된 이름 중 사용 가능한 이름을 할당
+        string furName;
+        if (removedFurNames.Count > 0)
         {
-            if (furPositions[i] == Vector3.zero) // 5.24 수정필 -> 삭제된 해당 자리 찾기
-            {
-                // 빈 자리를 찾았을 때, 해당 위치에 새로운 fur를 추가합니다.
-                GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
-                furs[i] = newFur;
-                furPositions[i] = position;
-
-                Renderer furRenderer = newFur.GetComponent<Renderer>();
-                if (furRenderer != null)
-                {
-                    Color initialColor = furRenderer.material.color;
-                    initialColor.a = 1f;
-                    furRenderer.material.color = initialColor;
-                }
-
-                // idleFurs에 추가하기 전에 missing 항목을 정리
-                idleFurs = idleFurs.Where(fur => fur != null).ToList();
-                idleFurs.Add(newFur);
-                furColorAssigned[newFur] = false;
-
-                // 새로운 fur가 추가되었으므로 함수를 종료합니다.
-                yield return null;
-            }
+            furName = removedFurNames.First();
+            removedFurNames.Remove(furName);
         }
+        else
+        {
+            furName = "fur" + furCounter++;
+        }
+        newFur.name = furName;
 
-        // 만약 삭제된 위치에 새로운 fur를 추가할 위치를 찾지 못한 경우,
-        // 리스트의 끝에 새로운 fur를 추가합니다.
-        GameObject newFurAtEnd = Instantiate(furPrefab, position, Quaternion.identity);
-        furs.Add(newFurAtEnd);
+        furs.Add(newFur);
         furPositions.Add(position);
 
-        Renderer furRendererAtEnd = newFurAtEnd.GetComponent<Renderer>();
-        if (furRendererAtEnd != null)
+        Renderer furRenderer = newFur.GetComponent<Renderer>();
+        if (furRenderer != null)
         {
-            Color initialColor = furRendererAtEnd.material.color;
+            Color initialColor = furRenderer.material.color;
             initialColor.a = 1f;
-            furRendererAtEnd.material.color = initialColor;
+            furRenderer.material.color = initialColor;
         }
 
         // idleFurs에 추가하기 전에 missing 항목을 정리
         idleFurs = idleFurs.Where(fur => fur != null).ToList();
-        idleFurs.Add(newFurAtEnd);
-        furColorAssigned[newFurAtEnd] = false;
+        idleFurs.Add(newFur);
+        furColorAssigned[newFur] = false;
     }
 }
-
-
 
 
 
