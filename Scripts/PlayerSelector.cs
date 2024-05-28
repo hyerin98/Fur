@@ -10,7 +10,7 @@ using Unity.VisualScripting.Dependencies.Sqlite;
 public class PlayerSelector : MonoBehaviour
 {
     [Header("Settings")]
-    private Dictionary<string, Player> players = new Dictionary<string, Player>();
+    public Dictionary<string, Player> players = new Dictionary<string, Player>();
     public HashSet<Color> changedColors = new HashSet<Color>(); // 변경된 색상을 추적하기 위한 HashSet
     public List<GameObject> furs = new List<GameObject>(); // 색을 할당받을 털 리스트
     private List<Vector3> furPositions = new List<Vector3>(); // 삭제 후 다시 생기기위한 털위치 리스트
@@ -23,16 +23,8 @@ public class PlayerSelector : MonoBehaviour
     public GameObject furPrefab;
     public bool isSpawn;
     public GameObject particlePrefab;
-    CameraShake Camera;
-    public bool idle = true;
-
-    [Header("Idle")]
-    private Coroutine idleMotionCoroutine; // 5.24 - idle진행되다가 한명이라도 접속 시 idleMotion 중지시키는 코루틴 (테스트 많이 해봐야함)
-    private bool isIdleMotionRunning = false;
-    public List<GameObject> idleFurs = new List<GameObject>(); // idle일때 움직이는 털 리스트 
-    private Dictionary<GameObject, bool> furColorAssigned = new Dictionary<GameObject, bool>(); // fur의 색상 할당 상태를 추적
-private HashSet<string> removedFurNames = new HashSet<string>(); // 삭제된 fur 이름을 저장할 HashSet
-private int furCounter = 0; // fur 이름에 사용할 인덱스
+    public ParticleSystem testParticle;
+    private IdleMotion idleMotion;
 
 
 
@@ -42,44 +34,14 @@ private int furCounter = 0; // fur 이름에 사용할 인덱스
         ProtocolManager.instance.onUserConnectEvent += OnUserConnectEvent;
         isSpawn = false;
         InitializeFurPositions();
+        idleMotion = GetComponent<IdleMotion>();
     }
 
     void Start()
     {
         DOTween.Init();
-        Camera = GameObject.FindWithTag("MainCamera").GetComponent<CameraShake>();
-        idle = true;
-
-        // 초기화: 모든 fur의 색상 할당 상태를 false로 설정
-        foreach (var fur in furs)
-        {
-            furColorAssigned[fur] = false;
-        }
-        StartCoroutine(CheckPlayerCount(10f));
+        //idleMotion = GetComponent<IdleMotion>();
     }
-
-    private IEnumerator CheckPlayerCount(float interval)
-    {
-        while (true)
-        {
-            if (players.Count == 0 && idle)
-            {
-
-                Debug.Log("플레이어가 없어서 다시 idle모드 발동");
-                IdleMotion();
-            }
-            else if (players.Count > 0)
-            {
-                idle = false;
-                Debug.Log("한명이라도 접속했기 때문에 idle모드 안댐");
-            }
-
-
-            yield return new WaitForSeconds(interval);
-        }
-    }
-
-
 
 
     private void InitializeFurPositions()
@@ -180,16 +142,16 @@ private int furCounter = 0; // fur 이름에 사용할 인덱스
 
     public void OnAddUser(PlayerData playerData)
     {
-        if (isIdleMotionRunning) // idle모드가 진행되고 있는 상황이라면
+        if (idleMotion.isIdleMotionRunning) // idle모드가 진행되고 있는 상황이라면
         {
             StopCoroutine("AssignColorsWithDelay"); // idle모드 멈추기
-            isIdleMotionRunning = false; // idle모드 false
+            idleMotion.isIdleMotionRunning = false; // idle모드 false
         }
 
-        if (idleMotionCoroutine != null)
+        if (idleMotion.idleMotionCoroutine != null)
         {
-            StopCoroutine(idleMotionCoroutine);
-            idleMotionCoroutine = null;
+            StopCoroutine(idleMotion.idleMotionCoroutine);
+            idleMotion.idleMotionCoroutine = null;
         }
         if (!players.ContainsKey(playerData.conn_id))
         {
@@ -239,22 +201,29 @@ private int furCounter = 0; // fur 이름에 사용할 인덱스
                             material.color = value;
                         });
 
-                        DOVirtual.Color(childLight.color, targetColor, 2f, value =>
+                        DOVirtual.Color(childLight.color, targetColor, 3f, value =>
                         {
                             childLight.color = value;
+                            childLight.intensity = 10f;
+                            childLight.range = 3f;
                         });
                     }
 
                     targetPlayer.enabled = true;
                     changedColors.Add(targetColor); // 변경된 색상을 추적
-                    furColorAssigned[assignedFur] = true; // 색상 할당 상태를 true로 설정
+                    idleMotion.furColorAssigned[assignedFur] = true; // 색상 할당 상태를 true로 설정
+
+                    ParticleSystem.MainModule main = testParticle.main;
+                    main.startColor = targetColor;
                 }
 
                 targetPlayer.playerID = playerData.conn_id;
                 targetPlayer.SetPlayerColor(playerData.color_id);
                 targetPlayer.SetUserIndex(furIndex);
 
-                Sequence mySequence = DOTween.Sequence();
+                // 플레이어 접속 시 파티클 생성
+                GameObject newParticle = Instantiate(testParticle.gameObject, targetPlayer.transform.position + new Vector3(0, 1f, -0.1f), Quaternion.identity);
+                Destroy(newParticle, 10f);
 
                 usedFur.Add(furIndex);
                 players.Add(playerData.conn_id, targetPlayer);
@@ -268,200 +237,102 @@ private int furCounter = 0; // fur 이름에 사용할 인덱스
 
             if (players.Count == 0 || playerData.player_index == 0)
             {
-                idle = true;
+                idleMotion.idle = true;
             }
             else if (playerData.player_index > 0)
             {
-                idle = false;
+                idleMotion.idle = false;
             }
-            if (!isIdleMotionRunning) // 만약 idle모드가 진행중이 아니라면
+            if (!idleMotion.isIdleMotionRunning) // 만약 idle모드가 진행중이 아니라면
             {
-                IdleMotion(); // idle 모드 실행 
+                idleMotion.StartRandomIdleMotion();
+                
             }
         }
     }
-
-    public void IdleMotion()
-    {
-        if (idleMotionCoroutine != null)
-        {
-            StopCoroutine(idleMotionCoroutine);
-            idleMotionCoroutine = null;
-        }
-
-        if (idle && !isIdleMotionRunning)
-        {
-            isIdleMotionRunning = true;
-            idleMotionCoroutine = StartCoroutine(AssignColorsWithDelay());
-        }
-
-        // if(idle)
-        // {
-        //     StartCoroutine(AssignColorsWithDelay());
-        // }
-        
-    }
-
-    private IEnumerator AssignColorsWithDelay()
-    {
-        // 빨간계열과 파란계열 색상 리스트 생성
-        List<Color> redColors = new List<Color> { Color.red, new Color(1f, 0.5f, 0.5f), new Color(1f, 0.2f, 0.2f) };
-        List<Color> blueColors = new List<Color> { Color.blue, new Color(0.5f, 0.5f, 1f), new Color(0.2f, 0.2f, 1f) };
-
-        // 색상 계열을 무작위로 선택
-        List<Color> selectedColors = Random.Range(0, 2) == 0 ? redColors : blueColors;
-
-        for (int i = 0; i < idleFurs.Count; i++)
-        {
-            GameObject idleFur = idleFurs[i];
-            Renderer renderer = idleFur.GetComponent<Renderer>();
-            Light childLight = idleFur.GetComponentInChildren<Light>();
-            Player player = idleFur.GetComponent<Player>(); // idleFur에서 Player 컴포넌트를 가져옴
-
-            if (childLight != null)
-            {
-                childLight.enabled = true;
-            }
-
-            if (renderer != null)
-            {
-                Material material = renderer.material;
-                Color initialColor = material.color; // 초기 색상 저장
-                Color targetColor = selectedColors[Random.Range(0, selectedColors.Count)];
-
-                DOVirtual.Color(material.color, targetColor, 1f, value =>
-                {
-                    material.color = value;
-                });
-                DOVirtual.Color(childLight.color, targetColor, 1f, value =>
-                {
-                    childLight.color = value;
-                });
-
-                StartCoroutine(RevertColorAfterDelay(material, childLight, initialColor, 1f, 1f));
-            }
-            else
-            {
-                Debug.LogWarning("Renderer가 존재하지 않습니다: " + idleFur.name);
-            }
-
-            if (player != null)
-            {
-                player.PushHingeJoint("fur", "push", 20f); // Player 컴포넌트의 PushHingeJoint 함수 호출
-            }
-            else
-            {
-                Debug.LogWarning("Player 컴포넌트가 존재하지 않습니다: " + idleFur.name);
-            }
-
-            yield return new WaitForSeconds(0.05f); // 다음 fur로 넘어가기 전에 약간의 대기
-        }
-    }
-
-    private IEnumerator RevertColorAfterDelay(Material material, Light childLight, Color initialColor, float delay, float duration)
-    {
-        yield return new WaitForSeconds(delay);
-
-        DOVirtual.Color(material.color, initialColor, duration, value =>
-    {
-        material.color = value;
-    });
-        if (childLight != null)
-        {
-            DOVirtual.Color(childLight.color, initialColor, duration, value =>
-            {
-                childLight.color = value;
-            });
-        }
-    }
-
-
 
     public void RemoveUser(PlayerData playerData)
-{
-    string playerID = playerData.conn_id;
-    if (players.ContainsKey(playerID))
     {
-        Player player = players[playerID];
-        GameObject furObject = player.gameObject;
-
-        if (furObject != null)
+        string playerID = playerData.conn_id;
+        if (players.ContainsKey(playerID))
         {
-            int furIndex = furs.IndexOf(furObject);
-            Vector3 initialPosition = furPositions[furIndex];
+            Player player = players[playerID];
+            GameObject furObject = player.gameObject;
 
-            // fur의 이름을 저장
-            removedFurNames.Add(furObject.name);
-
-            furs.RemoveAt(furIndex);
-            furPositions.RemoveAt(furIndex);
-            usedFur.Remove(furIndex);
-
-            // idleFurs에서 직접 요소 제거
-            idleFurs.Remove(furObject);
-
-            Light childLight = furObject.GetComponentInChildren<Light>();
-            Renderer renderer = furObject.GetComponent<Renderer>();
-            Rigidbody furRigidbody = furObject.GetComponent<Rigidbody>();
-            if (childLight != null && renderer != null && furRigidbody != null)
+            if (furObject != null)
             {
-                furRigidbody.isKinematic = false;
-                StartCoroutine(DimLightIntensity(childLight, 3f));
+                int furIndex = furs.IndexOf(furObject);
+                Vector3 initialPosition = furPositions[furIndex];
 
-                renderer.material.DOFade(0f, 3f).SetEase(ease);
-                Destroy(furObject, 4f);
-                StartCoroutine(RespawnFur(initialPosition)); // RespawnFur 메서드 호출
+                // fur의 이름을 저장
+                idleMotion.removedFurNames.Add(furObject.name);
+
+                furs.RemoveAt(furIndex);
+                furPositions.RemoveAt(furIndex);
+                usedFur.Remove(furIndex);
+
+                // idleFurs에서 직접 요소 제거
+                idleMotion.idleFurs.Remove(furObject);
+
+                Light childLight = furObject.GetComponentInChildren<Light>();
+                Renderer renderer = furObject.GetComponent<Renderer>();
+                Rigidbody furRigidbody = furObject.GetComponent<Rigidbody>();
+                if (childLight != null && renderer != null && furRigidbody != null)
+                {
+                    furRigidbody.isKinematic = false;
+                    StartCoroutine(DimLightIntensity(childLight, 3f));
+
+                    renderer.material.DOFade(0f, 3f).SetEase(ease);
+                    Destroy(furObject, 4f);
+                    StartCoroutine(RespawnFur(initialPosition)); // RespawnFur 메서드 호출
+                }
+            }
+            ColorManager.instance.ReturnColor(player.playerColor);
+            players.Remove(playerID);
+            TraceBox.Log("삭제된 플레이어의 아이디: " + playerID);
+
+            if (players.Count == 0)
+            {
+                idleMotion.idle = true;
             }
         }
-        ColorManager.instance.ReturnColor(player.playerColor);
-        players.Remove(playerID);
-        TraceBox.Log("삭제된 플레이어의 아이디: " + playerID);
-
-        if (players.Count == 0)
-        {
-            idle = true;
-        }
     }
-}
 
     public IEnumerator RespawnFur(Vector3 position)
-{
-    yield return new WaitForSeconds(3.0f);
-
-    if (furPrefab != null)
     {
-        GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
+        yield return new WaitForSeconds(3.0f);
 
-        // 삭제된 이름 중 사용 가능한 이름을 할당
-        string furName;
-        if (removedFurNames.Count > 0)
+        if (furPrefab != null)
         {
-            furName = removedFurNames.First();
-            removedFurNames.Remove(furName);
-        }
-        else
-        {
-            furName = "fur" + furCounter++;
-        }
-        newFur.name = furName;
+            GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
 
-        furs.Add(newFur);
-        furPositions.Add(position);
+            string furName;
+            if (idleMotion.removedFurNames.Count > 0)
+            {
+                furName = idleMotion.removedFurNames.First();
+                idleMotion.removedFurNames.Remove(furName);
+            }
+            else
+            {
+                furName = "fur" + idleMotion.furCounter++;
+            }
+            newFur.name = furName;
 
-        Renderer furRenderer = newFur.GetComponent<Renderer>();
-        if (furRenderer != null)
-        {
-            Color initialColor = furRenderer.material.color;
-            initialColor.a = 1f;
-            furRenderer.material.color = initialColor;
+            furs.Add(newFur);
+            furPositions.Add(position);
+
+            Renderer furRenderer = newFur.GetComponent<Renderer>();
+            if (furRenderer != null)
+            {
+                Color initialColor = furRenderer.material.color;
+                initialColor.a = 1f;
+                furRenderer.material.color = initialColor;
+            }
+            idleMotion.idleFurs = idleMotion.idleFurs.Where(fur => fur != null).ToList();
+            idleMotion.idleFurs.Add(newFur);
+            idleMotion.furColorAssigned[newFur] = false;
         }
-
-        // idleFurs에 추가하기 전에 missing 항목을 정리
-        idleFurs = idleFurs.Where(fur => fur != null).ToList();
-        idleFurs.Add(newFur);
-        furColorAssigned[newFur] = false;
     }
-}
 
 
 
@@ -497,11 +368,6 @@ private int furCounter = 0; // fur 이름에 사용할 인덱스
         {
             PlayerData playerData = new PlayerData();
             RemoveUser(playerData);
-        }
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            IdleMotion();
         }
     }
 }

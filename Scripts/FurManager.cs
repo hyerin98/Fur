@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 using IMFINE.Utils;
 using IMFINE.Utils.ConfigManager;
 using IMFINE.Utils.JoyStream.Communicator;

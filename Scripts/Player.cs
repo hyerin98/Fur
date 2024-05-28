@@ -5,6 +5,7 @@ using DG.Tweening;
 using IMFINE.Utils.JoyStream.Communicator;
 using System;
 using Unity.VisualScripting;
+using Unity.Mathematics;
 
 
 public class Player : MonoBehaviour
@@ -15,13 +16,14 @@ public class Player : MonoBehaviour
     public delegate void OnPlayerEnd(Player target);
     //public event OnPlayerEnd onPlayerEnd;
     public List<Rigidbody> childRigidbodies;
-    private PlayerSelector playerSelector;
-
     [Header("Bool")]
     public bool isFalled = false;
     public bool isFalling = false;
     public bool isActive = false;
     public bool isSmall = false;
+    public bool lightScene;
+    public bool furScene;
+
 
     [Header("String & Int")]
     public string playerColor;
@@ -31,15 +33,13 @@ public class Player : MonoBehaviour
     [Header("PlayerMovement")]
     public float forceMagnitude = 10f;
     //public float pushMagnitude;
-    private HingeJoint[] hingeJoints;
+    public HingeJoint[] hingeJoints;
 
-    private SpringJoint[] springJoints;
+    public SpringJoint[] springJoints;
     CameraShake Camera;
-    float time;
 
     [Header("Sound")]
-    public AudioSource splatSound;
-    public AudioSource colSound;
+    public AudioSource[] sounds;
 
     [Header("DOTween")]
     public Ease ease;
@@ -48,9 +48,7 @@ public class Player : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         hingeJoints = GetComponentsInChildren<HingeJoint>();
-        springJoints = GetComponentsInChildren<SpringJoint>();
-
-        playerSelector = FindObjectOfType<PlayerSelector>();
+        springJoints = GetComponentsInChildren<SpringJoint>();        
     }
 
     void Start()
@@ -67,24 +65,35 @@ public class Player : MonoBehaviour
     {
         if (downKeyCode == KeyCode.UpArrow)
         {
-            PushHingeJoint("fur", "pull", 10f);
-            //colSound.Play();
+            if(lightScene)
+            {
+                PushHingeJoint("fur", "pull", 10f);
+            }
+            else if(furScene)
+            {
+                PushHingeJoint("fur", "pull", 10f);
+            }
         }
 
         else if (downKeyCode == KeyCode.DownArrow)
         {
-            PushHingeJoint("fur", "push", 10f);
-            //colSound.Play();
+            if(lightScene)
+            {
+                PushHingeJoint("fur", "push", 10f);
+            }
+            else if(furScene)
+            {
+                PushHingeJoint("fur", "push", 10f);
+            }
+            
         }
         else if (downKeyCode == KeyCode.LeftArrow)
         {
-            ApplyForceToHingeJoints(-transform.right);
-            
-
+            ApplyForceToHingeJoints(-transform.right, 1.0f);
         }
         else if (downKeyCode == KeyCode.RightArrow)
         {
-            ApplyForceToHingeJoints(transform.right);
+            ApplyForceToHingeJoints(transform.right, 1.0f);
             
         }
         else if (downKeyCode == KeyCode.Space)
@@ -115,7 +124,7 @@ public class Player : MonoBehaviour
         {
             if(gameObject.CompareTag("Fur1"))
             {
-                ApplyForceToHingeJoints(transform.right);
+                ApplyForceToHingeJoints(transform.right, 1.0f);
             }
             Invoke("idleMotion3",1.0f);
             Invoke("idleMotion4",2f);
@@ -125,7 +134,7 @@ public class Player : MonoBehaviour
         {
             if (gameObject.CompareTag("Fur1"))
             {
-                ApplyForceToHingeJoints(-transform.right);
+                ApplyForceToHingeJoints(-transform.right, 1.0f);
             }
             Invoke("idleMotion4",1f);
             Invoke("idleMotion3",2.0f);
@@ -134,7 +143,7 @@ public class Player : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.C) && !isSmall)
         {
             isSmall= true;
-            Vector3 smallFur = new Vector3(0.2f,0.2f,0.2f);
+            Vector3 smallFur = new Vector3(0.2f,0.25f,0.2f);
             this.transform.DOScale(smallFur, 1f).SetEase(ease);
         }
         if(Input.GetKeyDown(KeyCode.O) && isSmall)
@@ -149,7 +158,7 @@ public class Player : MonoBehaviour
     {
         if(gameObject.CompareTag("Fur2"))
         {
-            ApplyForceToHingeJoints(-transform.right);
+            ApplyForceToHingeJoints(-transform.right, 1.0f);
         }
     }
 
@@ -157,7 +166,7 @@ public class Player : MonoBehaviour
     {
         if(gameObject.CompareTag("Fur3"))
         {
-            ApplyForceToHingeJoints(transform.right);
+            ApplyForceToHingeJoints(transform.right , 1.0f);
         }
     }
 
@@ -213,19 +222,37 @@ public class Player : MonoBehaviour
     }
 
 
-    public void ApplyForceToHingeJoints(Vector3 forceDirection)
+    public void ApplyForceToHingeJoints(Vector3 forceDirection, float forceMultiplier)
     {
         foreach (HingeJoint hingeJoint in hingeJoints)
         {
-            if(!isSmall)
+            if (!isSmall)
             {
-                Vector3 force = forceDirection.normalized * forceMagnitude;
-                hingeJoint.connectedBody.AddForce(force);
+                if (lightScene)
+                {
+                    Vector3 force = forceDirection.normalized * forceMagnitude * forceMultiplier;
+                    hingeJoint.connectedBody.AddForce(force);
+                }
+                else if (furScene)
+                {
+                    Vector3 force = forceDirection.normalized * forceMagnitude * forceMultiplier;
+                    hingeJoint.connectedBody.AddForce(force);
+                }
+
             }
-            else if(isSmall)
+            else if (isSmall)
             {
-                Vector3 force = forceDirection.normalized * forceMagnitude / 3f;
-                hingeJoint.connectedBody.AddForce(force);
+                if(lightScene)
+                {
+                    Vector3 force = forceDirection.normalized * forceMagnitude / 3f;
+                    hingeJoint.connectedBody.AddForce(force);
+                }
+                else if(furScene)
+                {
+                    Vector3 force = forceDirection.normalized * forceMagnitude / 3f;
+                    hingeJoint.connectedBody.AddForce(force);
+                }
+                
             }
         }
     }
@@ -236,24 +263,28 @@ public class Player : MonoBehaviour
         {
             case ProtocolType.CONTROLLER_UP_PRESS:
                 downKeyCode = KeyCode.UpArrow;
+                PlayRandomMoveSound();
                 break;
             case ProtocolType.CONTROLLER_UP_RELEASE:
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_DOWN_PRESS:
                 downKeyCode = KeyCode.DownArrow;
+                PlayRandomMoveSound();
                 break;
             case ProtocolType.CONTROLLER_DOWN_RELEASE:
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_LEFT_PRESS:
                 downKeyCode = KeyCode.LeftArrow;
+                PlayRandomMoveSound();
                 break;
             case ProtocolType.CONTROLLER_LEFT_RELEASE:
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_RIGHT_PRESS:
                 downKeyCode = KeyCode.RightArrow;
+                PlayRandomMoveSound();
                 break;
             case ProtocolType.CONTROLLER_RIGHT_RELEASE:
                 downKeyCode = KeyCode.None;
@@ -268,7 +299,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
-            splatSound.Play();  // 5.17 수정 필
+            PlayRandomFallingSound();
             isFalled = true;
             //rigid.isKinematic = true;
 
@@ -278,9 +309,46 @@ public class Player : MonoBehaviour
                 childRigidbody.AddForce(Vector3.down * 2f, ForceMode.Impulse);
             }
             this.transform.DOPunchPosition(Vector3.down, 0.02f, 10, 0.05f, false); // 5.22 추가
-            
         }
     }
+
+    private void PlayRandomFallingSound()
+    {
+        int randomIndex = UnityEngine.Random.Range(0, 3); // 0, 1, 2 중 랜덤 선택
+        switch (randomIndex)
+        {
+            case 0:
+                sounds[0].Play();
+                break;
+            case 1:
+                sounds[1].Play();
+                break;
+            case 2:
+                sounds[2].Play();
+                break;
+            case 3:
+                sounds[3].Play();
+                break;
+        }
+    }
+
+    private void PlayRandomMoveSound()
+    {
+        int randomIndex =  UnityEngine.Random.Range(0,3);
+        switch (randomIndex)
+        {
+            case 0:
+            sounds[4].Play();
+            break;
+            case 1:
+            sounds[5].Play();
+            break;
+            case 2:
+            sounds[6].Play();
+            break;
+        }
+    }
+
     private void PlayerStart()
     {
         isActive = true;
