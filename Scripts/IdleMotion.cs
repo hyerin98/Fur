@@ -30,13 +30,14 @@ public class IdleMotion : MonoBehaviour
     void Start()
     {
         playerSelector = GetComponent<PlayerSelector>();
-        if (playerSelector != null)
+        idle = true;
+        if (playerSelector != null && idle)
         {
             foreach (var fur in playerSelector.furs)
             {
                 furColorAssigned[fur] = false;
             }
-            StartCoroutine(CheckPlayerCount(15f));
+            //StartCoroutine(CheckPlayerCount(15f));
         }
         else
         {
@@ -46,9 +47,9 @@ public class IdleMotion : MonoBehaviour
 
     private void InitializeIdleFurPositions()
     {
-        foreach(var fur in idleFurs)
+        foreach(var idlefur in idleFurs)
         {
-            idleFurPositions.Add(fur.transform.position);
+            idleFurPositions.Add(idlefur.transform.position);
         }
     }
 
@@ -61,7 +62,6 @@ public class IdleMotion : MonoBehaviour
                 yield return new WaitForSeconds(5f);
                 Debug.Log("플레이어가 없어서 다시 idle모드 발동");
                 StartRandomIdleMotion();
-
             }
             else if (playerSelector.players.Count > 0)
             {
@@ -96,20 +96,6 @@ public class IdleMotion : MonoBehaviour
         }
     }
 
-    // public void idleMotion1()
-    // {
-    //     if (idleMotionCoroutine != null)
-    //     {
-    //         StopCoroutine(idleMotionCoroutine);
-    //         idleMotionCoroutine = null;
-    //     }
-
-    //     if (idle && !isIdleMotionRunning)
-    //     {
-    //         isIdleMotionRunning = true;
-    //         idleMotionCoroutine = StartCoroutine(AssignColorsWithDelay());
-    //     }
-    // }
     private IEnumerator IdleMotion1()
     {
         Debug.Log("IdleMotion1 시작");
@@ -231,15 +217,16 @@ public class IdleMotion : MonoBehaviour
                 Color initialColor = material.color; // 초기 색상 저장
                 Color targetColor = selectedColors[Random.Range(0, selectedColors.Count)];
 
-                DOVirtual.Color(material.color, targetColor, 1f, value =>
+                DOVirtual.Color(material.color, targetColor, 2f, value =>
                 {
                     material.color = value;
                 });
-                DOVirtual.Color(childLight.color, targetColor, 1f, value =>
+                DOVirtual.Color(childLight.color, targetColor, 0.5f, value =>
                 {
                     childLight.color = value;
-                     childLight.intensity = 10f;
-                     childLight.range = 3f;
+                    childLight.transform.position = new Vector3(childLight.transform.position.x,4f,childLight.transform.position.z);
+                    //  childLight.intensity = 10f;
+                    //  childLight.range = 3f;
                 });
 
                 StartCoroutine(RevertColorAfterDelay(material, childLight, initialColor, 1.2f, 1.2f));
@@ -293,43 +280,77 @@ public class IdleMotion : MonoBehaviour
     }
 
     private IEnumerator fallingFur()
+{
+    // Fur가 떨어지게 하기
+    yield return new WaitForSeconds(1f);
+
+    foreach (GameObject fur in idleFurs)
     {
-        yield return new WaitForSeconds(1f);
-
-        foreach (GameObject fur in idleFurs)
+        if (fur != null)
         {
-            if (fur != null)
-            {
-                Rigidbody furRigidbody = fur.GetComponent<Rigidbody>();
-                Renderer renderer = fur.GetComponent<Renderer>();
+            Rigidbody furRigidbody = fur.GetComponent<Rigidbody>();
+            Renderer renderer = fur.GetComponent<Renderer>();
+            Light childLight = fur.GetComponentInChildren<Light>();
 
-                if (furRigidbody != null && renderer != null)
+            if (furRigidbody != null && renderer != null && childLight != null)
+            {
+                furRigidbody.isKinematic = false; // 물리적 영향을 받도록 설정
+                renderer.material.DOFade(0f, 3f).SetEase(Ease.Linear);
+                StartCoroutine(DimLightIntensity(childLight, 3f));
+            }
+        }
+    }
+
+    // 떨어진 후 기다리기
+    yield return new WaitForSeconds(3f);
+
+    // Fur를 원래 자리로 되돌리기
+    for (int i = 0; i < idleFurs.Count; i++)
+    {
+        GameObject fur = idleFurs[i];
+        if (fur != null)
+        {
+            Rigidbody furRigidbody = fur.GetComponent<Rigidbody>();
+            Renderer renderer = fur.GetComponent<Renderer>();
+            Light childLight = fur.GetComponentInChildren<Light>();
+
+            if (furRigidbody != null && renderer != null && childLight != null)
+            {
+                // 투명도를 원래대로 복구
+                renderer.material.DOFade(1f, 0.5f).SetEase(Ease.Linear);
+
+                // Fur를 원래 위치로 천천히 이동
+                furRigidbody.isKinematic = true; // 물리적 영향을 받지 않게 설정
+                fur.transform.DOLocalMove(idleFurPositions[i], 5f).SetEase(Ease.OutQuad); // 부드럽게 이동
+                
+                
+
+                // 조명도 원래대로 복구
+                if (childLight != null)
                 {
-                    furRigidbody.isKinematic = false;
-                    renderer.material.DOFade(0.1f, 3f).SetEase(Ease.Linear);
+                    childLight.intensity = 10f;
                 }
             }
         }
-
-        // yield return new WaitForSeconds(1f);
-
-        // for (int i = 0; i < idleFurs.Count; i++)
-        // {
-        //     GameObject fur = idleFurs[i];
-        //     if (fur != null)
-        //     {
-        //         Rigidbody furRigidbody = fur.GetComponent<Rigidbody>();
-        //         Renderer renderer = fur.GetComponent<Renderer>();
-
-        //         if (furRigidbody != null && renderer != null)
-        //         {
-        //             furRigidbody.isKinematic = true;
-        //             renderer.material.DOFade(1f, 0.5f).SetEase(Ease.Linear);
-        //             fur.transform.DOMove(idleFurPositions[i], 5f).SetEase(Ease.OutBounce);
-        //         }
-        //     }
-        // }
     }
+}
+
+
+private IEnumerator DimLightIntensity(Light light, float duration)
+{
+    float startIntensity = light.intensity;
+    float timeElapsed = 0f;
+
+    while (timeElapsed < duration)
+    {
+        float t = timeElapsed / duration;
+        light.intensity = Mathf.Lerp(startIntensity, 0f, t);
+        timeElapsed += Time.deltaTime;
+        yield return null;
+    }
+    light.intensity = 0f;
+}
+
 
     void Update()
     {
@@ -337,6 +358,11 @@ public class IdleMotion : MonoBehaviour
         {
             Debug.Log("실행중");
             StartCoroutine(AssignColorsWithDelay());
+        }
+
+        if(Input.GetKeyDown(KeyCode.M))
+        {
+            StartCoroutine(fallingFur());
         }
     }
 

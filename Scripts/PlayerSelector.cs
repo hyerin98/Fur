@@ -144,7 +144,7 @@ public class PlayerSelector : MonoBehaviour
     {
         if (idleMotion.isIdleMotionRunning) // idle모드가 진행되고 있는 상황이라면
         {
-            StopCoroutine("AssignColorsWithDelay"); // idle모드 멈추기
+            StopCoroutine("CheckPlayerCount"); // idle모드 멈추기
             idleMotion.isIdleMotionRunning = false; // idle모드 false
         }
 
@@ -201,11 +201,11 @@ public class PlayerSelector : MonoBehaviour
                             material.color = value;
                         });
 
-                        DOVirtual.Color(childLight.color, targetColor, 3f, value =>
+                        DOVirtual.Color(childLight.color, targetColor, 0.5f, value =>
                         {
                             childLight.color = value;
-                            childLight.intensity = 10f;
-                            childLight.range = 3f;
+                            //childLight.intensity = 10f;
+                            //childLight.range = 3f;
                         });
                     }
 
@@ -273,6 +273,7 @@ public class PlayerSelector : MonoBehaviour
 
                 // idleFurs에서 직접 요소 제거
                 idleMotion.idleFurs.Remove(furObject);
+                furs.Remove(furObject); // 5.29 추가 -> furs리스트에서 missing뜨는 오류떄문
 
                 Light childLight = furObject.GetComponentInChildren<Light>();
                 Renderer renderer = furObject.GetComponent<Renderer>();
@@ -283,7 +284,7 @@ public class PlayerSelector : MonoBehaviour
                     StartCoroutine(DimLightIntensity(childLight, 3f));
 
                     renderer.material.DOFade(0f, 3f).SetEase(ease);
-                    Destroy(furObject, 4f);
+                    Destroy(furObject, 3.1f);
                     StartCoroutine(RespawnFur(initialPosition)); // RespawnFur 메서드 호출
                 }
             }
@@ -298,9 +299,9 @@ public class PlayerSelector : MonoBehaviour
         }
     }
 
-    public IEnumerator RespawnFur(Vector3 position)
+    IEnumerator RespawnFur(Vector3 position)
     {
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(1.0f);
 
         if (furPrefab != null)
         {
@@ -333,6 +334,7 @@ public class PlayerSelector : MonoBehaviour
             idleMotion.furColorAssigned[newFur] = false;
         }
     }
+
 
 
 

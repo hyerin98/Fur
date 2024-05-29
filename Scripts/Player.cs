@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
     public int userIndex;
 
     [Header("PlayerMovement")]
-    public float forceMagnitude = 10f;
+    public float forceMagnitude;
     //public float pushMagnitude;
     public HingeJoint[] hingeJoints;
 
@@ -235,7 +235,7 @@ public class Player : MonoBehaviour
                 }
                 else if (furScene)
                 {
-                    Vector3 force = forceDirection.normalized * forceMagnitude * forceMultiplier;
+                    Vector3 force = forceDirection.normalized * forceMagnitude * 2f;
                     hingeJoint.connectedBody.AddForce(force);
                 }
 

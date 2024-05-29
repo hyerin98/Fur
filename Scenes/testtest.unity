@@ -5807,6 +5807,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   availableColors: []
+  idleColorCount: 0
+  idleColors: []
 --- !u!4 &1121334482
 Transform:
   m_ObjectHideFlags: 0
@@ -9471,6 +9473,7 @@ MonoBehaviour:
   furPrefab: {fileID: 1991476768386480914, guid: c0a8d053060e1b54a960973f0c83d4f1, type: 3}
   isSpawn: 0
   particlePrefab: {fileID: 1991476768386480914, guid: c0a8d053060e1b54a960973f0c83d4f1, type: 3}
+  testParticle: {fileID: 0}
 --- !u!4 &1717756759
 Transform:
   m_ObjectHideFlags: 0

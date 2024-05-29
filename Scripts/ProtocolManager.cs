@@ -58,7 +58,7 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         }
     }
 
-     private void OnPrepared()
+    private void OnPrepared()
     {
         if (_enableDetaledLog) TraceBox.Log("JoyStream Communicator Prepared");
     }
@@ -66,9 +66,9 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
     private void OnUserEnter(PlayerData playerData)
     {
         OnReceivedUserConnect(playerData);
-        if(_enableDetaledLog)
+        if (_enableDetaledLog)
             TraceBox.Log("!!유저입장!!/ connID: " + playerData.conn_id + " / color: " + playerData.color_id + " / index: " + playerData.player_index);
-        
+
     }
 
     private void OnUserExit(PlayerData playerData)
@@ -113,7 +113,7 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
                 OnReceivedControllerDown_Press(connID);
                 break;
             case 32:
-                OnReceivedControllerFall_Press(connID); 
+                OnReceivedControllerFall_Press(connID);
                 break;
         }
     }
@@ -149,7 +149,7 @@ public class ProtocolManager : MonoSingleton<ProtocolManager>
         onUserConnectEvent?.Invoke(ProtocolType.CONTROLLER_DISCONNECT, playerData);
     }
 
-    public void OnReceivedControllerFall_Press(string conID) 
+    public void OnReceivedControllerFall_Press(string conID)
     {
         onWebControllerEvent?.Invoke(ProtocolType.CONTROLLER_FALL_PRESS, conID);
     }

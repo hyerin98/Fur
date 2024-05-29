@@ -1,28 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using DG.Tweening;
+// using System;
+// using System.Diagnostics;
+// using System.Runtime.InteropServices;
+// using IMFINE.Utils;
+// using UnityEngine;
 
-public class test : MonoBehaviour
-{
-    public GameObject[] obj;
-    public Vector3[] targetPositions;
-    public Ease ease;
 
-    void Start()
-    {
-        if (targetPositions.Length != obj.Length)
-        {
-            Debug.LogError("The number of target positions must match the number of objects.");
-            return;
-        }
+// void Awake()
+// {
+//     ConfigManager.instance.Prepared += ResizeWindow;
+// }
 
-        for (int i = 0; i < obj.Length; i++)
-        {
-            if (obj[i] != null)
-            {
-                obj[i].transform.DOMove(targetPositions[i], 3.0f).SetEase(ease); 
-            }
-        }
-    }
-}
+// void Start()
+// {
+//     if (ConfigManager.instance.isPrepared) ResizeWindow();
+// }
+
+// bool isWindowResized;
+// private void ResizeWindow()
+// {
+//     if (isWindowResized) return;
+
+//     WindowManager.instance.Resize(ConfigManager.instance.data.screenPositionX,
+//     ConfigManager.instance.data.screenPositionY,
+//     ConfigManager.instance.data.screenWidth,
+//     ConfigManager.instance.data.screenHeight);
+
+//     isWindowResized = true;
+// }
