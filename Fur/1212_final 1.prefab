@@ -132,7 +132,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4913091961923679528
 Transform:
   m_ObjectHideFlags: 0
@@ -230,6 +230,130 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+--- !u!1 &4290729583353606153
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8091226204497279323}
+  - component: {fileID: 4816321822743129605}
+  - component: {fileID: 3935578095787242052}
+  - component: {fileID: 5440428888099350156}
+  - component: {fileID: 2121384469813320919}
+  m_Layer: 0
+  m_Name: fur (1)
+  m_TagString: Bone
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8091226204497279323
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4290729583353606153}
+  m_LocalRotation: {x: 1.8e-43, y: 3.5527137e-15, z: 1.2621775e-29, w: 1}
+  m_LocalPosition: {x: -0, y: 0.996179, z: 3.0902143e-23}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5617275642057160103}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &4816321822743129605
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4290729583353606153}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!135 &3935578095787242052
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4290729583353606153}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.66532093
+  m_Center: {x: -0.037486605, y: -0.038492337, z: -0.000000002693626}
+--- !u!145 &5440428888099350156
+SpringJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4290729583353606153}
+  m_ConnectedBody: {fileID: 8405291986206414001}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_AutoConfigureConnectedAnchor: 0
+  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.99617946, z: -9.773738e-15}
+  serializedVersion: 2
+  m_Spring: 45
+  m_Damper: 0.2
+  m_MinDistance: 0
+  m_MaxDistance: 100
+  m_Tolerance: 0.025
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
+--- !u!59 &2121384469813320919
+HingeJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4290729583353606153}
+  m_ConnectedBody: {fileID: 8405291986206414001}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 1, y: 0, z: 0}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.99617934, z: -9.773738e-15}
+  m_UseSpring: 0
+  m_Spring:
+    spring: 0
+    damper: 20
+    targetPosition: 180
+  m_UseMotor: 0
+  m_Motor:
+    targetVelocity: 10
+    force: 10
+    freeSpin: 0
+  m_UseLimits: 1
+  m_Limits:
+    min: -90
+    max: 90
+    bounciness: 0
+    bounceMinVelocity: 0.2
+    contactDistance: 0
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1001 &1684993049057510979
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -243,7 +367,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.32
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_LocalScale.z
@@ -292,6 +416,10 @@ PrefabInstance:
     - target: {fileID: -8374560334186062905, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_Name
       value: fur
+      objectReference: {fileID: 0}
+    - target: {fileID: -8374560334186062905, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8374560334186062905, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_TagString
@@ -347,7 +475,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Fur1
       objectReference: {fileID: 0}
     - target: {fileID: 1230651142743150165, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_Name
@@ -652,7 +780,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f03fde1b44e62564e9b4b0b5f37f5707, type: 2}
+  - {fileID: 2100000, guid: 79654bc5836c6e14a857a89aba8375f8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -714,14 +842,15 @@ MonoBehaviour:
   isActive: 0
   isSmall: 0
   lightScene: 0
-  furScene: 0
+  furScene: 1
   playerColor: 
   playerID: 
   userIndex: 0
   forceMagnitude: 50
   hingeJoints: []
   springJoints: []
-  sounds: []
+  fallingSounds: []
+  moveSounds: []
   ease: 23
 --- !u!1 &2064295694412291460 stripped
 GameObject:
@@ -793,7 +922,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.99617934, z: -9.773738e-15}
+  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.99617934, z: 0.0000009536743}
   m_UseSpring: 0
   m_Spring:
     spring: 0

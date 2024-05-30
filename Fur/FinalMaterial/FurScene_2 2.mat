@@ -23,9 +23,9 @@ Material:
   m_Name: FurScene_2 2
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_ValidKeywords:
-  - _SPECULAR_SETUP
+  - _EMISSION
   m_InvalidKeywords: []
-  m_LightmapFlags: 4
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -153,7 +153,7 @@ Material:
     - _ShnOverlap: 0
     - _ShnRange: 0.15
     - _ShnSmooth: 0
-    - _Smoothness: 0
+    - _Smoothness: 0.232
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -173,16 +173,16 @@ Material:
     - _UseNormalMap: 0
     - _UseRoughnessMap: 0
     - _UseUIAlphaClip: 0
-    - _WorkflowMode: 0
+    - _WorkflowMode: 1
     - _ZTest: 0
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.990566, g: 0.35978103, b: 0.35978103, a: 1}
+    - _BaseColor: {r: 0.83921576, g: 0.23529413, b: 0.19607845, a: 1}
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
-    - _Color: {r: 0.99056596, g: 0.359781, b: 0.359781, a: 1}
+    - _Color: {r: 0.83921576, g: 0.2352941, b: 0.19607842, a: 1}
     - _Color1: {r: 1, g: 1, b: 1, a: 1}
     - _Color2: {r: 0, g: 0, b: 0, a: 1}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColor: {r: 0.67244333, g: 0.045186214, b: 0.03189604, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0.6901961, g: 0.121568635, b: 0.19607845, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}

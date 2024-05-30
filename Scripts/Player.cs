@@ -39,7 +39,8 @@ public class Player : MonoBehaviour
     CameraShake Camera;
 
     [Header("Sound")]
-    public AudioSource[] sounds;
+    public AudioSource[] fallingSounds;
+    public AudioSource[] moveSounds;
 
     [Header("DOTween")]
     public Ease ease;
@@ -296,56 +297,42 @@ public class Player : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
+{
+    if (other.gameObject.CompareTag("Ground") && !isFalled) // isFalled가 false일 때만 실행되도록 변경
     {
-        if (other.gameObject.CompareTag("Ground"))
+        isFalled = true;
+        //rigid.isKinematic = true;
+
+        foreach (var childRigidbody in childRigidbodies)
         {
-            PlayRandomFallingSound();
-            isFalled = true;
-            //rigid.isKinematic = true;
-
-            foreach (var childRigidbody in childRigidbodies)
-            {
-                childRigidbody.isKinematic = false;
-                childRigidbody.AddForce(Vector3.down * 2f, ForceMode.Impulse);
-            }
-            this.transform.DOPunchPosition(Vector3.down, 0.02f, 10, 0.05f, false); // 5.22 추가
+            childRigidbody.isKinematic = false;
+            childRigidbody.AddForce(Vector3.down * 2f, ForceMode.Impulse);
         }
-    }
+        this.transform.DOPunchPosition(Vector3.down, 0.02f, 10, 0.05f, false); // 5.22 추가
 
-    private void PlayRandomFallingSound()
+        PlayRandomFallingSound(); // 소리 재생
+    }
+}
+
+private void PlayRandomFallingSound()
+{
+    if (fallingSounds != null && fallingSounds.Length > 0)
     {
-        int randomIndex = UnityEngine.Random.Range(0, 3); // 0, 1, 2 중 랜덤 선택
-        switch (randomIndex)
-        {
-            case 0:
-                sounds[0].Play();
-                break;
-            case 1:
-                sounds[1].Play();
-                break;
-            case 2:
-                sounds[2].Play();
-                break;
-            case 3:
-                sounds[3].Play();
-                break;
-        }
+        Debug.Log("소리남");
+        int randomIndex = UnityEngine.Random.Range(0, fallingSounds.Length); 
+        fallingSounds[randomIndex]?.Play(); 
     }
+}
+
+
 
     private void PlayRandomMoveSound()
     {
-        int randomIndex =  UnityEngine.Random.Range(0,3);
-        switch (randomIndex)
+        if (moveSounds != null && moveSounds.Length > 0)
         {
-            case 0:
-            sounds[4].Play();
-            break;
-            case 1:
-            sounds[5].Play();
-            break;
-            case 2:
-            sounds[6].Play();
-            break;
+            Debug.Log("소리남");
+            int randomIndex = UnityEngine.Random.Range(0, moveSounds.Length); 
+            moveSounds[randomIndex]?.Play(); 
         }
     }
 

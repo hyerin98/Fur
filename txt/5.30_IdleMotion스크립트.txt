@@ -13,7 +13,7 @@ public class IdleMotion : MonoBehaviour
     private PlayerSelector playerSelector;
 
     public Coroutine idleMotionCoroutine; // 5.24 - idle진행되다가 한명이라도 접속 시 idleMotion 중지시키는 코루틴 (테스트 많이 해봐야함)
-    public bool isIdleMotionRunning = false;
+    public bool isIdleMotionRunning;
     public List<GameObject> idleFurs = new List<GameObject>(); // idle일때 움직이는 털 리스트 
     public Dictionary<GameObject, bool> furColorAssigned = new Dictionary<GameObject, bool>(); // fur의 색상 할당 상태를 추적
     public HashSet<string> removedFurNames = new HashSet<string>(); // 삭제된 fur 이름을 저장할 HashSet
@@ -37,7 +37,7 @@ public class IdleMotion : MonoBehaviour
             {
                 furColorAssigned[fur] = false;
             }
-            //StartCoroutine(CheckPlayerCount(15f));
+            StartCoroutine(CheckPlayerCount(15f));
         }
         else
         {
@@ -54,23 +54,27 @@ public class IdleMotion : MonoBehaviour
     }
 
     private IEnumerator CheckPlayerCount(float interval)
+{
+    while (true)
     {
-        while (true)
+        if (playerSelector.players.Count == 0 && idle)
         {
-            if (playerSelector.players.Count == 0 && idle)
+            yield return new WaitForSeconds(5f);
+            if (!isIdleMotionRunning)
             {
-                yield return new WaitForSeconds(5f);
                 Debug.Log("플레이어가 없어서 다시 idle모드 발동");
                 StartRandomIdleMotion();
             }
-            else if (playerSelector.players.Count > 0)
-            {
-                idle = false;
-                Debug.Log("한명이라도 접속했기 때문에 idle모드 안댐");
-            }
-            yield return new WaitForSeconds(interval);
         }
+        else if (playerSelector.players.Count > 0)
+        {
+            idle = false;
+            Debug.Log("한명이라도 접속했기 때문에 idle모드 안댐");
+        }
+        yield return new WaitForSeconds(interval);
     }
+}
+
 
     public void StartRandomIdleMotion()
     {
@@ -224,7 +228,7 @@ public class IdleMotion : MonoBehaviour
                 DOVirtual.Color(childLight.color, targetColor, 0.5f, value =>
                 {
                     childLight.color = value;
-                    childLight.transform.position = new Vector3(childLight.transform.position.x,4f,childLight.transform.position.z);
+                    childLight.transform.position = new Vector3(childLight.transform.position.x,4f,childLight.transform.position.z); // 5.29 추가
                     //  childLight.intensity = 10f;
                     //  childLight.range = 3f;
                 });
@@ -284,63 +288,63 @@ public class IdleMotion : MonoBehaviour
     }
 
     private IEnumerator fallingFur()
-{
-    // Fur가 떨어지게 하기
-    yield return new WaitForSeconds(1f);
-
-    foreach (GameObject fur in idleFurs)
     {
-        if (fur != null)
-        {
-            Rigidbody furRigidbody = fur.GetComponent<Rigidbody>();
-            Renderer renderer = fur.GetComponent<Renderer>();
-            Light childLight = fur.GetComponentInChildren<Light>();
+        // Fur가 떨어지게 하기
+        yield return new WaitForSeconds(1f);
 
-            if (furRigidbody != null && renderer != null && childLight != null)
+        foreach (GameObject fur in idleFurs)
+        {
+            if (fur != null)
             {
-                furRigidbody.isKinematic = false; // 물리적 영향을 받도록 설정
-                renderer.material.DOFade(0f, 3f).SetEase(Ease.Linear);
-                StartCoroutine(DimLightIntensity(childLight, 3f));
+                Rigidbody furRigidbody = fur.GetComponent<Rigidbody>();
+                Renderer renderer = fur.GetComponent<Renderer>();
+                Light childLight = fur.GetComponentInChildren<Light>();
+
+                if (furRigidbody != null && renderer != null && childLight != null)
+                {
+                    furRigidbody.isKinematic = false; // 물리적 영향을 받도록 설정
+                    renderer.material.DOFade(0f, 3f).SetEase(Ease.Linear);
+                    StartCoroutine(DimLightIntensity(childLight, 3f));
+                }
             }
         }
-    }
 
-    // 떨어진 후 기다리기
-    yield return new WaitForSeconds(3f);
+        // 떨어진 후 기다리기
+        yield return new WaitForSeconds(3f);
 
-    // Fur를 원래 자리로 되돌리기
-    for (int i = 0; i < idleFurs.Count; i++)
-    {
-        GameObject fur = idleFurs[i];
-        if (fur != null)
+        // Fur를 원래 자리로 되돌리기
+        for (int i = 0; i < idleFurs.Count; i++)
         {
-            Rigidbody furRigidbody = fur.GetComponent<Rigidbody>();
-            Renderer renderer = fur.GetComponent<Renderer>();
-            Light childLight = fur.GetComponentInChildren<Light>();
-
-            if (furRigidbody != null && renderer != null && childLight != null)
+            GameObject fur = idleFurs[i];
+            if (fur != null)
             {
-                // 투명도를 원래대로 복구
-                renderer.material.DOFade(1f, 0.5f).SetEase(Ease.Linear);
+                Rigidbody furRigidbody = fur.GetComponent<Rigidbody>();
+                Renderer renderer = fur.GetComponent<Renderer>();
+                Light childLight = fur.GetComponentInChildren<Light>();
 
-                // Fur를 원래 위치로 천천히 이동
-                furRigidbody.isKinematic = true; // 물리적 영향을 받지 않게 설정
-                fur.transform.DOLocalMove(idleFurPositions[i], 5f).SetEase(Ease.OutQuad); // 부드럽게 이동
-                
-                
-
-                // 조명도 원래대로 복구
-                if (childLight != null)
+                if (furRigidbody != null && renderer != null && childLight != null)
                 {
-                    childLight.intensity = 10f;
+                    // 투명도를 원래대로 복구
+                    renderer.material.DOFade(1f, 0.5f).SetEase(Ease.Linear);
+
+                    // Fur를 원래 위치로 천천히 이동
+                    furRigidbody.isKinematic = true; // 물리적 영향을 받지 않게 설정
+                    fur.transform.DOMove(idleFurPositions[i], 5f).SetEase(Ease.OutQuad); // 부드럽게 이동
+
+
+
+                    // 조명도 원래대로 복구
+                    if (childLight != null)
+                    {
+                        childLight.intensity = 10f;
+                    }
                 }
             }
         }
     }
-}
 
 
-private IEnumerator DimLightIntensity(Light light, float duration)
+    private IEnumerator DimLightIntensity(Light light, float duration)
 {
     float startIntensity = light.intensity;
     float timeElapsed = 0f;
@@ -358,11 +362,11 @@ private IEnumerator DimLightIntensity(Light light, float duration)
 
     void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.I))
-        // {
-        //     Debug.Log("실행중");
-        //     StartCoroutine(AssignColorsWithDelay());
-        // }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            Debug.Log("실행중");
+            StartCoroutine(AssignColorsWithDelay());
+        }
 
         if(Input.GetKeyDown(KeyCode.M))
         {
