@@ -49,3 +49,8 @@ light씬 떨어지는 소리
 
 ++ OnAddUser함수에서 Player targetPlayer = assignedFur.GetComponent<Player>(); 이 부분 missing에러  
 -> 계속 접속삭제 빠르면 idle코루틴도 이상해지고 missing에러뜸 -> 문제점 알아냄
+
+->  6.4일에 다 고치기
++ fallingfur idleMotion에서 플레이어 한명이라도 접속하면 멈추긴함 
+하지만 코루틴이 멈추기 떄문에 빈자리가 setactive(true)가되지 않는 문제 해결하기
++ 
