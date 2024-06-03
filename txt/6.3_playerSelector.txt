@@ -281,7 +281,7 @@ public class PlayerSelector : MonoBehaviour
                             childLight.color = value;
                             //childLight.range = 3f; // 5.30 - 3으로 하면 빛번짐은 없는 대신, 바닥이 비추지않음. 원래는 15로 되어있음. 어느게 나은지 여쭤보기
                         });
-                            // float duration = 2f;
+                            //  float duration = 2f;
                             // float elapsedTime = 0f;
 
                             // while (elapsedTime < duration)
@@ -414,7 +414,7 @@ public class PlayerSelector : MonoBehaviour
 
             Color startColor = new Color(0.5283019f, 0.5208259f, 0.5208259f);
             Color targetColor = new Color(0f, 0f, 0f, 0f);
-            float duration = 2f;
+            float duration = 3f;
             float elapsedTime = 0f;
 
             while (elapsedTime < duration)

@@ -1,0 +1,51 @@
+private IEnumerator fallingFur()
+    {
+        yield return new WaitForSeconds(1f);
+
+        List<GameObject> selectedFurs = new List<GameObject>();
+        int furCount = Mathf.Min(30, idleFurs.Count);
+
+        while (selectedFurs.Count < furCount)
+        {
+            GameObject randomFur = idleFurs[Random.Range(0, idleFurs.Count)];
+            if (!selectedFurs.Contains(randomFur))
+            {
+                selectedFurs.Add(randomFur);
+            }
+        }
+
+        foreach (GameObject fur in selectedFurs)
+        {
+            if (fur != null)
+            {
+                fur.SetActive(false);
+
+                GameObject fakeFur = Instantiate(fake_furPrefab, fur.transform.position, fur.transform.rotation);
+                Rigidbody furRigidbody = fakeFur.GetComponent<Rigidbody>();
+                Renderer renderer = fakeFur.GetComponent<Renderer>();
+                Light childLight = fakeFur.GetComponentInChildren<Light>();
+
+                childLight.color = new Color(0.7058824f, 0.1686274f, 0.317647f);
+                //childLight.intensity = 3f;
+
+                if (furRigidbody != null && renderer != null && childLight != null)
+                {
+                    furRigidbody.isKinematic = false; // 물리적 영향을 받도록 설정
+
+                    renderer.material.DOFade(0f, 2f).SetEase(Ease.Linear);
+                    ground.SetActive(false);
+                    StartCoroutine(DimLightIntensity(childLight, 3f));
+                    StartCoroutine(DestroyFakeFur(fakeFur, fur, 3f));
+                }
+            }
+        }
+        yield return new WaitForSeconds(3f);
+    }
+    private IEnumerator DestroyFakeFur(GameObject fakeFur, GameObject originalFur, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        Destroy(fakeFur);
+        originalFur.SetActive(true);
+        ground.SetActive(true);
+    }

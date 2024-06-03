@@ -8808,16 +8808,117 @@ MonoBehaviour:
   - {fileID: 1933997793}
   - {fileID: 1836484551}
   ease: 1
-  furPrefab_1: {fileID: 1991476768386480914, guid: c0a8d053060e1b54a960973f0c83d4f1, type: 3}
-  furPrefab_2: {fileID: 1991476768386480914, guid: 3072af0a0a009ca4a89925087117699a, type: 3}
-  furPrefab_3: {fileID: 1991476768386480914, guid: 28ce83caefc50f7418e108d71a1dbe4d, type: 3}
-  furPrefab_4: {fileID: 1991476768386480914, guid: a7220efda82bd7a4a86008ab69d85ba8, type: 3}
-  furPrefab_5: {fileID: 1991476768386480914, guid: b780f31b673de8846a75557d7f400e5e, type: 3}
+  furPrefab: {fileID: 1991476768386480914, guid: 3072af0a0a009ca4a89925087117699a, type: 3}
+  fake_furPrefab: {fileID: 1991476768386480914, guid: b780f31b673de8846a75557d7f400e5e, type: 3}
   isSpawn: 0
   particlePrefab: {fileID: 4938095755617958529, guid: 2e79f16be10fbd14f8d5ef191f8db4aa, type: 3}
   testParticle: {fileID: 8575279233651435532, guid: 66d41c5c03cd15140b7d927fe0eba06a, type: 3}
-  isChandelierScene: 0
+  idle: 1
   isFurScene: 1
+  isLightScene: 0
+  idleFurs:
+  - {fileID: 1874654296}
+  - {fileID: 473192932}
+  - {fileID: 460340067}
+  - {fileID: 122343923}
+  - {fileID: 1176435753}
+  - {fileID: 1293719688}
+  - {fileID: 1610032971}
+  - {fileID: 802944064}
+  - {fileID: 1163902320}
+  - {fileID: 461121064}
+  - {fileID: 73144656}
+  - {fileID: 1876815073}
+  - {fileID: 688840546}
+  - {fileID: 319520061}
+  - {fileID: 17281194}
+  - {fileID: 617963064}
+  - {fileID: 680279695}
+  - {fileID: 412457135}
+  - {fileID: 1457575474}
+  - {fileID: 2014638729}
+  - {fileID: 1214188396}
+  - {fileID: 687891828}
+  - {fileID: 1915396039}
+  - {fileID: 671148991}
+  - {fileID: 2057374678}
+  - {fileID: 1550543814}
+  - {fileID: 2072036350}
+  - {fileID: 914588546}
+  - {fileID: 541617302}
+  - {fileID: 1490500361}
+  - {fileID: 2009886534}
+  - {fileID: 1926818033}
+  - {fileID: 1898930207}
+  - {fileID: 530675585}
+  - {fileID: 1850487891}
+  - {fileID: 524027569}
+  - {fileID: 623765338}
+  - {fileID: 169933535}
+  - {fileID: 76795022}
+  - {fileID: 1282360213}
+  - {fileID: 349843024}
+  - {fileID: 1866364913}
+  - {fileID: 937852277}
+  - {fileID: 1067147496}
+  - {fileID: 2069488130}
+  - {fileID: 473429148}
+  - {fileID: 1552099579}
+  - {fileID: 1048664381}
+  - {fileID: 136477139}
+  - {fileID: 2082389179}
+  - {fileID: 616533970}
+  - {fileID: 1628975177}
+  - {fileID: 526757765}
+  - {fileID: 804301727}
+  - {fileID: 1124507467}
+  - {fileID: 1515369260}
+  - {fileID: 1256807833}
+  - {fileID: 960022339}
+  - {fileID: 1936273836}
+  - {fileID: 515846304}
+  - {fileID: 1342224127}
+  - {fileID: 950511769}
+  - {fileID: 1013300559}
+  - {fileID: 415269434}
+  - {fileID: 1891033966}
+  - {fileID: 906822864}
+  - {fileID: 876374214}
+  - {fileID: 676663750}
+  - {fileID: 1819779512}
+  - {fileID: 924605481}
+  - {fileID: 699569749}
+  - {fileID: 1885106562}
+  - {fileID: 241112669}
+  - {fileID: 276982940}
+  - {fileID: 1071928011}
+  - {fileID: 545179436}
+  - {fileID: 223991130}
+  - {fileID: 696979896}
+  - {fileID: 767610532}
+  - {fileID: 425765299}
+  - {fileID: 1843157913}
+  - {fileID: 1641742244}
+  - {fileID: 818980543}
+  - {fileID: 480843057}
+  - {fileID: 1311444690}
+  - {fileID: 1595129051}
+  - {fileID: 800963267}
+  - {fileID: 803986506}
+  - {fileID: 876065725}
+  - {fileID: 2000986574}
+  - {fileID: 1043458130}
+  - {fileID: 1396522046}
+  - {fileID: 1169897734}
+  - {fileID: 909534736}
+  - {fileID: 45448106}
+  - {fileID: 482586135}
+  - {fileID: 1836484551}
+  - {fileID: 882141915}
+  - {fileID: 1243172890}
+  - {fileID: 18144953}
+  - {fileID: 1933997793}
+  - {fileID: 361505232}
 --- !u!114 &1022461659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8825,7 +8926,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1022461657}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 637ded01fcddb2b40a0941f19d8b33f5, type: 3}
   m_Name: 

@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
     public HingeJoint[] hingeJoints;
 
     public SpringJoint[] springJoints;
-    CameraShake Camera;
+    CameraShake cameraShake;
 
     [Header("Sound")]
     public AudioSource[] fallingSounds;
@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
 
         childRigidbodies = new List<Rigidbody>(GetComponentsInChildren<Rigidbody>());
         childRigidbodies.Remove(rigid);
-        Camera = GameObject.FindWithTag("MainCamera").GetComponent<CameraShake>();
+        cameraShake = GameObject.FindWithTag("MainCamera").GetComponent<CameraShake>();
     }
 
     private void Update()
@@ -301,6 +301,7 @@ public class Player : MonoBehaviour
     if (other.gameObject.CompareTag("Ground") && !isFalled) // isFalled가 false일 때만 실행되도록 변경
     {
         isFalled = true;
+        cameraShake.VibrateForTime(0.3f);
         //rigid.isKinematic = true;
 
         foreach (var childRigidbody in childRigidbodies)
