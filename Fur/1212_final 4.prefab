@@ -132,7 +132,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4913091961923679528
 Transform:
   m_ObjectHideFlags: 0
@@ -244,7 +244,7 @@ GameObject:
   - component: {fileID: 7526438305595495215}
   - component: {fileID: 1852638492771281665}
   m_Layer: 0
-  m_Name: fur (1)
+  m_Name: 'fur '
   m_TagString: Bone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -363,7 +363,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.35
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_LocalScale.y
@@ -371,7 +371,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.35
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_LocalPosition.x
@@ -843,14 +843,20 @@ MonoBehaviour:
   isSmall: 0
   lightScene: 0
   furScene: 1
+  isMove: 1
   playerColor: 
   playerID: 
   userIndex: 0
   forceMagnitude: 50
   hingeJoints: []
   springJoints: []
-  fallingSounds: []
-  moveSounds: []
+  fallingClips:
+  - {fileID: 8300000, guid: 586d2ebd2b8bf6b43a43aec77f725a71, type: 3}
+  - {fileID: 8300000, guid: 7b5b6172db138954893f26bc0d5a4529, type: 3}
+  - {fileID: 8300000, guid: 0769e3ed92c2dad4aa6d7e40313f8065, type: 3}
+  - {fileID: 8300000, guid: 6c09af8fafd083e4bb2ee6140fc70954, type: 3}
+  moveClips:
+  - {fileID: 8300000, guid: 0445be52465f3354abe928fc0d684cec, type: 3}
   ease: 23
 --- !u!1 &2064295694412291460 stripped
 GameObject:

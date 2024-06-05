@@ -244,7 +244,7 @@ GameObject:
   - component: {fileID: 4931603878011562465}
   - component: {fileID: 1342156129086415695}
   m_Layer: 0
-  m_Name: fur (1)
+  m_Name: fur
   m_TagString: Bone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -330,7 +330,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.99617934, z: -9.773738e-15}
+  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.9961767, z: -9.773745e-15}
   m_UseSpring: 0
   m_Spring:
     spring: 0
@@ -519,7 +519,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8377663325180701746, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_Name
-      value: Bone
+      value: longfur
       objectReference: {fileID: 0}
     - target: {fileID: 8377663325180701746, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_TagString
@@ -577,7 +577,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00000012945699, y: 1.0125103, z: 0.00000047683716}
+  m_ConnectedAnchor: {x: 0.00000012945708, y: 1.0125096, z: -9.773744e-15}
   m_UseSpring: 0
   m_Spring:
     spring: 10
@@ -700,7 +700,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.87999976, z: -9.77374e-15}
+  m_ConnectedAnchor: {x: 0.00000012945708, y: 0.8799976, z: 0.0000009536743}
   m_UseSpring: 0
   m_Spring:
     spring: 10
@@ -855,14 +855,25 @@ MonoBehaviour:
   isSmall: 0
   lightScene: 1
   furScene: 0
+  isMove: 1
   playerColor: 
   playerID: 
   userIndex: 0
   forceMagnitude: 50
   hingeJoints: []
   springJoints: []
-  fallingSounds: []
-  moveSounds: []
+  fallingClips:
+  - {fileID: 8300000, guid: fe69e333ac1cb7b438b425bd92520b8c, type: 3}
+  - {fileID: 8300000, guid: 973bc518f98edf045bb76fbe8850a939, type: 3}
+  - {fileID: 8300000, guid: 64e174cba6dd95f4d9a481957984dcc3, type: 3}
+  - {fileID: 8300000, guid: c0126700b6aff6e4f8fef3b2e8169f25, type: 3}
+  - {fileID: 8300000, guid: d44846f93f288014484bf9db6c1a96c2, type: 3}
+  - {fileID: 8300000, guid: 942d098beefbb194fb5d49d6e0bec846, type: 3}
+  - {fileID: 8300000, guid: 2602f8daa02185c4ba4bec64dd13a0a5, type: 3}
+  - {fileID: 8300000, guid: ac580367517e2ba42a4d38343eeaa193, type: 3}
+  moveClips:
+  - {fileID: 8300000, guid: 5af941200dc71264d8b63a7c18c43bba, type: 3}
+  - {fileID: 8300000, guid: 1d15a5836b30c0848b8b9ce361312f47, type: 3}
   ease: 19
 --- !u!1 &2064295694412291460 stripped
 GameObject:
@@ -1335,7 +1346,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.96351767, z: -9.773735e-15}
+  m_ConnectedAnchor: {x: 0.00000012945702, y: 3.6600008, z: -9.773737e-15}
   m_UseSpring: 0
   m_Spring:
     spring: 10

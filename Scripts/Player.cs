@@ -6,6 +6,7 @@ using IMFINE.Utils.JoyStream.Communicator;
 using System;
 using Unity.VisualScripting;
 using Unity.Mathematics;
+using System.Net.Security;
 
 
 public class Player : MonoBehaviour
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour
     public delegate void OnPlayerEnd(Player target);
     //public event OnPlayerEnd onPlayerEnd;
     public List<Rigidbody> childRigidbodies;
+    Light playerLight;
     [Header("Bool")]
     public bool isFalled = false;
     public bool isFalling = false;
@@ -23,6 +25,7 @@ public class Player : MonoBehaviour
     public bool isSmall = false;
     public bool lightScene;
     public bool furScene;
+    public bool isMove = true;
 
 
     [Header("String & Int")]
@@ -39,8 +42,8 @@ public class Player : MonoBehaviour
     CameraShake cameraShake;
 
     [Header("Sound")]
-    public AudioSource[] fallingSounds;
-    public AudioSource[] moveSounds;
+    public AudioClip[] fallingClips;
+    public AudioClip[] moveClips;
 
     [Header("DOTween")]
     public Ease ease;
@@ -49,7 +52,7 @@ public class Player : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         hingeJoints = GetComponentsInChildren<HingeJoint>();
-        springJoints = GetComponentsInChildren<SpringJoint>();        
+        springJoints = GetComponentsInChildren<SpringJoint>();
     }
 
     void Start()
@@ -60,42 +63,55 @@ public class Player : MonoBehaviour
         childRigidbodies = new List<Rigidbody>(GetComponentsInChildren<Rigidbody>());
         childRigidbodies.Remove(rigid);
         cameraShake = GameObject.FindWithTag("MainCamera").GetComponent<CameraShake>();
+        playerLight = GetComponentInChildren<Light>();
     }
 
     private void Update()
     {
-        if (downKeyCode == KeyCode.UpArrow)
+        if (downKeyCode == KeyCode.UpArrow && isMove)
         {
-            if(lightScene)
+            if (lightScene)
             {
                 PushHingeJoint("fur", "pull", 10f);
             }
-            else if(furScene)
+            else if (furScene)
             {
                 PushHingeJoint("fur", "pull", 10f);
             }
         }
 
-        else if (downKeyCode == KeyCode.DownArrow)
+        else if (downKeyCode == KeyCode.DownArrow & isMove)
         {
-            if(lightScene)
+            if (lightScene)
             {
                 PushHingeJoint("fur", "push", 10f);
             }
-            else if(furScene)
+            else if (furScene)
             {
                 PushHingeJoint("fur", "push", 10f);
             }
-            
         }
-        else if (downKeyCode == KeyCode.LeftArrow)
+        else if (downKeyCode == KeyCode.LeftArrow && isMove)
         {
-            ApplyForceToHingeJoints(-transform.right, 1.0f);
+            if (lightScene)
+            {
+                ApplyForceToHingeJoints(-transform.right, 1.0f);
+            }
+            else if (furScene)
+            {
+                ApplyForceToHingeJoints(-transform.right, 3.0f);
+            }
         }
-        else if (downKeyCode == KeyCode.RightArrow)
+        else if (downKeyCode == KeyCode.RightArrow && isMove)
         {
-            ApplyForceToHingeJoints(transform.right, 1.0f);
-            
+            if (lightScene)
+            {
+                ApplyForceToHingeJoints(transform.right, 1.0f);
+            }
+            else if (furScene)
+            {
+                ApplyForceToHingeJoints(transform.right, 3.0f);
+            }
         }
         else if (downKeyCode == KeyCode.Space)
         {
@@ -103,88 +119,138 @@ public class Player : MonoBehaviour
             isFalling = true;
         }
 
-
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.C) && !isSmall)
         {
-            if(gameObject.CompareTag("Fur1"))
-            {
-                PushHingeJoint("fur", "push", 30f);
-                
-            }
-            Invoke("idleMotion1",1.0f);
-            Invoke("idleMotion2",2f);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            //MoveChildWithSpringEffect();
-            PushHingeJoint("fur", "push", 50f);
-        }
-
-        if(Input.GetKeyDown(KeyCode.L))
-        {
-            if(gameObject.CompareTag("Fur1"))
-            {
-                ApplyForceToHingeJoints(transform.right, 1.0f);
-            }
-            Invoke("idleMotion3",1.0f);
-            Invoke("idleMotion4",2f);
-        }
-
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            if (gameObject.CompareTag("Fur1"))
-            {
-                ApplyForceToHingeJoints(-transform.right, 1.0f);
-            }
-            Invoke("idleMotion4",1f);
-            Invoke("idleMotion3",2.0f);
-        }
-        
-        if(Input.GetKeyDown(KeyCode.C) && !isSmall)
-        {
-            isSmall= true;
-            Vector3 smallFur = new Vector3(0.2f,0.25f,0.2f);
+            isSmall = true;
+            Vector3 smallFur = new Vector3(0.2f, 0.25f, 0.2f);
             this.transform.DOScale(smallFur, 1f).SetEase(ease);
         }
-        if(Input.GetKeyDown(KeyCode.O) && isSmall)
+        if (Input.GetKeyDown(KeyCode.O) && isSmall)
         {
             isSmall = false;
-            Vector3 oriFur = new Vector3(0.3f,0.35f,0.3f);
+            Vector3 oriFur = new Vector3(0.3f, 0.35f, 0.3f);
             this.transform.DOScale(oriFur, 1f).SetEase(ease);
         }
-    }
 
-    public void idleMotion3()
-    {
-        if(gameObject.CompareTag("Fur2"))
+        if(Input.GetKeyDown(KeyCode.X))
         {
-            ApplyForceToHingeJoints(-transform.right, 1.0f);
+            if(this.CompareTag("Fur1"))
+            {
+                Invoke("PushIdleMotion",1f);
+            }
+            if(this.CompareTag("Fur2"))
+            {
+                Invoke("PushIdleMotion",2f);
+            }
+            if(this.CompareTag("Fur3"))
+            {
+                Invoke("PushIdleMotion",3f);
+            }
+            if(this.CompareTag("Fur4"))
+            {
+                Invoke("PushIdleMotion",4f);
+            }
+            if(this.CompareTag("Fur5"))
+            {
+                Invoke("PushIdleMotion",5f);
+            }
+            // if(gameObject.CompareTag("Fur1") || gameObject.CompareTag("Fur2") || gameObject.CompareTag("Fur3") || gameObject.CompareTag("Fur4") ||  gameObject.CompareTag("Fur5"))
+            // {
+            //     Invoke("PushIdleMotion",6f);
+            // }
         }
     }
 
-    public void idleMotion4()
+    void PushIdleMotion()
     {
-        if(gameObject.CompareTag("Fur3"))
+        Renderer renderer = this.GetComponent<Renderer>();
+        Material material = renderer.material;
+        Color initialColor = material.color;
+        Color targetColor = new Color(0.1561499f, 0.263519f, 0.2735849f);
+        DOVirtual.Color(playerLight.color, targetColor, 1f, value =>
+                   {
+                       playerLight.color = value;
+                   });
+
+        Transform transform = this.transform;
+        foreach (SpringJoint springJoint in springJoints)
         {
-            ApplyForceToHingeJoints(transform.right , 1.0f);
+            if (springJoint.name == "longfur")
+            {
+
+                Transform furTransform = springJoint.transform.Find("longfur");
+                if (furTransform != null)
+                {
+                    StartCoroutine(AnimateFur(furTransform));
+                }
+            }
+            PushHingeJoint("fur","push",20f);
+            StartCoroutine(RevertPushColorDelay(playerLight, initialColor, 1f, 1f));
+        }
+    }
+    IEnumerator AnimateFur(Transform furTransform)
+    {
+        Vector3 originalPosition = furTransform.localPosition;
+        Vector3 targetPosition = originalPosition * 4;
+        float duration = 1.0f; // 애니메이션이 걸리는 시간
+        float elapsedTime = 0f;
+
+        // 원래 위치에서 목표 위치로 이동
+        while (elapsedTime < duration)
+        {
+            furTransform.localPosition = Vector3.Lerp(originalPosition, targetPosition, (elapsedTime / duration));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        furTransform.localPosition = targetPosition;
+
+        // 잠시 대기
+        yield return new WaitForSeconds(0.5f);
+
+        elapsedTime = 0f;
+
+        // 목표 위치에서 원래 위치로 이동
+        while (elapsedTime < duration)
+        {
+            furTransform.localPosition = Vector3.Lerp(targetPosition, originalPosition, (elapsedTime / duration));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        furTransform.localPosition = originalPosition;
+    }
+
+
+    private IEnumerator RevertPushColorDelay(Light playerLight, Color initialColor, float delay, float duration)
+    {
+        yield return new WaitForSeconds(delay);
+        if (playerLight != null)
+        {
+            DOVirtual.Color(playerLight.color, initialColor, duration, value =>
+            {
+                playerLight.color = value;
+            });
         }
     }
 
-    public void idleMotion1()
-    {
-        if(gameObject.CompareTag("Fur2"))
-        {
-            PushHingeJoint("fur", "push", 40f);
-        }
-    }
+    
 
-    public void idleMotion2()
+    void idleMotion2()
     {
-        if(gameObject.CompareTag("Fur3"))
-        {
-            PushHingeJoint("fur", "push", 50f);
-        }
+        PushHingeJoint("fur","push",80f);
+        playerLight.color = new Color(1, 1, 1,1);
+    }
+    
+    void idleMotion3()
+    {
+        PushHingeJoint("fur","push",80f);
+        playerLight.color = new Color(1, 1, 1,1);
+    }
+    void idleMotion4()
+    {
+        PushHingeJoint("fur","push",80f);
+        playerLight.color = new Color(1, 1, 1,1);
     }
 
     public void PushHingeJoint(string jointName, string action, float pushForce)
@@ -243,17 +309,17 @@ public class Player : MonoBehaviour
             }
             else if (isSmall)
             {
-                if(lightScene)
+                if (lightScene)
                 {
                     Vector3 force = forceDirection.normalized * forceMagnitude / 3f;
                     hingeJoint.connectedBody.AddForce(force);
                 }
-                else if(furScene)
+                else if (furScene)
                 {
                     Vector3 force = forceDirection.normalized * forceMagnitude / 3f;
                     hingeJoint.connectedBody.AddForce(force);
                 }
-                
+
             }
         }
     }
@@ -264,28 +330,28 @@ public class Player : MonoBehaviour
         {
             case ProtocolType.CONTROLLER_UP_PRESS:
                 downKeyCode = KeyCode.UpArrow;
-                PlayRandomMoveSound();
+                SoundManager.instance.SFXMovePlay("", moveClips);
                 break;
             case ProtocolType.CONTROLLER_UP_RELEASE:
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_DOWN_PRESS:
                 downKeyCode = KeyCode.DownArrow;
-                PlayRandomMoveSound();
+                SoundManager.instance.SFXMovePlay("", moveClips);
                 break;
             case ProtocolType.CONTROLLER_DOWN_RELEASE:
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_LEFT_PRESS:
                 downKeyCode = KeyCode.LeftArrow;
-                PlayRandomMoveSound();
+                SoundManager.instance.SFXMovePlay("", moveClips);
                 break;
             case ProtocolType.CONTROLLER_LEFT_RELEASE:
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_RIGHT_PRESS:
                 downKeyCode = KeyCode.RightArrow;
-                PlayRandomMoveSound();
+                SoundManager.instance.SFXMovePlay("", moveClips);
                 break;
             case ProtocolType.CONTROLLER_RIGHT_RELEASE:
                 downKeyCode = KeyCode.None;
@@ -297,43 +363,21 @@ public class Player : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
-{
-    if (other.gameObject.CompareTag("Ground") && !isFalled) // isFalled가 false일 때만 실행되도록 변경
     {
-        isFalled = true;
-        cameraShake.VibrateForTime(0.3f);
-        //rigid.isKinematic = true;
-
-        foreach (var childRigidbody in childRigidbodies)
+        if (other.gameObject.CompareTag("Ground") && !isFalled) // isFalled가 false일 때만 실행되도록 변경
         {
-            childRigidbody.isKinematic = false;
-            childRigidbody.AddForce(Vector3.down * 2f, ForceMode.Impulse);
-        }
-        this.transform.DOPunchPosition(Vector3.down, 0.02f, 10, 0.05f, false); // 5.22 추가
+            isFalled = true;
+            cameraShake.VibrateForTime(0.3f);
+            //rigid.isKinematic = true;
 
-        PlayRandomFallingSound(); // 소리 재생
-    }
-}
+            foreach (var childRigidbody in childRigidbodies)
+            {
+                childRigidbody.isKinematic = false;
+                childRigidbody.AddForce(Vector3.down * 2f, ForceMode.Impulse);
+            }
+            this.transform.DOPunchPosition(Vector3.down, 0.02f, 10, 0.05f, false); // 5.22 추가
 
-private void PlayRandomFallingSound()
-{
-    if (fallingSounds != null && fallingSounds.Length > 0)
-    {
-        Debug.Log("소리남");
-        int randomIndex = UnityEngine.Random.Range(0, fallingSounds.Length); 
-        fallingSounds[randomIndex]?.Play(); 
-    }
-}
-
-
-
-    private void PlayRandomMoveSound()
-    {
-        if (moveSounds != null && moveSounds.Length > 0)
-        {
-            Debug.Log("소리남");
-            int randomIndex = UnityEngine.Random.Range(0, moveSounds.Length); 
-            moveSounds[randomIndex]?.Play(); 
+            SoundManager.instance.SFXFallingPlay("", fallingClips);
         }
     }
 

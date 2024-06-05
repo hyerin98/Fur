@@ -24,14 +24,17 @@ Material:
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_ValidKeywords:
   - _EMISSION
+  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap:
-    RenderType: Opaque
-  disabledShaderPasses: []
+    RenderType: Transparent
+  disabledShaderPasses:
+  - DepthOnly
+  - SHADOWCASTER
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -129,7 +132,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DstBlend: 0
+    - _DstBlend: 10
     - _EnableExternalAlpha: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
@@ -156,7 +159,7 @@ Material:
     - _Smoothness: 0.232
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SrcBlend: 1
+    - _SrcBlend: 5
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -164,7 +167,7 @@ Material:
     - _StencilWriteMask: 255
     - _Steps: 3
     - _StpSmooth: 0
-    - _Surface: 0
+    - _Surface: 1
     - _UVSec: 0
     - _UseAoMap: 0
     - _UseColorMap: 0
@@ -175,7 +178,7 @@ Material:
     - _UseUIAlphaClip: 0
     - _WorkflowMode: 1
     - _ZTest: 0
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
     - _BaseColor: {r: 0.61960787, g: 0.07058824, b: 0.19607845, a: 1}
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}

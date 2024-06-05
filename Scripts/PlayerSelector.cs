@@ -4,7 +4,6 @@ using DG.Tweening;
 using IMFINE.Utils.JoyStream.Communicator;
 using UnityEngine;
 using System.Linq;
-using Unity.VisualScripting.Dependencies.Sqlite;
 //using IMFINE.Utils.JoyStream.Communicator.ext;
 
 public class PlayerSelector : MonoBehaviour
@@ -26,10 +25,11 @@ public class PlayerSelector : MonoBehaviour
     public bool idle = true;
     public bool isFurScene;
     public bool isLightScene;
-    public GameObject ground;
+    //public GameObject ground;
 
     [Header("Idle")]
     private Coroutine idleMotionCoroutine; // 5.24 - idle진행되다가 한명이라도 접속 시 idleMotion 중지시키는 코루틴 (테스트 많이 해봐야함)
+    private Coroutine fallingMotionCoroutine;
     private bool isIdleMotionRunning = false;
     public List<GameObject> idleFurs = new List<GameObject>(); // idle일때 움직이는 털 리스트 
     private Dictionary<GameObject, bool> furColorAssigned = new Dictionary<GameObject, bool>(); // fur의 색상 할당 상태를 추적
@@ -65,59 +65,36 @@ public class PlayerSelector : MonoBehaviour
         else
         {
             idle = true;
-            //StartCoroutine(CheckPlayerCount(15f));
-            //StartCoroutine(StartRandomIdleMotion(10f));
+            //StartCoroutine(StartRandomIdleMotion());
         }
     }
-
-    private IEnumerator CheckPlayerCount(float interval)
+    private IEnumerator StartRandomIdleMotion()
     {
-        while (true)
+        while (idle)
         {
-            yield return new WaitForSeconds(interval);
+            yield return new WaitForSeconds(5f);
 
             if (players.Count == 0 && idle)
             {
-                Debug.Log("플레이어가 없어서 다시 idle모드 발동");
+                int randomMotion = Random.Range(0, 2);
                 idle = true;
                 isIdleMotionRunning = false;
-                IdleMotion();
+                switch (randomMotion)
+                {
+                    case 0:
+                        Debug.Log("떨어지는 모션 발동");
+                        FallingMotion();
+                        break;
+                
+                    case 1:
+                        Debug.Log("훑는모션 발동");
+                        IdleMotion();
+                        break;
+                }
             }
-            else if (players.Count > 0)
-            {
-                idle = false;
-                Debug.Log("한명이라도 접속했기 때문에 idle모드 안댐");
-            }
+             yield return new WaitForSeconds(5f);
         }
     }
-
-    private IEnumerator StartRandomIdleMotion(float interval)
-{
-    while (true)
-    {
-        yield return new WaitForSeconds(interval);
-
-        if (players.Count == 0 && idle)
-        {
-            int randomMotion = Random.Range(0, 2); 
-            idle = true;
-            isIdleMotionRunning = false;
-            switch (randomMotion)
-            {
-                case 0:
-                    Debug.Log("떨어지는 모션 발동");
-                    FallingMotion();
-                    break;
-               
-                case 1:
-                    Debug.Log("훑는모션 발동");
-                    IdleMotion();
-                    break;
-            }
-        }
-    }
-}
-
 
     private void InitializeFurPositions()
     {
@@ -127,7 +104,6 @@ public class PlayerSelector : MonoBehaviour
             furPositions.Add(fur.transform.position); // 각 fur의 초기 위치를 저장 
         }
     }
-
 
     private void OnUserConnectEvent(ProtocolType protocolType, PlayerData playerData)
     {
@@ -218,6 +194,7 @@ public class PlayerSelector : MonoBehaviour
         if (isIdleMotionRunning) // idle모드가 진행되고 있는 상황이라면
         {
             StopCoroutine("AssignColorsWithDelay"); // idle모드 멈추기
+            StopCoroutine("fallingFur");
             isIdleMotionRunning = false; // idle모드 false
         }
 
@@ -226,6 +203,12 @@ public class PlayerSelector : MonoBehaviour
             StopCoroutine(idleMotionCoroutine);
             idleMotionCoroutine = null;
         }
+        if (fallingMotionCoroutine != null)
+        {
+            StopCoroutine(fallingMotionCoroutine);
+            fallingMotionCoroutine = null;
+        }
+
         if (!players.ContainsKey(playerData.conn_id))
         {
             playerData.color_id = ColorManager.instance.AssignUserColor();
@@ -323,10 +306,10 @@ public class PlayerSelector : MonoBehaviour
                 idle = false;
             }
             if (!isIdleMotionRunning) // 만약 idle모드가 진행중이 아니라면
-            {
-                IdleMotion(); // idle 모드 실행 
-                FallingMotion();
-            }
+        {
+            IdleMotion(); // idle 모드 실행 
+            FallingMotion();
+        }
         }
     }
 
@@ -337,8 +320,9 @@ public class PlayerSelector : MonoBehaviour
         {
             Player player = players[playerID];
             GameObject furObject = player.gameObject;
-
-            if (furObject != null)
+            player.isMove = false;
+            
+            if (furObject != null )
             {
                 int furIndex = furs.IndexOf(furObject);
                 Vector3 initialPosition = furPositions[furIndex];
@@ -362,7 +346,8 @@ public class PlayerSelector : MonoBehaviour
                 if (childLight != null && renderer != null && furRigidbody != null)
                 {
                     furRigidbody.isKinematic = false;
-                    StartCoroutine(DimLightIntensity(childLight, 5f));
+
+                    StartCoroutine(DimLightIntensity(childLight, 3.2f));
 
                     renderer.material.DOFade(0f, 5f).SetEase(ease);
                     Destroy(furObject, 5.5f);
@@ -380,63 +365,72 @@ public class PlayerSelector : MonoBehaviour
         }
     }
 
-
     public IEnumerator RespawnFur(Vector3 position)
-{
-    yield return new WaitForSeconds(3.0f);
-
-    if (furPrefab != null)
     {
-        GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
+        yield return new WaitForSeconds(3.0f);
 
-        string furName;
-        if (removedFurNames.Count > 0)
+        if (furPrefab != null)
         {
-            furName = removedFurNames.First();
-            removedFurNames.Remove(furName);
-        }
-        else
-        {
-            furName = "fur" + furCounter++;
-        }
-        newFur.name = furName;
-
-        furs.Add(newFur);
-        furPositions.Add(position);
-
-        Renderer furRenderer = newFur.GetComponent<Renderer>();
-        Light childLight = newFur.GetComponentInChildren<Light>();
-        if (furRenderer != null && childLight != null)
-        {
-            Color initialColor = furRenderer.material.color;
-            initialColor.a = 1f;
-            furRenderer.material.color = initialColor;
-
-            Color startColor = new Color(0.5283019f, 0.5208259f, 0.5208259f);
-            Color targetColor = new Color(0f, 0f, 0f, 0f);
-            float duration = 2f;
-            float elapsedTime = 0f;
-
-            while (elapsedTime < duration)
+            GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
+            Player player = newFur.GetComponent<Player>();
+            
+            if(player.isSmall && player != null)
             {
-                elapsedTime += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsedTime / duration);
-                childLight.color = Color.Lerp(startColor, targetColor, t);
-                yield return null;
+                newFur.transform.localScale = new Vector3(0.2f, 0.25f, 0.2f);
             }
-        }
+            else{
+                newFur.transform.localScale = new Vector3(0f, newFur.transform.localScale.y, newFur.transform.localScale.z);
+                newFur.transform.DOScaleX(0.3f, 1f).SetEase(ease);
+            }
 
-        idleFurs = idleFurs.Where(fur => fur != null).ToList();
-        idleFurs.Add(newFur);
-        furColorAssigned[newFur] = false;
+            string furName;
+            if (removedFurNames.Count > 0)
+            {
+                furName = removedFurNames.First();
+                removedFurNames.Remove(furName);
+            }
+            else
+            {
+                furName = "fur" + furCounter++;
+            }
+            newFur.name = furName;
+
+            furs.Add(newFur);
+            furPositions.Add(position);
+
+            Renderer furRenderer = newFur.GetComponent<Renderer>();
+            Light childLight = newFur.GetComponentInChildren<Light>();
+            if (furRenderer != null && childLight != null)
+            {
+                Color initialColor = furRenderer.material.color;
+                initialColor.a = 1f;
+                furRenderer.material.color = initialColor;
+
+                Color startColor = new Color(0.5283019f, 0.5208259f, 0.5208259f);
+                Color targetColor = new Color(0f, 0f, 0f, 0f);
+                float duration = 2.5f;
+                float elapsedTime = 0f;
+
+                while (elapsedTime < duration)
+                {
+                    elapsedTime += Time.deltaTime;
+                    float t = Mathf.Clamp01(elapsedTime / duration);
+                    childLight.color = Color.Lerp(startColor, targetColor, t);
+                    yield return null;
+                }
+            }
+
+            idleFurs = idleFurs.Where(fur => fur != null).ToList();
+            idleFurs.Add(newFur);
+            furColorAssigned[newFur] = false;
+        }
     }
-}
 
     public void IdleMotion()
     {
-        if (idleMotionCoroutine != null)
+        if (idleMotionCoroutine != null) // 만약 idlemotion코루틴이 돌고있다면
         {
-            StopCoroutine(idleMotionCoroutine);
+            StopCoroutine(idleMotionCoroutine); // idlemotion코루틴 정지
             idleMotionCoroutine = null;
         }
 
@@ -451,21 +445,22 @@ public class PlayerSelector : MonoBehaviour
         //     StartCoroutine(AssignColorsWithDelay());
         // }
     }
-    
-    public void FallingMotion()
-    {
-         if (idleMotionCoroutine != null)
-        {
-            StopCoroutine(idleMotionCoroutine);
-            idleMotionCoroutine = null;
-        }
 
-        if (idle && !isIdleMotionRunning)
-        {
-            isIdleMotionRunning = true;
-            idleMotionCoroutine = StartCoroutine(fallingFur());
-        }
+    public void FallingMotion()
+{
+    if (fallingMotionCoroutine != null)
+    {
+        StopCoroutine(fallingMotionCoroutine);
+        fallingMotionCoroutine = null;
     }
+
+    if (idle && !isIdleMotionRunning)
+    {
+        isIdleMotionRunning = true;
+        fallingMotionCoroutine = StartCoroutine(fallingFur());
+    }
+}
+
 
     private IEnumerator AssignColorsWithDelay()
     {
@@ -577,21 +572,24 @@ public class PlayerSelector : MonoBehaviour
                 {
                     if (player.CompareTag("Fur1"))
                     {
-                        player.ApplyForceToHingeJoints(transform.right, 2f);
+                        player.ApplyForceToHingeJoints(transform.right, 2.5f);
                     }
                     else if (player.CompareTag("Fur2"))
                     {
-                        player.ApplyForceToHingeJoints(-transform.right, 2f);
+                        player.ApplyForceToHingeJoints(-transform.right, 2.5f);
                     }
                     else if (player.CompareTag("Fur3"))
                     {
-                        player.ApplyForceToHingeJoints(transform.right, 2f);
+                        player.ApplyForceToHingeJoints(transform.right, 2.5f);
                     }
                     else if (player.CompareTag("Fur4"))
                     {
-                        player.ApplyForceToHingeJoints(-transform.right, 2f);
+                        player.ApplyForceToHingeJoints(-transform.right, 2.5f);
                     }
-
+                    else if (player.CompareTag("Fur5"))
+                    {
+                        player.ApplyForceToHingeJoints(transform.right, 2.5f);
+                    }
                 }
                 else
                 {
@@ -622,17 +620,6 @@ public class PlayerSelector : MonoBehaviour
         }
     }
 
-
-
-    private IEnumerator MakeFurEligibleForColor(GameObject fur)
-{
-    yield return new WaitForSeconds(5.0f); // 5초 후에 할당 가능
-    if (fur != null)
-    {
-        furColorAssigned[fur] = true;
-    }
-}
-
     private IEnumerator DimLightIntensity(Light light, float duration)
     {
         float startIntensity = light.intensity;
@@ -640,6 +627,7 @@ public class PlayerSelector : MonoBehaviour
 
         while (timeElapsed < duration)
         {
+
             float t = timeElapsed / duration;
 
             light.intensity = Mathf.Lerp(startIntensity, 0f, t);
@@ -647,60 +635,91 @@ public class PlayerSelector : MonoBehaviour
             timeElapsed += Time.deltaTime;
 
             yield return null;
+
         }
         light.intensity = 0f;
     }
 
     private IEnumerator fallingFur()
     {
-        yield return new WaitForSeconds(1f);
-
-        List<GameObject> selectedFurs = new List<GameObject>();
-        int furCount = Mathf.Min(10, idleFurs.Count);
-
-        while (selectedFurs.Count < furCount)
+        if (idle)
         {
-            GameObject randomFur = idleFurs[Random.Range(0, idleFurs.Count)];
-            if (!selectedFurs.Contains(randomFur))
+            //yield return new WaitForSeconds(1f);
+            List<GameObject> selectedFurs = new List<GameObject>();
+            int furCount = Mathf.Min(50, idleFurs.Count);
+
+            while (selectedFurs.Count < furCount)
             {
-                selectedFurs.Add(randomFur);
-            }
-        }
-        foreach (GameObject fur in selectedFurs)
-        {
-            if (fur != null)
-            {
-                fur.SetActive(false);
-
-                GameObject fakeFur = Instantiate(fake_furPrefab, fur.transform.position, fur.transform.rotation);
-                Rigidbody furRigidbody = fakeFur.GetComponent<Rigidbody>();
-                Renderer renderer = fakeFur.GetComponent<Renderer>();
-                Light childLight = fakeFur.GetComponentInChildren<Light>();
-
-                childLight.color = new Color(0.7058824f, 0.1686274f, 0.317647f);
-
-                if (furRigidbody != null && renderer != null && childLight != null)
+                GameObject randomFur = idleFurs[Random.Range(0, idleFurs.Count)];
+                if (!selectedFurs.Contains(randomFur))
                 {
+                    selectedFurs.Add(randomFur);
+                }
+            }
+            foreach (GameObject fur in selectedFurs)
+            {
+                if (fur != null)
+                {
+                    fur.SetActive(false);
+
+                    GameObject fakeFur = Instantiate(fake_furPrefab, fur.transform.position, fur.transform.rotation);
+                    Rigidbody furRigidbody = fakeFur.GetComponent<Rigidbody>();
+                    Renderer renderer = fakeFur.GetComponent<Renderer>();
+                    Light childLight = fakeFur.GetComponentInChildren<Light>();
+                    Material material = renderer.material;
+
+                    List<Color> randomFallingColor = new List<Color> { new Color(0.2156862f, 0.1058823f, 0.345098f),
+        new Color(0.2980392f, 0.2078431f, 0.4588234f),
+        new Color(0.3568628f, 0.2941176f, 0.5411765f),
+        new Color(0.4705882f, 0.345098f, 0.6509804f),new Color(1f, 0.7333333f, 0.3607843f),
+        new Color(1f, 0.6078432f, 0.3137255f),
+        new Color(0.8862745f, 0.3686274f, 0.2431372f),
+        new Color(0.7764706f, 0.2392156f, 0.1843137f),new Color(0.02352941f, 0.1607843f, 0.145098f),
+        new Color(0.01568628f, 0.2901961f, 0.2588235f),
+        new Color(0.227451f, 0.5686274f, 0.5333333f),new Color(0.03921569f, 0.1490196f, 0.2784314f),
+        new Color(0.07843138f, 0.2588235f, 0.4470588f),
+        new Color(0.1254902f, 0.3215686f, 0.5843138f),
+        new Color(0.172549f, 0.4549019f, 0.7019608f),new Color(0.2588235f, 0.01960784f, 0.08627448f),
+         new Color(0.4901961f, 0.09803919f, 0.2078431f),
+         new Color(0.7058824f, 0.1686274f, 0.317647f),
+         new Color(0.859f, 0.2431372f, 0.418f)
+                    };
+                     Color initialColor = material.color;
+                    
+                    childLight.color = randomFallingColor[Random.Range(0, randomFallingColor.Count)];
+
+                    if (furRigidbody != null && renderer != null && childLight != null)
+                    {
                     furRigidbody.isKinematic = false;
-
-                    renderer.material.DOFade(0f, 2f).SetEase(Ease.Linear);
-                    ground.SetActive(false);
-                    StartCoroutine(DimLightIntensity(childLight, 3f));
+                    childLight.intensity =30f;
+                    yield return new WaitForSeconds(0.1f);  
+                    renderer.material.DOFade(0f, 2.8f).SetEase(Ease.Linear);
+                        DOVirtual.Color(childLight.color, initialColor, 2.8f, value =>
+                {
+                    childLight.color = value;
+                });
+                        StartCoroutine(DestroyFakeFur(fakeFur, fur, 2.8f));
+                    
                     yield return new WaitForSeconds(1f);
+                    //childLight.intensity = 10f;
 
-                    StartCoroutine(DestroyFakeFur(fakeFur, fur, 3f));
+                    }
                 }
             }
         }
     }
 
-    private IEnumerator DestroyFakeFur(GameObject fakeFur, GameObject originalFur, float delay)
+    public IEnumerator DestroyFakeFur(GameObject fakeFur, GameObject originalFur, float delay)
     {
         yield return new WaitForSeconds(delay);
         Destroy(fakeFur);
+
         originalFur.SetActive(true);
-        ground.SetActive(true);
+
+        originalFur.transform.localScale = new Vector3(0f, originalFur.transform.localScale.y, originalFur.transform.localScale.z);
+        originalFur.transform.DOScaleX(0.3f, 1f).SetEase(ease);
     }
+
 
 
     void Update()
