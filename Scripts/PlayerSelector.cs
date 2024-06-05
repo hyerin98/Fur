@@ -321,14 +321,16 @@ public class PlayerSelector : MonoBehaviour
             Player player = players[playerID];
             GameObject furObject = player.gameObject;
             player.isMove = false;
-            
-            if (furObject != null )
+
+            if (furObject != null)
             {
                 int furIndex = furs.IndexOf(furObject);
                 Vector3 initialPosition = furPositions[furIndex];
 
-                // fur의 이름을 저장
+
                 removedFurNames.Add(furObject.name);
+
+
 
                 furs.RemoveAt(furIndex);
                 furPositions.RemoveAt(furIndex);
@@ -373,17 +375,19 @@ public class PlayerSelector : MonoBehaviour
         {
             GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
             Player player = newFur.GetComponent<Player>();
-            
-            if(player.isSmall && player != null)
+
+            if (player.isSmall && player != null) // 6.5 작아졌을때는 작은 오브젝트가 생성되도록 수정필
             {
                 newFur.transform.localScale = new Vector3(0.2f, 0.25f, 0.2f);
             }
-            else{
+            else
+            {
                 newFur.transform.localScale = new Vector3(0f, newFur.transform.localScale.y, newFur.transform.localScale.z);
                 newFur.transform.DOScaleX(0.3f, 1f).SetEase(ease);
             }
 
             string furName;
+
             if (removedFurNames.Count > 0)
             {
                 furName = removedFurNames.First();
@@ -394,6 +398,8 @@ public class PlayerSelector : MonoBehaviour
                 furName = "fur" + furCounter++;
             }
             newFur.name = furName;
+
+
 
             furs.Add(newFur);
             furPositions.Add(position);
