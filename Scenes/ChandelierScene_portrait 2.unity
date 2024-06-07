@@ -5372,6 +5372,7 @@ MonoBehaviour:
   idle: 1
   isFurScene: 0
   isLightScene: 1
+  ground: {fileID: 2032176890}
   idleFurs:
   - {fileID: 1186802101}
   - {fileID: 914647474}
