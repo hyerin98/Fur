@@ -34,7 +34,6 @@ public class SoundManager : MonoBehaviour
 
             Destroy(fallingSound, clip.length);
         }
-
     }
 
     public void SFXMovePlay(string sfxName, AudioClip[] clips)
@@ -51,7 +50,5 @@ public class SoundManager : MonoBehaviour
 
             Destroy(moveSound, clip.length);
         }
-
     }
-
 }

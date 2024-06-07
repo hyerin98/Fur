@@ -141,7 +141,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1451679523206233168}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8, y: 2.5, z: 0}
+  m_LocalPosition: {x: -7.5, y: 2.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -330,7 +330,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.9961767, z: -9.773745e-15}
+  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.99617934, z: -9.773738e-15}
   m_UseSpring: 0
   m_Spring:
     spring: 0
@@ -577,7 +577,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00000012945708, y: 1.0125096, z: -9.773744e-15}
+  m_ConnectedAnchor: {x: 0.00000012945699, y: 1.0125103, z: 0.00000047683716}
   m_UseSpring: 0
   m_Spring:
     spring: 10
@@ -700,7 +700,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00000012945708, y: 0.8799976, z: 0.0000009536743}
+  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.87999976, z: -9.77374e-15}
   m_UseSpring: 0
   m_Spring:
     spring: 10
@@ -862,18 +862,56 @@ MonoBehaviour:
   forceMagnitude: 50
   hingeJoints: []
   springJoints: []
-  fallingClips:
-  - {fileID: 8300000, guid: fe69e333ac1cb7b438b425bd92520b8c, type: 3}
-  - {fileID: 8300000, guid: 973bc518f98edf045bb76fbe8850a939, type: 3}
-  - {fileID: 8300000, guid: 64e174cba6dd95f4d9a481957984dcc3, type: 3}
-  - {fileID: 8300000, guid: c0126700b6aff6e4f8fef3b2e8169f25, type: 3}
-  - {fileID: 8300000, guid: d44846f93f288014484bf9db6c1a96c2, type: 3}
-  - {fileID: 8300000, guid: 942d098beefbb194fb5d49d6e0bec846, type: 3}
-  - {fileID: 8300000, guid: 2602f8daa02185c4ba4bec64dd13a0a5, type: 3}
-  - {fileID: 8300000, guid: ac580367517e2ba42a4d38343eeaa193, type: 3}
-  moveClips:
+  lightFallingClips:
+  - {fileID: 8300000, guid: ffa0d9812c724fa449bbdc2a920cd31c, type: 3}
+  - {fileID: 8300000, guid: 0e105a1dd33926547a91feb20901c644, type: 3}
+  - {fileID: 8300000, guid: cb1d81f8e67951749b0d2d21fb0d1110, type: 3}
+  - {fileID: 8300000, guid: fac7cc2c67061b544ae18da006ac3bbc, type: 3}
+  - {fileID: 8300000, guid: 7fa597b15497ac04d92bfe0bde8ddb15, type: 3}
+  - {fileID: 8300000, guid: b612a7c7f43639045a858b533e9c11be, type: 3}
+  - {fileID: 8300000, guid: a01152dc30ce2f6499388a09d8395a0b, type: 3}
+  - {fileID: 8300000, guid: ebd891871174b3444a7cb5c3ce3c4229, type: 3}
+  - {fileID: 8300000, guid: dc5e31dcd855d9d4faf4284ba5452569, type: 3}
+  - {fileID: 8300000, guid: fced90a72d8578e43881bb8aacc38b2a, type: 3}
+  - {fileID: 8300000, guid: 352856b846d9ec34b9759818cd0fd659, type: 3}
+  - {fileID: 8300000, guid: d7858289a8a92b84a96eede938f6d4bb, type: 3}
+  - {fileID: 8300000, guid: 3490a350b7523b140ae542ef99fab753, type: 3}
+  - {fileID: 8300000, guid: 87a52cfe02efa75429edf2169129c1c9, type: 3}
+  - {fileID: 8300000, guid: 4c15844be6ddbfd48a12433531398fd3, type: 3}
+  - {fileID: 8300000, guid: 944277e0947c2d84d9dbbcc7ca8b5f90, type: 3}
+  - {fileID: 8300000, guid: f5ecf52ad9033644cb9430aec21ae19a, type: 3}
+  - {fileID: 8300000, guid: b38a2a6231b2f54468af0c2b2bdf2aa3, type: 3}
+  - {fileID: 8300000, guid: e2c1737e59fb7384684dd3d42c144fb4, type: 3}
+  - {fileID: 8300000, guid: 1e525a6795deaca49b122ee69e39483e, type: 3}
+  - {fileID: 8300000, guid: 6d53889fd0b85e04297e4c6a6f6f8d5e, type: 3}
+  - {fileID: 8300000, guid: 1586c9b593c11eb479f687bb9d1d0660, type: 3}
+  - {fileID: 8300000, guid: 5d14aff433c52dd4c9164204877d8911, type: 3}
+  - {fileID: 8300000, guid: 3cdf4a21783d60642856184e934ab17a, type: 3}
+  - {fileID: 8300000, guid: 92fe6b2d7f4f73d43b9951283dc7091b, type: 3}
+  - {fileID: 8300000, guid: d881d768b1d35034fbabc12fe0933805, type: 3}
+  - {fileID: 8300000, guid: d6b429791cff04b42b43de492b40a3be, type: 3}
+  - {fileID: 8300000, guid: cdd83e897d1df1242aa713299d0df369, type: 3}
+  - {fileID: 8300000, guid: 13b6e49e9f4ece54ab4cdc38bbc49cd4, type: 3}
+  - {fileID: 8300000, guid: c2e3d923acd033a469c212534bcd6cc7, type: 3}
+  - {fileID: 8300000, guid: 2931adbdc1459af41ad8c5fe5c4cfbcc, type: 3}
+  - {fileID: 8300000, guid: 7c0dc97ac6ecc984f85ce30686dbce3d, type: 3}
+  - {fileID: 8300000, guid: 2552426ec6a6f23488bcc4add74733da, type: 3}
+  - {fileID: 8300000, guid: a99354b655af6df43a2cc01ca73337f2, type: 3}
+  - {fileID: 8300000, guid: 1d00db9cfe149e84a9fcad566196653f, type: 3}
+  - {fileID: 8300000, guid: 24d27991e89c8a5489eb67edaf3eb396, type: 3}
+  - {fileID: 8300000, guid: 071a05cf9cb0e954b936fd94acf590bb, type: 3}
+  - {fileID: 8300000, guid: 3a4e20dbf568c9d43934671945860293, type: 3}
+  lightMoveClips:
   - {fileID: 8300000, guid: 5af941200dc71264d8b63a7c18c43bba, type: 3}
   - {fileID: 8300000, guid: 1d15a5836b30c0848b8b9ce361312f47, type: 3}
+  furFallingClips:
+  - {fileID: 8300000, guid: 586d2ebd2b8bf6b43a43aec77f725a71, type: 3}
+  - {fileID: 8300000, guid: 7b5b6172db138954893f26bc0d5a4529, type: 3}
+  - {fileID: 8300000, guid: 0769e3ed92c2dad4aa6d7e40313f8065, type: 3}
+  - {fileID: 8300000, guid: 6c09af8fafd083e4bb2ee6140fc70954, type: 3}
+  - {fileID: 8300000, guid: 0445be52465f3354abe928fc0d684cec, type: 3}
+  furMoveClips:
+  - {fileID: 8300000, guid: 32c6246e949b6db488acd25eef55283a, type: 3}
   ease: 19
 --- !u!1 &2064295694412291460 stripped
 GameObject:
@@ -1346,7 +1384,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00000012945702, y: 3.6600008, z: -9.773737e-15}
+  m_ConnectedAnchor: {x: 0.00000012945702, y: 0.96351767, z: -9.773735e-15}
   m_UseSpring: 0
   m_Spring:
     spring: 10

@@ -42,8 +42,10 @@ public class Player : MonoBehaviour
     CameraShake cameraShake;
 
     [Header("Sound")]
-    public AudioClip[] fallingClips;
-    public AudioClip[] moveClips;
+    public AudioClip[] lightFallingClips;
+    public AudioClip[] lightMoveClips;
+    public AudioClip[] furFallingClips;
+    public AudioClip[] furMoveClips;
 
     [Header("DOTween")]
     public Ease ease;
@@ -175,52 +177,10 @@ public class Player : MonoBehaviour
         Transform transform = this.transform;
         foreach (SpringJoint springJoint in springJoints)
         {
-            if (springJoint.name == "longfur")
-            {
-
-                Transform furTransform = springJoint.transform.Find("longfur");
-                if (furTransform != null)
-                {
-                    StartCoroutine(AnimateFur(furTransform));
-                }
-            }
-            PushHingeJoint("fur","push",20f);
+            PushHingeJoint("fur", "push", 20f);
             StartCoroutine(RevertPushColorDelay(playerLight, initialColor, 1f, 1f));
         }
     }
-    IEnumerator AnimateFur(Transform furTransform)
-    {
-        Vector3 originalPosition = furTransform.localPosition;
-        Vector3 targetPosition = originalPosition * 4;
-        float duration = 1.0f; // 애니메이션이 걸리는 시간
-        float elapsedTime = 0f;
-
-        // 원래 위치에서 목표 위치로 이동
-        while (elapsedTime < duration)
-        {
-            furTransform.localPosition = Vector3.Lerp(originalPosition, targetPosition, (elapsedTime / duration));
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        furTransform.localPosition = targetPosition;
-
-        // 잠시 대기
-        yield return new WaitForSeconds(0.5f);
-
-        elapsedTime = 0f;
-
-        // 목표 위치에서 원래 위치로 이동
-        while (elapsedTime < duration)
-        {
-            furTransform.localPosition = Vector3.Lerp(targetPosition, originalPosition, (elapsedTime / duration));
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        furTransform.localPosition = originalPosition;
-    }
-
 
     private IEnumerator RevertPushColorDelay(Light playerLight, Color initialColor, float delay, float duration)
     {
@@ -232,25 +192,6 @@ public class Player : MonoBehaviour
                 playerLight.color = value;
             });
         }
-    }
-
-    
-
-    void idleMotion2()
-    {
-        PushHingeJoint("fur","push",80f);
-        playerLight.color = new Color(1, 1, 1,1);
-    }
-    
-    void idleMotion3()
-    {
-        PushHingeJoint("fur","push",80f);
-        playerLight.color = new Color(1, 1, 1,1);
-    }
-    void idleMotion4()
-    {
-        PushHingeJoint("fur","push",80f);
-        playerLight.color = new Color(1, 1, 1,1);
     }
 
     public void PushHingeJoint(string jointName, string action, float pushForce)
@@ -330,28 +271,40 @@ public class Player : MonoBehaviour
         {
             case ProtocolType.CONTROLLER_UP_PRESS:
                 downKeyCode = KeyCode.UpArrow;
-                SoundManager.instance.SFXMovePlay("", moveClips);
+                if (lightScene)
+                    SoundManager.instance.SFXMovePlay("", lightMoveClips);
+                else if (furScene)
+                    SoundManager.instance.SFXMovePlay("", furMoveClips);
                 break;
             case ProtocolType.CONTROLLER_UP_RELEASE:
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_DOWN_PRESS:
                 downKeyCode = KeyCode.DownArrow;
-                SoundManager.instance.SFXMovePlay("", moveClips);
+                if (lightScene)
+                    SoundManager.instance.SFXMovePlay("", lightMoveClips);
+                else if (furScene)
+                    SoundManager.instance.SFXMovePlay("", furMoveClips);
                 break;
             case ProtocolType.CONTROLLER_DOWN_RELEASE:
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_LEFT_PRESS:
                 downKeyCode = KeyCode.LeftArrow;
-                SoundManager.instance.SFXMovePlay("", moveClips);
+                if (lightScene)
+                    SoundManager.instance.SFXMovePlay("", lightMoveClips);
+                else if (furScene)
+                    SoundManager.instance.SFXMovePlay("", furMoveClips);
                 break;
             case ProtocolType.CONTROLLER_LEFT_RELEASE:
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_RIGHT_PRESS:
                 downKeyCode = KeyCode.RightArrow;
-                SoundManager.instance.SFXMovePlay("", moveClips);
+                if (lightScene)
+                    SoundManager.instance.SFXMovePlay("", lightMoveClips);
+                else if (furScene)
+                    SoundManager.instance.SFXMovePlay("", furMoveClips);
                 break;
             case ProtocolType.CONTROLLER_RIGHT_RELEASE:
                 downKeyCode = KeyCode.None;
@@ -367,7 +320,7 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("Ground") && !isFalled) // isFalled가 false일 때만 실행되도록 변경
         {
             isFalled = true;
-            cameraShake.VibrateForTime(0.3f);
+            //cameraShake.VibrateForTime(0.3f);
             //rigid.isKinematic = true;
 
             foreach (var childRigidbody in childRigidbodies)
@@ -375,9 +328,13 @@ public class Player : MonoBehaviour
                 childRigidbody.isKinematic = false;
                 childRigidbody.AddForce(Vector3.down * 2f, ForceMode.Impulse);
             }
-            this.transform.DOPunchPosition(Vector3.down, 0.02f, 10, 0.05f, false); // 5.22 추가
+           // this.transform.DOPunchPosition(Vector3.down, 0.02f, 10, 0.05f, false); // 5.22 추가
 
-            SoundManager.instance.SFXFallingPlay("", fallingClips);
+            if(lightScene)
+            {
+                SoundManager.instance.SFXFallingPlay("", lightFallingClips);
+            }
+            
         }
     }
 

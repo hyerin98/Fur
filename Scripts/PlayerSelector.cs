@@ -327,10 +327,7 @@ public class PlayerSelector : MonoBehaviour
                 int furIndex = furs.IndexOf(furObject);
                 Vector3 initialPosition = furPositions[furIndex];
 
-
                 removedFurNames.Add(furObject.name);
-
-
 
                 furs.RemoveAt(furIndex);
                 furPositions.RemoveAt(furIndex);
@@ -368,102 +365,80 @@ public class PlayerSelector : MonoBehaviour
     }
 
     public IEnumerator RespawnFur(Vector3 position)
-    {
-        yield return new WaitForSeconds(3.0f);
-
-        if (furPrefab != null)
-        {
-            GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
-            Player player = newFur.GetComponent<Player>();
-
-            if (player.isSmall && player != null) // 6.5 작아졌을때는 작은 오브젝트가 생성되도록 수정필
-            {
-                newFur.transform.localScale = new Vector3(0.2f, 0.25f, 0.2f);
-            }
-            else
-            {
-                newFur.transform.localScale = new Vector3(0f, newFur.transform.localScale.y, newFur.transform.localScale.z);
-                newFur.transform.DOScaleX(0.3f, 1f).SetEase(ease);
-            }
-
-            string furName;
-
-            if (removedFurNames.Count > 0)
-            {
-                furName = removedFurNames.First();
-                removedFurNames.Remove(furName);
-            }
-            else
-            {
-                furName = "fur" + furCounter++;
-            }
-            newFur.name = furName;
-
-
-
-            furs.Add(newFur);
-            furPositions.Add(position);
-
-            Renderer furRenderer = newFur.GetComponent<Renderer>();
-            Light childLight = newFur.GetComponentInChildren<Light>();
-            if (furRenderer != null && childLight != null)
-            {
-                Color initialColor = furRenderer.material.color;
-                initialColor.a = 1f;
-                furRenderer.material.color = initialColor;
-
-                Color startColor = new Color(0.5283019f, 0.5208259f, 0.5208259f);
-                Color targetColor = new Color(0f, 0f, 0f, 0f);
-                float duration = 2.5f;
-                float elapsedTime = 0f;
-
-                while (elapsedTime < duration)
-                {
-                    elapsedTime += Time.deltaTime;
-                    float t = Mathf.Clamp01(elapsedTime / duration);
-                    childLight.color = Color.Lerp(startColor, targetColor, t);
-                    yield return null;
-                }
-            }
-
-            idleFurs = idleFurs.Where(fur => fur != null).ToList();
-            idleFurs.Add(newFur);
-            furColorAssigned[newFur] = false;
-        }
-    }
-
-    public void IdleMotion()
-    {
-        if (idleMotionCoroutine != null) // 만약 idlemotion코루틴이 돌고있다면
-        {
-            StopCoroutine(idleMotionCoroutine); // idlemotion코루틴 정지
-            idleMotionCoroutine = null;
-        }
-
-        if (idle && !isIdleMotionRunning)
-        {
-            isIdleMotionRunning = true;
-            idleMotionCoroutine = StartCoroutine(AssignColorsWithDelay());
-        }
-
-        // if(idle)
-        // {
-        //     StartCoroutine(AssignColorsWithDelay());
-        // }
-    }
-
-    public void FallingMotion()
 {
-    if (fallingMotionCoroutine != null)
-    {
-        StopCoroutine(fallingMotionCoroutine);
-        fallingMotionCoroutine = null;
-    }
+    yield return new WaitForSeconds(3.0f);
 
-    if (idle && !isIdleMotionRunning)
+    if (furPrefab != null)
     {
-        isIdleMotionRunning = true;
-        fallingMotionCoroutine = StartCoroutine(fallingFur());
+        GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
+        Player player = newFur.GetComponent<Player>();
+
+        if (player.isSmall && player != null) // 6.5 작아졌을때는 작은 오브젝트가 생성되도록 수정필
+        {
+            newFur.transform.localScale = new Vector3(0.2f, 0.25f, 0.2f);
+        }
+        else
+        {
+            newFur.transform.localScale = new Vector3(newFur.transform.localScale.y, 0.1f, newFur.transform.localScale.z);
+            newFur.transform.DOScaleY(0.35f, 3f).SetEase(ease);
+        }
+
+        string furName;
+
+        if (removedFurNames.Count > 0)
+        {
+            furName = removedFurNames.First();
+            removedFurNames.Remove(furName);
+        }
+        else
+        {
+            furName = "fur" + furCounter++;
+        }
+        newFur.name = furName;
+        furs.Add(newFur);
+        furPositions.Add(position);
+
+        Renderer furRenderer = newFur.GetComponent<Renderer>();
+        Light childLight = newFur.GetComponentInChildren<Light>();
+        if (furRenderer != null && childLight != null)
+        {
+            Color initialColor = furRenderer.material.color;
+            initialColor.a = 1f;
+            furRenderer.material.color = initialColor;
+
+            Color startColor = new Color(0.5283019f, 0.5208259f, 0.5208259f);
+            Color targetColor = new Color(0f, 0f, 0f, 0f);
+            float duration = 2.5f;
+            float elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / duration);
+                childLight.color = Color.Lerp(startColor, targetColor, t);
+                yield return null;
+            }
+        }
+
+        idleFurs = idleFurs.Where(fur => fur != null).ToList();
+        idleFurs.Add(newFur);
+        furColorAssigned[newFur] = false;
+
+        // furs 리스트를 이름 숫자 순으로 정렬
+        furs.Sort((fur1, fur2) =>
+        {
+            int num1 = int.Parse(fur1.name.Replace("fur", ""));
+            int num2 = int.Parse(fur2.name.Replace("fur", ""));
+            return num1.CompareTo(num2);
+        });
+
+        // idleFurs 리스트도 이름 숫자 순으로 정렬
+        idleFurs.Sort((fur1, fur2) =>
+        {
+            int num1 = int.Parse(fur1.name.Replace("fur", ""));
+            int num2 = int.Parse(fur2.name.Replace("fur", ""));
+            return num1.CompareTo(num2);
+        });
     }
 }
 
@@ -472,16 +447,16 @@ public class PlayerSelector : MonoBehaviour
     {
         // 삭제된 fur를 제외하고 남은 fur들만 추출
         if (idle)
-        {
-            List<GameObject> remainingFurs = idleFurs.Where(fur => !removedFurNames.Contains(fur.name)).ToList();
+    {
+        List<GameObject> remainingFurs = idleFurs.Where(fur => !removedFurNames.Contains(fur.name)).ToList();
 
-            // fur 이름 숫자 순으로 정렬
-            remainingFurs.Sort((fur1, fur2) =>
-            {
-                int num1 = int.Parse(fur1.name.Replace("fur", ""));
-                int num2 = int.Parse(fur2.name.Replace("fur", ""));
-                return num1.CompareTo(num2);
-            });
+        // fur 이름 숫자 순으로 정렬
+        remainingFurs.Sort((fur1, fur2) =>
+        {
+            int num1 = int.Parse(fur1.name.Replace("fur", ""));
+            int num2 = int.Parse(fur2.name.Replace("fur", ""));
+            return num1.CompareTo(num2);
+        });
 
             // 피도타기할 때 조화로운 같은 색 계열 -> 5.27 더 조화롭게 수정필
             List<Color> redColors = new List<Color>
@@ -559,15 +534,16 @@ public class PlayerSelector : MonoBehaviour
 
                     DOVirtual.Color(material.color, targetColor, 1f, value =>
                     {
+                        
                         material.color = value;
                     });
                     DOVirtual.Color(childLight.color, targetColor, 1f, value =>
                     {
                         childLight.color = value;
-                        childLight.transform.position = new Vector3(childLight.transform.position.x, 4f, childLight.transform.position.z);
+                        //childLight.transform.position = new Vector3(childLight.transform.position.x, 4f, childLight.transform.position.z);
                     });
 
-                    StartCoroutine(RevertColorAfterDelay(material, childLight, initialColor, 1.2f, 1.2f));
+                    StartCoroutine(RevertColorAfterDelay(material, childLight, initialColor, 1.2f, 2f));
                 }
                 else
                 {
@@ -626,6 +602,41 @@ public class PlayerSelector : MonoBehaviour
         }
     }
 
+    public void IdleMotion()
+    {
+        if (idleMotionCoroutine != null) // 만약 idlemotion코루틴이 돌고있다면
+        {
+            StopCoroutine(idleMotionCoroutine); // idlemotion코루틴 정지
+            idleMotionCoroutine = null;
+        }
+
+        if (idle && !isIdleMotionRunning)
+        {
+            isIdleMotionRunning = true;
+            idleMotionCoroutine = StartCoroutine(AssignColorsWithDelay());
+        }
+
+        // if(idle)
+        // {
+        //     StartCoroutine(AssignColorsWithDelay());
+        // }
+    }
+
+    public void FallingMotion()
+{
+    if (fallingMotionCoroutine != null)
+    {
+        StopCoroutine(fallingMotionCoroutine);
+        fallingMotionCoroutine = null;
+    }
+
+    if (idle && !isIdleMotionRunning)
+    {
+        isIdleMotionRunning = true;
+        fallingMotionCoroutine = StartCoroutine(fallingFur());
+    }
+}
+
     private IEnumerator DimLightIntensity(Light light, float duration)
     {
         float startIntensity = light.intensity;
@@ -652,7 +663,7 @@ public class PlayerSelector : MonoBehaviour
         {
             //yield return new WaitForSeconds(1f);
             List<GameObject> selectedFurs = new List<GameObject>();
-            int furCount = Mathf.Min(50, idleFurs.Count);
+            int furCount = Mathf.Min(5, idleFurs.Count);
 
             while (selectedFurs.Count < furCount)
             {
@@ -690,24 +701,24 @@ public class PlayerSelector : MonoBehaviour
          new Color(0.7058824f, 0.1686274f, 0.317647f),
          new Color(0.859f, 0.2431372f, 0.418f)
                     };
-                     Color initialColor = material.color;
-                    
+                    Color initialColor = material.color;
+
                     childLight.color = randomFallingColor[Random.Range(0, randomFallingColor.Count)];
 
                     if (furRigidbody != null && renderer != null && childLight != null)
                     {
-                    furRigidbody.isKinematic = false;
-                    childLight.intensity =30f;
-                    yield return new WaitForSeconds(0.1f);  
-                    renderer.material.DOFade(0f, 2.8f).SetEase(Ease.Linear);
-                        DOVirtual.Color(childLight.color, initialColor, 2.8f, value =>
+                        furRigidbody.isKinematic = false;
+                        childLight.intensity = 30f;
+                        yield return new WaitForSeconds(0.1f);
+                        renderer.material.DOFade(0f, 3f).SetEase(Ease.Linear);
+                        DOVirtual.Color(childLight.color, initialColor, 3f, value =>
                 {
                     childLight.color = value;
                 });
-                        StartCoroutine(DestroyFakeFur(fakeFur, fur, 2.8f));
-                    
-                    yield return new WaitForSeconds(1f);
-                    //childLight.intensity = 10f;
+                        StartCoroutine(DestroyFakeFur(fakeFur, fur, 3f));
+
+                        yield return new WaitForSeconds(0.5f);
+                        //childLight.intensity = 10f;
 
                     }
                 }
@@ -744,12 +755,14 @@ public class PlayerSelector : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.I))
         {
-            IdleMotion();
+            StartCoroutine(AssignColorsWithDelay());
+            //IdleMotion();
         }
 
         if (Input.GetKeyDown(KeyCode.M))
         {
             StartCoroutine(fallingFur());
+            //FallingMotion();
         }
     }
 }

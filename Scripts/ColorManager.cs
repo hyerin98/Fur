@@ -26,7 +26,7 @@ public class ColorManager : MonoSingleton<ColorManager>
         availableColors = GenerateRandomColors(maxUsers);
 
         // idle모션일 떄 할당할 컬러수
-        idleColorCount = 118;
+        idleColorCount = 130;
         idleColors = GenerateRandomColors(idleColorCount);
     }
 

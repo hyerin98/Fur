@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
 
     void AdjustCamera()
     {
-        float targetAspect = 16.0f / 9.0f;
+        float targetAspect = 9f / 16f;
         float windowAspect = (float)Screen.width / (float)Screen.height;
         float scaleHeight = windowAspect / targetAspect;
 

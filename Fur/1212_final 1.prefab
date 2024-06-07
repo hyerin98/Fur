@@ -850,13 +850,26 @@ MonoBehaviour:
   forceMagnitude: 50
   hingeJoints: []
   springJoints: []
-  fallingClips:
+  lightFallingClips:
+  - {fileID: 8300000, guid: ac580367517e2ba42a4d38343eeaa193, type: 3}
+  - {fileID: 8300000, guid: fe69e333ac1cb7b438b425bd92520b8c, type: 3}
+  - {fileID: 8300000, guid: 973bc518f98edf045bb76fbe8850a939, type: 3}
+  - {fileID: 8300000, guid: 64e174cba6dd95f4d9a481957984dcc3, type: 3}
+  - {fileID: 8300000, guid: c0126700b6aff6e4f8fef3b2e8169f25, type: 3}
+  - {fileID: 8300000, guid: d44846f93f288014484bf9db6c1a96c2, type: 3}
+  - {fileID: 8300000, guid: 942d098beefbb194fb5d49d6e0bec846, type: 3}
+  - {fileID: 8300000, guid: 2602f8daa02185c4ba4bec64dd13a0a5, type: 3}
+  lightMoveClips:
+  - {fileID: 8300000, guid: 5af941200dc71264d8b63a7c18c43bba, type: 3}
+  - {fileID: 8300000, guid: 1d15a5836b30c0848b8b9ce361312f47, type: 3}
+  furFallingClips:
   - {fileID: 8300000, guid: 586d2ebd2b8bf6b43a43aec77f725a71, type: 3}
   - {fileID: 8300000, guid: 7b5b6172db138954893f26bc0d5a4529, type: 3}
   - {fileID: 8300000, guid: 0769e3ed92c2dad4aa6d7e40313f8065, type: 3}
   - {fileID: 8300000, guid: 6c09af8fafd083e4bb2ee6140fc70954, type: 3}
-  moveClips:
   - {fileID: 8300000, guid: 0445be52465f3354abe928fc0d684cec, type: 3}
+  furMoveClips:
+  - {fileID: 8300000, guid: 32c6246e949b6db488acd25eef55283a, type: 3}
   ease: 23
 --- !u!1 &2064295694412291460 stripped
 GameObject:
