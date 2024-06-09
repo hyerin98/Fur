@@ -1,0 +1,126 @@
+public void RemoveUser(PlayerData playerData)
+{
+    string playerID = playerData.conn_id;
+    if (players.ContainsKey(playerID))
+    {
+        Player player = players[playerID];
+        GameObject furObject = player.gameObject;
+        player.isMove = false;
+
+        if (furObject != null)
+        {
+            Vector3 initialPosition = furObject.transform.position; // 현재 위치 저장
+
+            removedFurNames.Add(furObject.name);
+
+            // furs 리스트와 furPositions에서 요소 제거
+            int furIndex = furs.IndexOf(furObject);
+            furs.RemoveAt(furIndex);
+            furPositions.RemoveAt(furIndex);
+
+            // 사용된 fur 인덱스 제거
+            usedFur.Remove(furIndex);
+
+            // idleFurs와 furColorAssigned에서 제거
+            idleFurs.Remove(furObject);
+            furColorAssigned.Remove(furObject);
+
+            // furObject의 컴포넌트 가져오기
+            Light childLight = furObject.GetComponentInChildren<Light>();
+            Renderer renderer = furObject.GetComponent<Renderer>();
+            Rigidbody furRigidbody = furObject.GetComponent<Rigidbody>();
+
+            if (childLight != null && renderer != null && furRigidbody != null)
+            {
+                furRigidbody.isKinematic = false;
+
+                StartCoroutine(DimLightIntensity(childLight, 3.2f));
+                renderer.material.DOFade(0f, 5f).SetEase(ease);
+                Destroy(furObject, 5.5f);
+
+                // RespawnFur 메서드 호출
+                StartCoroutine(RespawnFur(initialPosition));
+            }
+        }
+
+        // 플레이어 색상 반환
+        ColorManager.instance.ReturnColor(player.playerColor);
+        players.Remove(playerID);
+
+        TraceBox.Log("삭제된 플레이어의 아이디: " + playerID);
+
+        if (players.Count == 0)
+        {
+            idle = true;
+        }
+    }
+}
+
+
+public IEnumerator RespawnFur(Vector3 position)
+{
+    yield return new WaitForSeconds(3.0f);
+
+    if (furPrefab != null)
+    {
+        GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
+        Player player = newFur.GetComponent<Player>();
+
+        string furName;
+        if (removedFurNames.Count > 0)
+        {
+            furName = removedFurNames.First();
+            removedFurNames.Remove(furName);
+        }
+        else
+        {
+            furName = "fur" + furCounter++;
+        }
+
+        newFur.name = furName;
+        furs.Add(newFur);
+        furPositions.Add(position);
+
+        Renderer furRenderer = newFur.GetComponent<Renderer>();
+        Light childLight = newFur.GetComponentInChildren<Light>();
+        if (furRenderer != null && childLight != null)
+        {
+            Color initialColor = furRenderer.material.color;
+            initialColor.a = 1f;
+            furRenderer.material.color = initialColor;
+
+            Color startColor = new Color(0.5283019f, 0.5208259f, 0.5208259f);
+            Color targetColor = new Color(0f, 0f, 0f, 0f);
+            float duration = 2.5f;
+            float elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / duration);
+                childLight.color = Color.Lerp(startColor, targetColor, t);
+                yield return null;
+            }
+        }
+
+        idleFurs = idleFurs.Where(fur => fur != null).ToList();
+        idleFurs.Add(newFur);
+        furColorAssigned[newFur] = false;
+
+        // furs 리스트를 이름 숫자 순으로 정렬
+        furs.Sort((fur1, fur2) =>
+        {
+            int num1 = int.Parse(fur1.name.Replace("fur", ""));
+            int num2 = int.Parse(fur2.name.Replace("fur", ""));
+            return num1.CompareTo(num2);
+        });
+
+        // idleFurs 리스트도 이름 숫자 순으로 정렬
+        idleFurs.Sort((fur1, fur2) =>
+        {
+            int num1 = int.Parse(fur1.name.Replace("fur", ""));
+            int num2 = int.Parse(fur2.name.Replace("fur", ""));
+            return num1.CompareTo(num2);
+        });
+    }
+}
