@@ -359,19 +359,20 @@ public class PlayerSelector : MonoBehaviour
             if (furObject != null)
             {
                 Vector3 initialPosition = furObject.transform.position; // 현재 위치 저장
+                Debug.Log("Initial Position: " + initialPosition); // 디버깅 로그
 
                 removedFurNames.Add(furObject.name);
 
                 // furs 리스트와 furPositions에서 요소 제거
                 int furIndex = furs.IndexOf(furObject);
+                if (furIndex != -1)
+                {
+                    furs.RemoveAt(furIndex);
+                    furPositions.RemoveAt(furIndex);
 
-                furs.RemoveAt(furIndex);
-                furPositions.RemoveAt(furIndex);
-
-                // 사용된 fur 인덱스 제거
-                usedFur.Remove(furIndex);
-
-
+                    // 사용된 fur 인덱스 제거
+                    usedFur.Remove(furIndex);
+                }
 
                 // idleFurs와 furColorAssigned에서 제거
                 idleFurs.Remove(furObject);
@@ -392,7 +393,7 @@ public class PlayerSelector : MonoBehaviour
                     Destroy(furObject, 3.5f);
 
                     // RespawnFur 메서드 호출
-                    StartCoroutine(RespawnFur(initialPosition));
+                    StartCoroutine(RespawnFur(initialPosition, furObject.name));
                 }
             }
 
@@ -430,27 +431,20 @@ public class PlayerSelector : MonoBehaviour
     }
 
 
-    public IEnumerator RespawnFur(Vector3 position)
+    public IEnumerator RespawnFur(Vector3 position, string originalName)
     {
+        Debug.Log("Respawn Position: " + position); // 디버깅 로그
         yield return new WaitForSeconds(3.0f);
 
         if (furPrefab != null)
         {
             GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
+            Debug.Log("New Fur Position: " + newFur.transform.position); // 디버깅 로그
             Player player = newFur.GetComponent<Player>();
 
-            string furName;
-            if (removedFurNames.Count > 0)
-            {
-                furName = removedFurNames.First();
-                removedFurNames.Remove(furName);
-            }
-            else
-            {
-                furName = "fur" + furCounter++;
-            }
-
+            string furName = originalName; // 원래 이름을 사용
             newFur.name = furName;
+
             furs.Add(newFur);
             furPositions.Add(position);
 
@@ -497,6 +491,7 @@ public class PlayerSelector : MonoBehaviour
             });
         }
     }
+}
 
     private IEnumerator AssignColorsWithDelay()
     {
