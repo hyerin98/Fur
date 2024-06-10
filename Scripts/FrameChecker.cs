@@ -13,6 +13,7 @@ public class FrameChecker : MonoBehaviour
 
     void Awake()
     {
+        Application.targetFrameRate = 60;
         int w = Screen.width, h = Screen.height;
         rect = new Rect(0, 0, w, h * 2 / 100); // 텍스트 사이즈를 적절히 조정
         style = new GUIStyle

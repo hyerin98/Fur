@@ -160,8 +160,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_Intensity: 10
-  m_Range: 15
+  m_Intensity: 30
+  m_Range: 30
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -244,7 +244,7 @@ GameObject:
   - component: {fileID: 4931603878011562465}
   - component: {fileID: 1342156129086415695}
   m_Layer: 0
-  m_Name: fur
+  m_Name: hingeJointFur
   m_TagString: Bone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -354,6 +354,37 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!1 &8663659235619424153
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 126424876090677384}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &126424876090677384
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8663659235619424153}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 69.95119, y: -24.804022, z: 3.43935}
+  m_LocalScale: {x: 3.333333, y: 2.5, z: 3.333333}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1218493342966227368}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1684993049057510979
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -367,7 +398,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.35
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_LocalScale.z
@@ -427,7 +458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8178801793560530460, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_Name
-      value: fur
+      value: hingeJointFur
       objectReference: {fileID: 0}
     - target: {fileID: -8178801793560530460, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_TagString
@@ -479,7 +510,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1230651142743150165, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_Name
-      value: fur
+      value: hingeJointFur
       objectReference: {fileID: 0}
     - target: {fileID: 1230651142743150165, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
       propertyPath: m_TagString
@@ -628,6 +659,11 @@ SpringJoint:
 --- !u!4 &868025128178666715 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -7248099391530038632, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
+  m_PrefabInstance: {fileID: 1684993049057510979}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1218493342966227368 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9d7325d12a8ba29469b4259818ddc704, type: 3}
   m_PrefabInstance: {fileID: 1684993049057510979}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1809676680112666535 stripped
@@ -859,48 +895,30 @@ MonoBehaviour:
   playerColor: 
   playerID: 
   userIndex: 0
-  forceMagnitude: 50
+  forceMagnitude: 100
   hingeJoints: []
   springJoints: []
   lightFallingClips:
   - {fileID: 8300000, guid: ffa0d9812c724fa449bbdc2a920cd31c, type: 3}
-  - {fileID: 8300000, guid: 0e105a1dd33926547a91feb20901c644, type: 3}
   - {fileID: 8300000, guid: cb1d81f8e67951749b0d2d21fb0d1110, type: 3}
   - {fileID: 8300000, guid: fac7cc2c67061b544ae18da006ac3bbc, type: 3}
   - {fileID: 8300000, guid: 7fa597b15497ac04d92bfe0bde8ddb15, type: 3}
-  - {fileID: 8300000, guid: b612a7c7f43639045a858b533e9c11be, type: 3}
   - {fileID: 8300000, guid: a01152dc30ce2f6499388a09d8395a0b, type: 3}
   - {fileID: 8300000, guid: ebd891871174b3444a7cb5c3ce3c4229, type: 3}
-  - {fileID: 8300000, guid: dc5e31dcd855d9d4faf4284ba5452569, type: 3}
   - {fileID: 8300000, guid: fced90a72d8578e43881bb8aacc38b2a, type: 3}
-  - {fileID: 8300000, guid: 352856b846d9ec34b9759818cd0fd659, type: 3}
-  - {fileID: 8300000, guid: d7858289a8a92b84a96eede938f6d4bb, type: 3}
   - {fileID: 8300000, guid: 3490a350b7523b140ae542ef99fab753, type: 3}
   - {fileID: 8300000, guid: 87a52cfe02efa75429edf2169129c1c9, type: 3}
-  - {fileID: 8300000, guid: 4c15844be6ddbfd48a12433531398fd3, type: 3}
-  - {fileID: 8300000, guid: 944277e0947c2d84d9dbbcc7ca8b5f90, type: 3}
-  - {fileID: 8300000, guid: f5ecf52ad9033644cb9430aec21ae19a, type: 3}
   - {fileID: 8300000, guid: b38a2a6231b2f54468af0c2b2bdf2aa3, type: 3}
-  - {fileID: 8300000, guid: e2c1737e59fb7384684dd3d42c144fb4, type: 3}
-  - {fileID: 8300000, guid: 1e525a6795deaca49b122ee69e39483e, type: 3}
   - {fileID: 8300000, guid: 6d53889fd0b85e04297e4c6a6f6f8d5e, type: 3}
   - {fileID: 8300000, guid: 1586c9b593c11eb479f687bb9d1d0660, type: 3}
   - {fileID: 8300000, guid: 5d14aff433c52dd4c9164204877d8911, type: 3}
   - {fileID: 8300000, guid: 3cdf4a21783d60642856184e934ab17a, type: 3}
-  - {fileID: 8300000, guid: 92fe6b2d7f4f73d43b9951283dc7091b, type: 3}
-  - {fileID: 8300000, guid: d881d768b1d35034fbabc12fe0933805, type: 3}
-  - {fileID: 8300000, guid: d6b429791cff04b42b43de492b40a3be, type: 3}
   - {fileID: 8300000, guid: cdd83e897d1df1242aa713299d0df369, type: 3}
   - {fileID: 8300000, guid: 13b6e49e9f4ece54ab4cdc38bbc49cd4, type: 3}
-  - {fileID: 8300000, guid: c2e3d923acd033a469c212534bcd6cc7, type: 3}
   - {fileID: 8300000, guid: 2931adbdc1459af41ad8c5fe5c4cfbcc, type: 3}
   - {fileID: 8300000, guid: 7c0dc97ac6ecc984f85ce30686dbce3d, type: 3}
-  - {fileID: 8300000, guid: 2552426ec6a6f23488bcc4add74733da, type: 3}
   - {fileID: 8300000, guid: a99354b655af6df43a2cc01ca73337f2, type: 3}
   - {fileID: 8300000, guid: 1d00db9cfe149e84a9fcad566196653f, type: 3}
-  - {fileID: 8300000, guid: 24d27991e89c8a5489eb67edaf3eb396, type: 3}
-  - {fileID: 8300000, guid: 071a05cf9cb0e954b936fd94acf590bb, type: 3}
-  - {fileID: 8300000, guid: 3a4e20dbf568c9d43934671945860293, type: 3}
   lightMoveClips:
   - {fileID: 8300000, guid: 5af941200dc71264d8b63a7c18c43bba, type: 3}
   - {fileID: 8300000, guid: 1d15a5836b30c0848b8b9ce361312f47, type: 3}

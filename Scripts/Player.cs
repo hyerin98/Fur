@@ -74,11 +74,11 @@ public class Player : MonoBehaviour
         {
             if (lightScene)
             {
-                PushHingeJoint("fur", "pull", 10f);
+                PushHingeJoint("hingeJointFur", "pull", 10f);
             }
             else if (furScene)
             {
-                PushHingeJoint("fur", "pull", 10f);
+                PushHingeJoint("hingeJointFur", "pull", 10f);
             }
         }
 
@@ -86,18 +86,18 @@ public class Player : MonoBehaviour
         {
             if (lightScene)
             {
-                PushHingeJoint("fur", "push", 10f);
+                PushHingeJoint("hingeJointFur", "push", 10f);
             }
             else if (furScene)
             {
-                PushHingeJoint("fur", "push", 10f);
+                PushHingeJoint("hingeJointFur", "push", 10f);
             }
         }
         else if (downKeyCode == KeyCode.LeftArrow && isMove)
         {
             if (lightScene)
             {
-                ApplyForceToHingeJoints(-transform.right, 1.0f);
+                ApplyForceToHingeJoints(-transform.right, 1.5f);
             }
             else if (furScene)
             {
@@ -108,7 +108,7 @@ public class Player : MonoBehaviour
         {
             if (lightScene)
             {
-                ApplyForceToHingeJoints(transform.right, 1.0f);
+                ApplyForceToHingeJoints(transform.right, 1.5f);
             }
             else if (furScene)
             {
@@ -126,6 +126,12 @@ public class Player : MonoBehaviour
             isSmall = true;
             Vector3 smallFur = new Vector3(0.2f, 0.25f, 0.2f);
             this.transform.DOScale(smallFur, 1f).SetEase(ease);
+            Light childLight = gameObject.GetComponentInChildren<Light>();
+             Renderer renderer = this.GetComponent<Renderer>();
+            Material material = renderer.material;
+            Color initialColor = material.color;
+            childLight.color = new Color(1,1,1,1);
+            StartCoroutine(RevertPushColorDelay(playerLight, initialColor, 1f, 1f));
         }
         if (Input.GetKeyDown(KeyCode.O) && isSmall)
         {
@@ -177,7 +183,7 @@ public class Player : MonoBehaviour
         Transform transform = this.transform;
         foreach (SpringJoint springJoint in springJoints)
         {
-            PushHingeJoint("fur", "push", 20f);
+            PushHingeJoint("hingeJointFur", "push", 20f);
             StartCoroutine(RevertPushColorDelay(playerLight, initialColor, 1f, 1f));
         }
     }
@@ -202,7 +208,7 @@ public class Player : MonoBehaviour
             {
                 if (action == "push")
                 {
-                    Transform furTransform = springJoint.transform.Find("fur");
+                    Transform furTransform = springJoint.transform.Find("hingeJointFur");
                     if (furTransform != null)
                     {
                         Rigidbody furRigidbody = furTransform.GetComponent<Rigidbody>();
@@ -214,7 +220,7 @@ public class Player : MonoBehaviour
                 }
                 else if (action == "pull")
                 {
-                    Transform furTransform = springJoint.transform.Find("fur");
+                    Transform furTransform = springJoint.transform.Find("hingeJointFur");
                     if (furTransform != null)
                     {
                         Rigidbody furRigidbody = furTransform.GetComponent<Rigidbody>();
