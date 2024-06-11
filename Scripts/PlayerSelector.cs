@@ -18,7 +18,6 @@ public class PlayerSelector : MonoBehaviour
     //private Dictionary<string, string> colorToConnIdMap = new Dictionary<string, string>();
     private Dictionary<string, Color> assignedColors = new Dictionary<string, Color>();
 
-
     [Header("DOtween & GameObject & Bool")]
     public Ease ease;
     public GameObject furPrefab;
@@ -36,7 +35,6 @@ public class PlayerSelector : MonoBehaviour
     public List<GameObject> idleFurs = new List<GameObject>(); // idle일때 움직이는 털 리스트 
     private Dictionary<GameObject, bool> furColorAssigned = new Dictionary<GameObject, bool>(); // fur의 색상 할당 상태를 추적
     private HashSet<string> removedFurNames = new HashSet<string>(); // 삭제된 fur 이름을 저장할 HashSet
-    private int furCounter = 0; // fur 이름에 사용할 인덱스
 
     private void Awake()
     {
@@ -125,7 +123,7 @@ public class PlayerSelector : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("No player data found for disconnection.");
+                Debug.LogWarning("플레이어 데이터 연결 X");
             }
         }
     }
@@ -203,7 +201,6 @@ public class PlayerSelector : MonoBehaviour
             isIdleMotionRunning = true;
             idleMotionCoroutine = StartCoroutine(AssignColorsWithDelay());
         }
-
         // if(idle)
         // {
         //     StartCoroutine(AssignColorsWithDelay());
@@ -298,17 +295,7 @@ public class PlayerSelector : MonoBehaviour
                         {
                             childLight.color = value;
                         });
-                        // 할당된 색상을 저장
-                        assignedColors[assignedFur.name] = targetColor;
-                            // float duration = 2f;
-                            // float elapsedTime = 0f;
-
-                            // while (elapsedTime < duration)
-                            // {
-                            //     elapsedTime += Time.deltaTime;
-                            //     float t = Mathf.Clamp01(elapsedTime / duration);
-                            //     childLight.color = Color.Lerp(childLight.color, targetColor, t);
-                            // }
+                        assignedColors[assignedFur.name] = targetColor; // 할당된 색상을 저장
                         }
                     }
 
@@ -339,11 +326,11 @@ public class PlayerSelector : MonoBehaviour
             {
                 idle = false;
             }
-            if (!isIdleMotionRunning) // 만약 idle모드가 진행중이 아니라면
-            {
-                IdleMotion(); // idle 모드 실행 
-                FallingMotion();
-            }
+            // if (!isIdleMotionRunning) // 만약 idle모드가 진행중이 아니라면
+            // {
+            //     IdleMotion(); // idle 모드 실행 
+            //     FallingMotion();
+            // }
         }
     }
 
@@ -359,19 +346,18 @@ public class PlayerSelector : MonoBehaviour
             if (furObject != null)
             {
                 Vector3 initialPosition = furObject.transform.position; // 현재 위치 저장
+                Debug.Log("원래위치: " + initialPosition); 
 
                 removedFurNames.Add(furObject.name);
 
                 // furs 리스트와 furPositions에서 요소 제거
                 int furIndex = furs.IndexOf(furObject);
-
-                furs.RemoveAt(furIndex);
-                furPositions.RemoveAt(furIndex);
-
-                // 사용된 fur 인덱스 제거
-                usedFur.Remove(furIndex);
-
-
+                if (furIndex != -1)
+                {
+                    furs.RemoveAt(furIndex);
+                    furPositions.RemoveAt(furIndex);
+                    usedFur.Remove(furIndex); // 사용된 fur 인덱스 제거
+                }
 
                 // idleFurs와 furColorAssigned에서 제거
                 idleFurs.Remove(furObject);
@@ -391,11 +377,9 @@ public class PlayerSelector : MonoBehaviour
                     renderer.material.DOFade(0f, 3f).SetEase(ease);
                     Destroy(furObject, 3.5f);
 
-                    // RespawnFur 메서드 호출
-                    StartCoroutine(RespawnFur(initialPosition));
+                    StartCoroutine(RespawnFur(initialPosition, furObject.name)); // 리스폰 코루틴 호출
                 }
             }
-
             // 플레이어 색상 반환
             ColorManager.instance.ReturnColor(player.playerColor);
             players.Remove(playerID);
@@ -409,7 +393,7 @@ public class PlayerSelector : MonoBehaviour
         }
     }
 
-    private IEnumerator DimLightIntensity(Light light, float duration)
+    private IEnumerator DimLightIntensity(Light light, float duration) // 라이트 서서히 변환시키는 코루틴
     {
         float startIntensity = light.intensity;
         float timeElapsed = 0f;
@@ -426,31 +410,22 @@ public class PlayerSelector : MonoBehaviour
             yield return null;
         }
         light.intensity = 0f;
-
     }
 
-
-    public IEnumerator RespawnFur(Vector3 position)
+    public IEnumerator RespawnFur(Vector3 position, string originalName)
     {
+        Debug.Log("리스폰된 위치: " + position);
         yield return new WaitForSeconds(3.0f);
 
         if (furPrefab != null)
         {
             GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
+            Debug.Log("새로 생성된 털 위치: " + newFur.transform.position); 
             Player player = newFur.GetComponent<Player>();
 
-            string furName;
-            if (removedFurNames.Count > 0)
-            {
-                furName = removedFurNames.First();
-                removedFurNames.Remove(furName);
-            }
-            else
-            {
-                furName = "fur" + furCounter++;
-            }
-
+            string furName = originalName; // 원래 이름을 사용
             newFur.name = furName;
+
             furs.Add(newFur);
             furPositions.Add(position);
 
@@ -475,7 +450,6 @@ public class PlayerSelector : MonoBehaviour
                     yield return null;
                 }
             }
-
             idleFurs = idleFurs.Where(fur => fur != null).ToList();
             idleFurs.Add(newFur);
             furColorAssigned[newFur] = false;
@@ -498,7 +472,7 @@ public class PlayerSelector : MonoBehaviour
         }
     }
 
-    private IEnumerator AssignColorsWithDelay()
+    private IEnumerator AssignColorsWithDelay() // 파도타기 코루틴
     {
         // 삭제된 fur를 제외하고 남은 fur들만 추출
         if (idle)
@@ -513,7 +487,7 @@ public class PlayerSelector : MonoBehaviour
                 return num1.CompareTo(num2);
             });
 
-            // 피도타기할 때 조화로운 같은 색 계열 -> 5.27 더 조화롭게 수정필
+            // 피도타기할 때 조화로운 같은 색 계열
             List<Color> redColors = new List<Color>
         { new Color(0.2588235f, 0.01960784f, 0.08627448f),
          new Color(0.4901961f, 0.09803919f, 0.2078431f),
@@ -605,33 +579,37 @@ public class PlayerSelector : MonoBehaviour
                     Debug.LogWarning("Renderer가 존재하지 않습니다: " + idleFur.name);
                 }
 
-                // if (player != null)
-                // {
-                //     if (player.CompareTag("Fur1"))
-                //     {
-                //         player.ApplyForceToHingeJoints(transform.right, 2.5f);
-                //     }
-                //     else if (player.CompareTag("Fur2"))
-                //     {
-                //         player.ApplyForceToHingeJoints(-transform.right, 2.5f);
-                //     }
-                //     else if (player.CompareTag("Fur3"))
-                //     {
-                //         player.ApplyForceToHingeJoints(transform.right, 2.5f);
-                //     }
-                //     else if (player.CompareTag("Fur4"))
-                //     {
-                //         player.ApplyForceToHingeJoints(-transform.right, 2.5f);
-                //     }
-                //     else if (player.CompareTag("Fur5"))
-                //     {
-                //         player.ApplyForceToHingeJoints(transform.right, 2.5f);
-                //     }
-                // }
-                // else
-                // {
-                //     Debug.LogWarning("Player 컴포넌트가 존재하지 않습니다: " + idleFur.name);
-                // }
+                if (player != null)
+                {
+                    if (player.CompareTag("Fur1"))
+                    {
+                        player.ApplyForceToHingeJoints(transform.right, 1.5f);
+                    }
+                    else if (player.CompareTag("Fur2"))
+                    {
+                        player.ApplyForceToHingeJoints(-transform.right, 1.5f);
+                    }
+                    else if (player.CompareTag("Fur3"))
+                    {
+                        player.ApplyForceToHingeJoints(transform.right, 1.5f);
+                    }
+                    else if (player.CompareTag("Fur4"))
+                    {
+                        player.ApplyForceToHingeJoints(-transform.right, 1.5f);
+                    }
+                    else if (player.CompareTag("Fur5"))
+                    {
+                        player.ApplyForceToHingeJoints(transform.right, 1.5f);
+                    }
+                    else if(player.CompareTag("Fur6"))
+                    {
+                        player.ApplyForceToHingeJoints(-transform.right, 1.5f);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Player 컴포넌트가 존재하지 않습니다: " + idleFur.name);
+                }
 
                 yield return new WaitForSeconds(0.05f); // 다음 fur로 넘어가기 전에 약간의 대기
             }
@@ -639,7 +617,7 @@ public class PlayerSelector : MonoBehaviour
     }
 
 
-    private IEnumerator RevertColorAfterDelay(Material material, Light childLight, Color initialColor, float delay, float duration)
+    private IEnumerator RevertColorAfterDelay(Material material, Light childLight, Color initialColor, float delay, float duration) // 파도타기를 원래의 색으로 돌아오게하는 코루틴
     {
         yield return new WaitForSeconds(delay);
 
@@ -655,8 +633,6 @@ public class PlayerSelector : MonoBehaviour
             });
         }
     }
-
-
 
     private IEnumerator fallingFur()
     {
@@ -687,20 +663,20 @@ public class PlayerSelector : MonoBehaviour
                     Material material = renderer.material;
 
                     List<Color> randomFallingColor = new List<Color> { new Color(0.2156862f, 0.1058823f, 0.345098f),
-        new Color(0.2980392f, 0.2078431f, 0.4588234f),
-        new Color(0.3568628f, 0.2941176f, 0.5411765f),
-        new Color(0.4705882f, 0.345098f, 0.6509804f),new Color(1f, 0.7333333f, 0.3607843f),
-        new Color(1f, 0.6078432f, 0.3137255f),
-        new Color(0.8862745f, 0.3686274f, 0.2431372f),
-        new Color(0.7764706f, 0.2392156f, 0.1843137f),new Color(0.02352941f, 0.1607843f, 0.145098f),
-        new Color(0.01568628f, 0.2901961f, 0.2588235f),
-        new Color(0.227451f, 0.5686274f, 0.5333333f),new Color(0.03921569f, 0.1490196f, 0.2784314f),
-        new Color(0.07843138f, 0.2588235f, 0.4470588f),
-        new Color(0.1254902f, 0.3215686f, 0.5843138f),
-        new Color(0.172549f, 0.4549019f, 0.7019608f),new Color(0.2588235f, 0.01960784f, 0.08627448f),
-         new Color(0.4901961f, 0.09803919f, 0.2078431f),
-         new Color(0.7058824f, 0.1686274f, 0.317647f),
-         new Color(0.859f, 0.2431372f, 0.418f)
+                    new Color(0.2980392f, 0.2078431f, 0.4588234f),
+                    new Color(0.3568628f, 0.2941176f, 0.5411765f),
+                    new Color(0.4705882f, 0.345098f, 0.6509804f),new Color(1f, 0.7333333f, 0.3607843f),
+                    new Color(1f, 0.6078432f, 0.3137255f),
+                    new Color(0.8862745f, 0.3686274f, 0.2431372f),
+                    new Color(0.7764706f, 0.2392156f, 0.1843137f),new Color(0.02352941f, 0.1607843f, 0.145098f),
+                    new Color(0.01568628f, 0.2901961f, 0.2588235f),
+                    new Color(0.227451f, 0.5686274f, 0.5333333f),new Color(0.03921569f, 0.1490196f, 0.2784314f),
+                    new Color(0.07843138f, 0.2588235f, 0.4470588f),
+                    new Color(0.1254902f, 0.3215686f, 0.5843138f),
+                    new Color(0.172549f, 0.4549019f, 0.7019608f),new Color(0.2588235f, 0.01960784f, 0.08627448f),
+                    new Color(0.4901961f, 0.09803919f, 0.2078431f),
+                    new Color(0.7058824f, 0.1686274f, 0.317647f),
+                    new Color(0.859f, 0.2431372f, 0.418f)
                     };
                     Color initialColor = material.color;
 
@@ -717,10 +693,7 @@ public class PlayerSelector : MonoBehaviour
                     childLight.color = value;
                 });
                         StartCoroutine(DestroyFakeFur(fakeFur, fur, 3f));
-
                         yield return new WaitForSeconds(0.5f);
-                        //childLight.intensity = 10f;
-
                     }
                 }
             }
@@ -754,8 +727,8 @@ public class PlayerSelector : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.I))
         {
-            StartCoroutine(AssignColorsWithDelay());
-            //IdleMotion();
+            //StartCoroutine(AssignColorsWithDelay());
+            IdleMotion();
         }
 
         if (Input.GetKeyDown(KeyCode.M))

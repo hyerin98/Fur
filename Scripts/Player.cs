@@ -162,6 +162,10 @@ public class Player : MonoBehaviour
             {
                 Invoke("PushIdleMotion",5f);
             }
+            if(this.CompareTag("Fur6"))
+            {
+                Invoke("PushIdleMotion",6f);
+            }
             // if(gameObject.CompareTag("Fur1") || gameObject.CompareTag("Fur2") || gameObject.CompareTag("Fur3") || gameObject.CompareTag("Fur4") ||  gameObject.CompareTag("Fur5"))
             // {
             //     Invoke("PushIdleMotion",6f);
@@ -174,7 +178,61 @@ public class Player : MonoBehaviour
         Renderer renderer = this.GetComponent<Renderer>();
         Material material = renderer.material;
         Color initialColor = material.color;
-        Color targetColor = new Color(0.1561499f, 0.263519f, 0.2735849f);
+        List<Color> redColors = new List<Color>
+        { new Color(0.2588235f, 0.01960784f, 0.08627448f),
+         new Color(0.4901961f, 0.09803919f, 0.2078431f),
+         new Color(0.7058824f, 0.1686274f, 0.317647f),
+         new Color(0.859f, 0.2431372f, 0.418f) };
+
+            List<Color> blueColors = new List<Color>
+        { new Color(0.03921569f, 0.1490196f, 0.2784314f),
+        new Color(0.07843138f, 0.2588235f, 0.4470588f),
+        new Color(0.1254902f, 0.3215686f, 0.5843138f),
+        new Color(0.172549f, 0.4549019f, 0.7019608f) };
+
+            List<Color> greenColors = new List<Color>
+        { new Color(0.02352941f, 0.1607843f, 0.145098f),
+        new Color(0.01568628f, 0.2901961f, 0.2588235f),
+        new Color(0.227451f, 0.5686274f, 0.5333333f) };
+
+            List<Color> yellowColors = new List<Color>
+        { new Color(1f, 0.7333333f, 0.3607843f),
+        new Color(1f, 0.6078432f, 0.3137255f),
+        new Color(0.8862745f, 0.3686274f, 0.2431372f),
+        new Color(0.7764706f, 0.2392156f, 0.1843137f)};
+
+            List<Color> purpleColors = new List<Color>
+        { new Color(0.2156862f, 0.1058823f, 0.345098f),
+        new Color(0.2980392f, 0.2078431f, 0.4588234f),
+        new Color(0.3568628f, 0.2941176f, 0.5411765f),
+        new Color(0.4705882f, 0.345098f, 0.6509804f)};
+
+        int randomIndex = UnityEngine.Random.Range(0, 5);
+            List<Color> selectedColors;
+
+            switch (randomIndex)
+            {
+                case 0:
+                    selectedColors = blueColors;
+                    break;
+                case 1:
+                    selectedColors = greenColors;
+                    break;
+                case 2:
+                    selectedColors = redColors;
+                    break;
+                case 3:
+                    selectedColors = yellowColors;
+                    break;
+                case 4:
+                    selectedColors = purpleColors;
+                    break;
+                default:
+                    selectedColors = blueColors; // 기본값
+                    break;
+            }
+
+        Color targetColor = selectedColors[UnityEngine.Random.Range(0, selectedColors.Count)];
         DOVirtual.Color(playerLight.color, targetColor, 1f, value =>
                    {
                        playerLight.color = value;
@@ -183,7 +241,7 @@ public class Player : MonoBehaviour
         Transform transform = this.transform;
         foreach (SpringJoint springJoint in springJoints)
         {
-            PushHingeJoint("hingeJointFur", "push", 20f);
+            PushHingeJoint("hingeJointFur", "push", 40f);
             StartCoroutine(RevertPushColorDelay(playerLight, initialColor, 1f, 1f));
         }
     }
