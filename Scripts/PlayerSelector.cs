@@ -346,8 +346,7 @@ public class PlayerSelector : MonoBehaviour
             if (furObject != null)
             {
                 Vector3 initialPosition = furObject.transform.position; // 현재 위치 저장
-                Debug.Log("원래위치: " + initialPosition); 
-
+                Debug.Log(furObject + "의 " +"원래위치: " + initialPosition); 
                 removedFurNames.Add(furObject.name);
 
                 // furs 리스트와 furPositions에서 요소 제거
@@ -414,13 +413,13 @@ public class PlayerSelector : MonoBehaviour
 
     public IEnumerator RespawnFur(Vector3 position, string originalName)
     {
-        Debug.Log("리스폰된 위치: " + position);
+        Debug.Log(originalName + "이 " +"리스폰된 위치: " + position);
         yield return new WaitForSeconds(3.0f);
 
         if (furPrefab != null)
         {
             GameObject newFur = Instantiate(furPrefab, position, Quaternion.identity);
-            Debug.Log("새로 생성된 털 위치: " + newFur.transform.position); 
+            Debug.Log(newFur.name + "이 " + "새로 생성된 털 위치: " + newFur.transform.position); 
             Player player = newFur.GetComponent<Player>();
 
             string furName = originalName; // 원래 이름을 사용
