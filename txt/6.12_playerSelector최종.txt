@@ -345,40 +345,23 @@ public class PlayerSelector : MonoBehaviour
                 {
                     furRigidbody.isKinematic = false;
 
-                    // StartCoroutine(DimLightIntensity(childLight, 2f));
-                    // //childLight.transform.localPosition = new Vector3(1f, childLight.transform.localPosition.y, childLight.transform.localPosition.z);
-                    // childLight.transform.DOLocalMoveX(-1f, 2f).SetEase(ease); // 6.12 - 떨어지면서 바닥과 충돌할때 
-                    // if(savedTag =="Fur6")
-                    // {
-                    //     childLight.transform.DOLocalMoveX(-3f, 0.7f);
+                    StartCoroutine(DimLightIntensity(childLight, 2f));
+                    //childLight.transform.localPosition = new Vector3(1f, childLight.transform.localPosition.y, childLight.transform.localPosition.z);
+                    childLight.transform.DOLocalMoveX(-1f, 2f).SetEase(ease); // 6.12 - 떨어지면서 바닥과 충돌할때 
+                    if(savedTag =="Fur6")
+                    {
+                        childLight.transform.DOLocalMoveX(-3f, 0.7f);
                         
-                    // }
-                    // if(savedTag == "Fur5")
-                    // {
-                    //     childLight.transform.DOLocalMoveX(-3f, 1.2f);
-                    // }
-
-                    // renderer.material.DOFade(0f, 3f).SetEase(ease);
-                    // Destroy(furObject, 3.5f);
-
-                    // StartCoroutine(RespawnFur(initialPosition, furObject.name)); // 리스폰 코루틴 호출
-                    Sequence mySequence = DOTween.Sequence();
-                    mySequence.Append(childLight.transform.DOLocalMoveX(-1f, 2f).SetEase(ease));
-                    mySequence.Join(DOTween.To(() => childLight.intensity, x => childLight.intensity = x, 0f, 2f));
-
-                    if (savedTag == "Fur6")
-                    {
-                        mySequence.Append(childLight.transform.DOLocalMoveX(-3f, 0.7f));
                     }
-                    else if (savedTag == "Fur5")
+                    if(savedTag == "Fur5")
                     {
-                        mySequence.Append(childLight.transform.DOLocalMoveX(-3f, 1.2f));
+                        childLight.transform.DOLocalMoveX(-3f, 1.2f);
                     }
 
                     renderer.material.DOFade(0f, 3f).SetEase(ease);
                     Destroy(furObject, 3.5f);
 
-                    StartCoroutine(RespawnFur(initialPosition, furObject.name));
+                    StartCoroutine(RespawnFur(initialPosition, furObject.name)); // 리스폰 코루틴 호출
                 }
             }
             // 플레이어 색상 반환
