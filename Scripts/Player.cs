@@ -236,6 +236,7 @@ public class Player : MonoBehaviour
         DOVirtual.Color(playerLight.color, targetColor, 1f, value =>
                    {
                        playerLight.color = value;
+                       playerLight.intensity = 50f;
                    });
 
         Transform transform = this.transform;
@@ -254,6 +255,7 @@ public class Player : MonoBehaviour
             DOVirtual.Color(playerLight.color, initialColor, duration, value =>
             {
                 playerLight.color = value;
+                playerLight.intensity = 30f;
             });
         }
     }

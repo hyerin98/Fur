@@ -11,23 +11,15 @@ public class ColorManager : MonoSingleton<ColorManager>
     private HashSet<string> assignedColors = new HashSet<string>(); // 할당 받은 컬러 해시셋
     private Dictionary<string, Player> players = new Dictionary<string, Player>();
     private int maxUsers;
-    public int idleColorCount;
     private float minSaturation = 0.5f; 
     private float maxSaturation = 1.0f;
     private float minBrightness = 0.5f; 
     private float maxBrightness = 0.9f; 
 
-    //[Header("idleColorSettings")]
-    //public List<string> idleColors = new List<string> ();
-
     void Start()
     {
         maxUsers = 50;
         availableColors = GenerateRandomColors(maxUsers);
-
-        // idle모션일 떄 할당할 컬러수
-        idleColorCount = 160;
-        //idleColors = GenerateRandomColors(idleColorCount);
     }
 
     public void AddPlayer(Player player)
@@ -64,28 +56,6 @@ public class ColorManager : MonoSingleton<ColorManager>
         }
         return null; // 사용 가능한 색상이 없을 경우 null 반환
     }
-
-    // public string IdleColor()
-    // {
-    //     if(idleColors.Count > 0)
-    //     {
-    //         string color = idleColors[0];
-    //         idleColors.RemoveAt(0);
-    //         idleColors.Add(color);
-    //         return color;
-    //     }
-    //     return null;
-    // }
-
-    // public void IdleReturnColor(string color)
-    // {
-    //     if(idleColors.Contains(color))
-    //     {
-    //         idleColors.Remove(color);
-    //         idleColors.Add(color);
-    //     }
-    // }
-
     public bool IsColorAvailable()
     {
         return assignedColors.Count < availableColors.Count;

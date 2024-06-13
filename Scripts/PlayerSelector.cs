@@ -42,6 +42,7 @@ public class PlayerSelector : MonoBehaviour
         ProtocolManager.instance.onUserConnectEvent += OnUserConnectEvent;
         isSpawn = false;
         InitializeFurPositions();
+        IdleMotion();
     }
 
     private void Start()
@@ -50,13 +51,10 @@ public class PlayerSelector : MonoBehaviour
 
         idle = true;
 
-        // 초기화: 모든 fur의 색상 할당 상태를 false로 설정
         foreach (var fur in furs)
         {
             furColorAssigned[fur] = false;
         }
-
-        // 플레이어 수를 즉시 확인하고, 필요할 경우 idle 모드로 설정
         if (players.Count > 0)
         {
             idle = false;
@@ -82,7 +80,6 @@ public class PlayerSelector : MonoBehaviour
         {
             playerDataList[playerData.conn_id] = playerData;
             OnAddUser(playerData);
-            TraceBox.Log("들어온 유저다: " + playerData.conn_id + " , " + playerData.color_id + " , " + playerData.player_index);
         }
         else if (protocolType == ProtocolType.CONTROLLER_DISCONNECT)
         {
@@ -90,7 +87,6 @@ public class PlayerSelector : MonoBehaviour
             {
                 RemoveUser(playerData);
                 playerDataList.Remove(playerData.conn_id);
-                TraceBox.Log("삭제한 아이디와 컬러값은?: " + playerData.conn_id + " , " + playerData.color_id);
             }
             else
             {
@@ -163,7 +159,7 @@ public class PlayerSelector : MonoBehaviour
     {
         if (idleMotionCoroutine != null) // 만약 idlemotion코루틴이 돌고있다면
         {
-            StopCoroutine(idleMotionCoroutine); // idlemotion코루틴 정지
+            //StopCoroutine(idleMotionCoroutine); // idlemotion코루틴 정지
             idleMotionCoroutine = null;
         }
 
@@ -173,10 +169,6 @@ public class PlayerSelector : MonoBehaviour
             idleMotionCoroutine = StartCoroutine(AssignColorsWithDelay());
              isIdleMotionRunning = false;
         }
-        // if(idle)
-        // {
-        //     StartCoroutine(AssignColorsWithDelay());
-        // }
     }
 
     public void FallingMotion()
@@ -283,7 +275,6 @@ public class PlayerSelector : MonoBehaviour
 
                 usedFur.Add(furIndex);
                 players.Add(playerData.conn_id, targetPlayer);
-                //colorToConnIdMap.Add(playerData.color_id, playerData.conn_id); // 5.17 수정 -> 최대컬러수 할당받고 나면 컨트롤러 흰색으로 뜨는 이슈 원인 
                 playerData.player_index = players.Count;
             }
             else
@@ -299,11 +290,6 @@ public class PlayerSelector : MonoBehaviour
             {
                 idle = false;
             }
-            // if (!isIdleMotionRunning) // 만약 idle모드가 진행중이 아니라면
-            // {
-            //     IdleMotion(); // idle 모드 실행 
-            //     FallingMotion();
-            // }
         }
     }
 
@@ -316,6 +302,7 @@ public class PlayerSelector : MonoBehaviour
             GameObject furObject = player.gameObject;
             player.isMove = false;
             savedTag = furObject.tag;
+            players.Remove(playerID);
 
             if (furObject != null)
             {
@@ -344,24 +331,6 @@ public class PlayerSelector : MonoBehaviour
                 if (childLight != null && renderer != null && furRigidbody != null)
                 {
                     furRigidbody.isKinematic = false;
-
-                    // StartCoroutine(DimLightIntensity(childLight, 2f));
-                    // //childLight.transform.localPosition = new Vector3(1f, childLight.transform.localPosition.y, childLight.transform.localPosition.z);
-                    // childLight.transform.DOLocalMoveX(-1f, 2f).SetEase(ease); // 6.12 - 떨어지면서 바닥과 충돌할때 
-                    // if(savedTag =="Fur6")
-                    // {
-                    //     childLight.transform.DOLocalMoveX(-3f, 0.7f);
-                        
-                    // }
-                    // if(savedTag == "Fur5")
-                    // {
-                    //     childLight.transform.DOLocalMoveX(-3f, 1.2f);
-                    // }
-
-                    // renderer.material.DOFade(0f, 3f).SetEase(ease);
-                    // Destroy(furObject, 3.5f);
-
-                    // StartCoroutine(RespawnFur(initialPosition, furObject.name)); // 리스폰 코루틴 호출
                     Sequence mySequence = DOTween.Sequence();
                     mySequence.Append(childLight.transform.DOLocalMoveX(-1f, 2f).SetEase(ease));
                     mySequence.Join(DOTween.To(() => childLight.intensity, x => childLight.intensity = x, 0f, 2f));
@@ -383,8 +352,6 @@ public class PlayerSelector : MonoBehaviour
             }
             // 플레이어 색상 반환
             ColorManager.instance.ReturnColor(player.playerColor);
-            players.Remove(playerID);
-
             TraceBox.Log("삭제된 플레이어의 아이디: " + playerID);
 
             if (players.Count == 0)
@@ -392,25 +359,6 @@ public class PlayerSelector : MonoBehaviour
                 idle = true;
             }
         }
-    }
-
-    private IEnumerator DimLightIntensity(Light light, float duration) // 라이트 서서히 변환시키는 코루틴
-    {
-        float startIntensity = light.intensity;
-        float timeElapsed = 0f;
-
-        while (timeElapsed < duration)
-        {
-
-            float t = timeElapsed / duration;
-
-            light.intensity = Mathf.Lerp(startIntensity, 0f, t);
-
-            timeElapsed += Time.deltaTime;
-
-            yield return null;
-        }
-        light.intensity = 0f;
     }
 
     public IEnumerator RespawnFur(Vector3 position, string originalName)
@@ -575,6 +523,10 @@ public class PlayerSelector : MonoBehaviour
                     DOVirtual.Color(childLight.color, targetColor, 0.5f, value =>
                     {
                         childLight.color = value;
+                        if(selectedColors==yellowColors)
+                        {
+                            childLight.intensity = 10f;
+                        }
                         //childLight.transform.position = new Vector3(childLight.transform.position.x, 4f, childLight.transform.position.z);
                     });
 
@@ -636,6 +588,7 @@ public class PlayerSelector : MonoBehaviour
             DOVirtual.Color(childLight.color, initialColor, duration, value =>
             {
                 childLight.color = value;
+                childLight.intensity = 30f;
             });
         }
     }
