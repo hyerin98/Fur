@@ -12,9 +12,9 @@ public class ColorManager : MonoSingleton<ColorManager>
     private Dictionary<string, Player> players = new Dictionary<string, Player>();
     private int maxUsers;
     private float minSaturation = 0.5f; 
-    private float maxSaturation = 1.0f;
+    private float maxSaturation = 1.5f;
     private float minBrightness = 0.5f; 
-    private float maxBrightness = 0.9f; 
+    private float maxBrightness = 0.8f; 
 
     void Start()
     {

@@ -35,6 +35,7 @@ public class PlayerSelector : MonoBehaviour
     public List<GameObject> idleFurs = new List<GameObject>(); // idle일때 움직이는 털 리스트 
     private Dictionary<GameObject, bool> furColorAssigned = new Dictionary<GameObject, bool>(); // fur의 색상 할당 상태를 추적
     private HashSet<string> removedFurNames = new HashSet<string>(); // 삭제된 fur 이름을 저장할 HashSet
+    CameraShake cameraShake;
 
     private void Awake()
     {
@@ -42,7 +43,7 @@ public class PlayerSelector : MonoBehaviour
         ProtocolManager.instance.onUserConnectEvent += OnUserConnectEvent;
         isSpawn = false;
         InitializeFurPositions();
-        IdleMotion();
+        
     }
 
     private void Start()
@@ -64,7 +65,9 @@ public class PlayerSelector : MonoBehaviour
         {
             idle = true;
         }
+        Invoke("IdleMotion",3f);
     }
+
     private void InitializeFurPositions()
     {
         furPositions.Clear(); // 6.10 주석해제
@@ -175,7 +178,7 @@ public class PlayerSelector : MonoBehaviour
     {
         if (fallingMotionCoroutine != null)
         {
-            StopCoroutine(fallingMotionCoroutine);
+            //StopCoroutine(fallingMotionCoroutine);
             fallingMotionCoroutine = null;
         }
 
@@ -598,6 +601,7 @@ public class PlayerSelector : MonoBehaviour
         if (idle)
         {
             //yield return new WaitForSeconds(1f);
+            
             List<GameObject> selectedFurs = new List<GameObject>();
             int furCount = Mathf.Min(5, idleFurs.Count);
 
@@ -614,7 +618,6 @@ public class PlayerSelector : MonoBehaviour
                 if (fur != null)
                 {
                     fur.SetActive(false);
-
                     GameObject fakeFur = Instantiate(fake_furPrefab, fur.transform.position, fur.transform.rotation);
                     Rigidbody furRigidbody = fakeFur.GetComponent<Rigidbody>();
                     Renderer renderer = fakeFur.GetComponent<Renderer>();
@@ -666,7 +669,7 @@ public class PlayerSelector : MonoBehaviour
 
         originalFur.SetActive(true);
 
-        originalFur.transform.localScale = new Vector3(0f, originalFur.transform.localScale.y, originalFur.transform.localScale.z);
+        originalFur.transform.localScale = new Vector3(0.2f, originalFur.transform.localScale.y, originalFur.transform.localScale.z);
         originalFur.transform.DOScaleX(0.3f, 1f).SetEase(ease);
     }
 
