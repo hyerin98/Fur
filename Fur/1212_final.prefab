@@ -919,9 +919,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7c0dc97ac6ecc984f85ce30686dbce3d, type: 3}
   - {fileID: 8300000, guid: a99354b655af6df43a2cc01ca73337f2, type: 3}
   - {fileID: 8300000, guid: 1d00db9cfe149e84a9fcad566196653f, type: 3}
-  lightMoveClips:
-  - {fileID: 8300000, guid: 5af941200dc71264d8b63a7c18c43bba, type: 3}
-  - {fileID: 8300000, guid: 1d15a5836b30c0848b8b9ce361312f47, type: 3}
   furFallingClips:
   - {fileID: 8300000, guid: 586d2ebd2b8bf6b43a43aec77f725a71, type: 3}
   - {fileID: 8300000, guid: 7b5b6172db138954893f26bc0d5a4529, type: 3}

@@ -9,3 +9,17 @@ HEX가 value이고
 
 서버가 콘텐츠에게 보낼때 protocolManager이고
 콘텐츠가 서버에게 보내줄때는 joyStreamCommunicator를 쓴다
+
+뿌연거줄이기
+
+라이팅문제 옵션열어서 조절
+
+재질 메탈x
+
+D63C32
+C32C31
+B01F32
+9F1132
+
+카메라 z축 -39.84
+field of view는 30.2

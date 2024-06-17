@@ -13,9 +13,8 @@ public class Player : MonoBehaviour
 {
     [Header("Settings")]
     private KeyCode downKeyCode = 0;
-    public Rigidbody rigid;
+    private Rigidbody rigid;
     public delegate void OnPlayerEnd(Player target);
-    //public event OnPlayerEnd onPlayerEnd;
     public List<Rigidbody> childRigidbodies;
     Light playerLight;
     [Header("Bool")]
@@ -43,7 +42,7 @@ public class Player : MonoBehaviour
 
     [Header("Sound")]
     public AudioClip[] lightFallingClips;
-    public AudioClip[] lightMoveClips;
+    //public AudioClip[] lightMoveClips;
     public AudioClip[] furFallingClips;
     public AudioClip[] furMoveClips;
 
@@ -337,41 +336,41 @@ public class Player : MonoBehaviour
         {
             case ProtocolType.CONTROLLER_UP_PRESS:
                 downKeyCode = KeyCode.UpArrow;
-                if (lightScene)
-                    SoundManager.instance.SFXMovePlay("", lightMoveClips);
-                else if (furScene)
-                    SoundManager.instance.SFXMovePlay("", furMoveClips);
+                // if (lightScene)
+                //     SoundManager.instance.SFXMovePlay("", lightMoveClips);
+                // else if (furScene)
+                //     SoundManager.instance.SFXMovePlay("", furMoveClips);
                 break;
             case ProtocolType.CONTROLLER_UP_RELEASE:
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_DOWN_PRESS:
                 downKeyCode = KeyCode.DownArrow;
-                if (lightScene)
-                    SoundManager.instance.SFXMovePlay("", lightMoveClips);
-                else if (furScene)
-                    SoundManager.instance.SFXMovePlay("", furMoveClips);
+                // if (lightScene)
+                //     SoundManager.instance.SFXMovePlay("", lightMoveClips);
+                // else if (furScene)
+                //     SoundManager.instance.SFXMovePlay("", furMoveClips);
                 break;
             case ProtocolType.CONTROLLER_DOWN_RELEASE:
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_LEFT_PRESS:
                 downKeyCode = KeyCode.LeftArrow;
-                if (lightScene)
-                    SoundManager.instance.SFXMovePlay("", lightMoveClips);
-                else if (furScene)
-                    SoundManager.instance.SFXMovePlay("", furMoveClips);
+                // if (lightScene)
+                //     SoundManager.instance.SFXMovePlay("", lightMoveClips);
+                // else if (furScene)
+                //     SoundManager.instance.SFXMovePlay("", furMoveClips);
                 break;
             case ProtocolType.CONTROLLER_LEFT_RELEASE:
                 downKeyCode = KeyCode.None;
                 break;
             case ProtocolType.CONTROLLER_RIGHT_PRESS:
                 downKeyCode = KeyCode.RightArrow;
-                if (lightScene)
-                    SoundManager.instance.SFXMovePlay("", lightMoveClips);
-                else if (furScene)
-                    SoundManager.instance.SFXMovePlay("", furMoveClips);
-                break;
+                // if (lightScene)
+                //     SoundManager.instance.SFXMovePlay("", lightMoveClips);
+                // else if (furScene)
+                //     SoundManager.instance.SFXMovePlay("", furMoveClips);
+                 break;
             case ProtocolType.CONTROLLER_RIGHT_RELEASE:
                 downKeyCode = KeyCode.None;
                 break;

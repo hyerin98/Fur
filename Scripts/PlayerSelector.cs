@@ -336,7 +336,7 @@ public class PlayerSelector : MonoBehaviour
                     furRigidbody.isKinematic = false;
                     Sequence mySequence = DOTween.Sequence();
                     mySequence.Append(childLight.transform.DOLocalMoveX(-1f, 2f).SetEase(ease));
-                    mySequence.Join(DOTween.To(() => childLight.intensity, x => childLight.intensity = x, 0f, 2f));
+                    mySequence.Join(DOTween.To(() => childLight.intensity, x => childLight.intensity = x, 0f, 2.5f));
 
                     if (savedTag == "Fur6")
                     {
